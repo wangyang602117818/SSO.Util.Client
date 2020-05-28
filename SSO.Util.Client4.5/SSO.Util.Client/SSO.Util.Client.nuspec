@@ -1,0 +1,25 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SSO.Util.Client</id>
+    <version>1.0.0</version>
+    <title>SSO.Util.Client</title>
+    <authors>Wang Yang</authors>
+    <owners>Wang Yang</owners>
+    <projectUrl>https://github.com/wangyang602117818/SSO.Client</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>该程序配置自动登录中心,基于role的权限控制</description>
+    <releaseNotes>
+      添加获取 user 基本信息的快捷方式
+    </releaseNotes>
+    <copyright>Copyright 2020-01-18</copyright>
+    <tags>SSO.Util.Client</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="11.0.2" />
+      <dependency id="Microsoft.AspNet.Mvc" version="5.0.0" />
+      <dependency id="Microsoft.IdentityModel.JsonWebTokens" version="5.6.0" />
+      <dependency id="System.IdentityModel.Tokens.Jwt" version="5.6.0" />
+      <dependency id="log4net" version="2.0.8" />
+    </dependencies>
+  </metadata>
+</package>
