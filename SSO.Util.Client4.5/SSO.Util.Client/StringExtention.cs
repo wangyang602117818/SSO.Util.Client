@@ -88,5 +88,32 @@ namespace SSO.Util.Client
             if (index == -1) return "";
             return str.Substring(index);
         }
+        public static bool IsNullOrEmpty(this string str)
+        {
+            return string.IsNullOrEmpty(str);
+        }
+        public static string FormatMonth(this int month)
+        {
+            return month < 10 ? "0" + month : month.ToString();
+        }
+        /// <summary>
+        /// string 转成 url 安全的base64 编码
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string StrToBase64(this string str)
+        {
+            string base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(str));
+            return Base64SecureURL.Encode(base64);
+        }
+        /// <summary>
+        /// url 安全的base64 编码 转 string
+        /// </summary>
+        /// <returns></returns>
+        public static string Base64ToStr(this string base64)
+        {
+            base64 = Base64SecureURL.Decode(base64);
+            return Encoding.UTF8.GetString(Convert.FromBase64String(base64));
+        }
     }
 }
