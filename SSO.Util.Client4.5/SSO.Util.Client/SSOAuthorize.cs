@@ -14,14 +14,14 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
-namespace SSO.Client
+namespace SSO.Util.Client
 {
     public class SSOAuthorizeAttribute : AuthorizeAttribute
     {
-        public static string secretKey = System.Configuration.ConfigurationManager.AppSettings["ssoSecretKey"];
-        public static string baseUrl = System.Configuration.ConfigurationManager.AppSettings["ssoBaseUrl"];
-        public static string cookieKey = System.Configuration.ConfigurationManager.AppSettings["ssoCookieKey"];
-        public static string cookieTime = System.Configuration.ConfigurationManager.AppSettings["ssoCookieTime"];
+        public static string secretKey = AppSettings.GetValue("ssoSecretKey");
+        public static string baseUrl = AppSettings.GetValue("ssoBaseUrl");
+        public static string cookieKey = AppSettings.GetValue("ssoCookieKey");
+        public static string cookieTime = AppSettings.GetValue("ssoCookieTime");
         public static string loginUrl = baseUrl.TrimEnd('/') + "/sso/login";
         public static string getTokenUrl = baseUrl.TrimEnd('/') + "/sso/gettoken";
         public static UserData UserData = null;

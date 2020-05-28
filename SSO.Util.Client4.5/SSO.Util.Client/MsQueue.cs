@@ -5,7 +5,7 @@ using System.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UtilToolkit
+namespace SSO.Util.Client
 {
     public class MsQueue<T>
     {

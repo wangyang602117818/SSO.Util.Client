@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UtilToolkit
+namespace SSO.Util.Client
 {
     //默认log的位置  App_Data\Log\
     public static class Log4Net

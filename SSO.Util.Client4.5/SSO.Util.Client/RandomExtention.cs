@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UtilToolkit
+namespace SSO.Util.Client
 {
     public static class RandomExtention
     {

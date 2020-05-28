@@ -1,0 +1,119 @@
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.IO;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SSO.Util.Client
+{
+    /// <summary>
+    /// Jwt管理类,使用之前需要在web.config配置 secretKey issuer(颁发者) ticketTime(url上面的票据有效时间,单位秒)
+    /// </summary>
+    public static class JwtManager
+    {
+        public static string secretKey = AppSettings.GetValue("secretKey");
+        public static string issuer = AppSettings.GetValue("issuer");
+        public static string ticketTime = AppSettings.GetValue("ticketTime");
+        /// <summary>
+        /// 生成JwtToken类
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="userName"></param>
+        /// <param name="lang"></param>
+        /// <param name="company"></param>
+        /// <param name="departments"></param>
+        /// <param name="roles"></param>
+        /// <param name="ip"></param>
+        /// <param name="minutes"></param>
+        /// <returns></returns>
+        public static string GenerateToken(string userId, string userName, string lang, string company, IEnumerable<string> departments, IEnumerable<string> roles, string ip, int minutes)
+        {
+            var symmetricKey = Convert.FromBase64String(secretKey);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var claims = new List<Claim>() { new Claim(ClaimTypes.Name, userId) };
+            if (!string.IsNullOrEmpty(userName)) claims.Add(new Claim("StaffName", userName));
+            if (!string.IsNullOrEmpty(lang)) claims.Add(new Claim("Lang", lang));
+            if (!string.IsNullOrEmpty(company)) claims.Add(new Claim("Company", company));
+            if (departments != null)
+                foreach (string dept in departments) claims.Add(new Claim("Department", dept));
+            if (roles != null)
+                foreach (string role in roles) claims.Add(new Claim(ClaimTypes.Role, role));
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),  //token数据
+                Issuer = issuer,           //颁发者
+                IssuedAt = DateTime.Now,               //颁发时间
+                Audience = ip,                         //颁发给
+                Expires = DateTime.Now.AddMinutes(minutes), //过期时间
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)   //签名
+            };
+            var stoken = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.WriteToken(stoken);
+            return token;
+        }
+        /// <summary>
+        /// 改变语言,并且返回新token
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="lang"></param>
+        /// <param name="minutes"></param>
+        /// <returns></returns>
+        public static string ModifyTokenLang(string token, string lang, int minutes)
+        {
+            var symmetricKey = Convert.FromBase64String(secretKey);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var stoken = tokenHandler.ReadJwtToken(token);
+            var newClaims = new List<Claim>() { };
+            foreach (var claim in stoken.Claims)
+            {
+                if (claim.Type == "Lang")
+                {
+                    newClaims.Add(new Claim("Lang", lang));
+                }
+                else
+                {
+                    newClaims.Add(new Claim(claim.Type, claim.Value));
+                }
+            }
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(newClaims),  //token数据
+                IssuedAt = DateTime.Now,               //颁发时间
+                Expires = DateTime.Now.AddMinutes(minutes), //过期时间
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)   //签名
+            };
+            var newStoken = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(newStoken);
+        }
+        /// <summary>
+        /// 生成url上面的Ticket,一般只有几秒有效期
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static string GenerateTicket(string userId)
+        {
+            string sourceString = DateTime.Now.ToString("yyyy-MM-dd") + userId + DateTime.Now.ToString("HH:mm:ss");
+            string ticket = SymmetricEncryptHelper.AesEncode(sourceString, secretKey);
+            return Base64SecureURL.Encode(ticket);
+        }
+        /// <summary>
+        /// 解析url上面的Ticket
+        /// </summary>
+        /// <param name="ticket"></param>
+        /// <returns>用户id,如果过期就返回""</returns>
+        public static string DecodeTicket(string ticket)
+        {
+            string sourceString = SymmetricEncryptHelper.AesDecode(Base64SecureURL.Decode(ticket), secretKey);
+            string userId = sourceString.Substring(10, sourceString.Length - 18);
+            DateTime ticketTime = DateTime.Parse(sourceString.Substring(0, 10) + " " + sourceString.Substring(10 + userId.Length));
+            var diff = DateTime.Now - ticketTime;
+            if (diff.TotalSeconds > Convert.ToInt32(ticketTime)) return "";
+            return userId;
+        }
+    }
+}

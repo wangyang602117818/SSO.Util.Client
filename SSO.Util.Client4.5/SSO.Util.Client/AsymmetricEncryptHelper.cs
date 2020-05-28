@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UtilToolkit
+namespace SSO.Util.Client
 {
     /// <summary>
     /// 非对称加密算法

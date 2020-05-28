@@ -53,6 +53,7 @@
     <Compile Include="HttpRequestHelper.cs" />
     <Compile Include="ImageExtention.cs" />
     <Compile Include="JsonSerializerHelper.cs" />
+    <Compile Include="JwtManager.cs" />
     <Compile Include="Log4Net.cs" />
     <Compile Include="MsQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

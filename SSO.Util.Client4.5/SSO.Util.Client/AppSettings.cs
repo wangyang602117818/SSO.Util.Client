@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UtilToolkit
+namespace SSO.Util.Client
 {
-    public class AppSettings
+    public static class AppSettings
     {
-        public string GetValue(string key)
+        public static string GetValue(string key)
         {
             return ConfigurationManager.AppSettings[key];
         }
