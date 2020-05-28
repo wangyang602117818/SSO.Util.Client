@@ -4,7 +4,8 @@
 Newtonsoft.Json<br>
 Microsoft.AspNet.Mvc<br>
 log4net<br>
-System.IdentityModel.Tokens.Jwt
+System.IdentityModel.Tokens.Jwt<br>
+MongoDB.Bson
 ## 第一步: 安装 和 配置
 ```
 nuget上搜索 SSO.Util.Client 关键词安装
@@ -27,6 +28,8 @@ nuget上搜索 SSO.Util.Client 关键词安装
 [SSOAuthorize]  :需要登录才能访问
 [SSOAuthorize(Roles = "admin")] :需要相应的role才能访问
 [AllowAnonymous] :可以匿名访问
+//也可以通过注册全局验证过滤器来启用验证
+filters.Add(new SSOAuthorizeAttribute());
 //访问用户id
 var userId = User.Identity.Name; //或者
 var userId = SSOAuthorizeAttribute.UserData.UserId;
@@ -50,7 +53,16 @@ log4net.Config.XmlConfigurator.Configure(stream);
 Log4Net.InfoLog("xx");
 Log4Net.ErrorLog("xx");
 ```
-### 第四步: 其他工具方法
+### 第四步: 验证和返回值
+```
+//注册全局错误过滤器: 
+filters.Add(new MyHandleErrorAttribute());
+//注册全局model验证过滤器
+filters.Add(new ValidateModelStateAttribute());
+ErrorCode :返回值枚举
+ResponseModel :返回值对象
+```
+### 第五步: 其他工具方法
 ```
 var str =  AppSettings.GetValue("key")  //获取配置文件
 AsymmetricEncryptHelper: 非对称加密解密类
