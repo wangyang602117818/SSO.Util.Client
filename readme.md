@@ -5,7 +5,6 @@ Newtonsoft.Json<br>
 Microsoft.AspNet.Mvc<br>
 log4net<br>
 System.IdentityModel.Tokens.Jwt<br>
-MongoDB.Bson
 ## 第一步: 安装 和 配置
 ```
 nuget上搜索 SSO.Util.Client 关键词安装
