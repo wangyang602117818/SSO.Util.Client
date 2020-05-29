@@ -13,11 +13,23 @@ namespace SSO.Util.Client
     /// <summary>
     /// Jwt管理类,使用之前需要在web.config配置 secretKey issuer(颁发者) ticketTime(url上面的票据有效时间,单位秒)
     /// </summary>
-    public static class JwtManager
+    public class JwtManager
     {
-        public static string secretKey = AppSettings.GetValue("secretKey");
-        public static string issuer = AppSettings.GetValue("issuer");
-        public static string ticketTime = AppSettings.GetValue("ticketTime");
+        private string secretKey = "";
+        private string issuer = "";
+        private int ticketTime = 0;
+        /// <summary>
+        /// 生成JwtToken的类
+        /// </summary>
+        /// <param name="secretKey">秘钥</param>
+        /// <param name="issuer">颁发者</param>
+        /// <param name="ticketTime">url上面的ticket过期时间(秒)</param>
+        public JwtManager(string secretKey, string issuer, int ticketTime = 0)
+        {
+            this.secretKey = secretKey;
+            this.issuer = issuer;
+            this.ticketTime = ticketTime;
+        }
         /// <summary>
         /// 生成JwtToken类
         /// </summary>
@@ -30,7 +42,7 @@ namespace SSO.Util.Client
         /// <param name="ip"></param>
         /// <param name="minutes"></param>
         /// <returns></returns>
-        public static string GenerateToken(string userId, string userName, string lang, string company, IEnumerable<string> departments, IEnumerable<string> roles, string ip, int minutes)
+        public string GenerateToken(string userId, string userName, string lang, string company, IEnumerable<string> departments, IEnumerable<string> roles, string ip, int minutes)
         {
             var symmetricKey = Convert.FromBase64String(secretKey);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -63,7 +75,7 @@ namespace SSO.Util.Client
         /// <param name="lang"></param>
         /// <param name="minutes"></param>
         /// <returns></returns>
-        public static string ModifyTokenLang(string token, string lang, int minutes)
+        public string ModifyTokenLang(string token, string lang, int minutes)
         {
             var symmetricKey = Convert.FromBase64String(secretKey);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -95,7 +107,7 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static string GenerateTicket(string userId)
+        public string GenerateTicket(string userId)
         {
             string sourceString = DateTime.Now.ToString("yyyy-MM-dd") + userId + DateTime.Now.ToString("HH:mm:ss");
             string ticket = SymmetricEncryptHelper.AesEncode(sourceString, secretKey);
@@ -106,13 +118,13 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="ticket"></param>
         /// <returns>用户id,如果过期就返回""</returns>
-        public static string DecodeTicket(string ticket)
+        public string DecodeTicket(string ticket)
         {
             string sourceString = SymmetricEncryptHelper.AesDecode(Base64SecureURL.Decode(ticket), secretKey);
             string userId = sourceString.Substring(10, sourceString.Length - 18);
-            DateTime ticketTime = DateTime.Parse(sourceString.Substring(0, 10) + " " + sourceString.Substring(10 + userId.Length));
-            var diff = DateTime.Now - ticketTime;
-            if (diff.TotalSeconds > Convert.ToInt32(ticketTime)) return "";
+            DateTime ticketDateTime = DateTime.Parse(sourceString.Substring(0, 10) + " " + sourceString.Substring(10 + userId.Length));
+            var diff = DateTime.Now - ticketDateTime;
+            if (diff.TotalSeconds > ticketTime) return "";
             return userId;
         }
     }

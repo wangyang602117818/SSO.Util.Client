@@ -7,6 +7,10 @@ using System.Web.Mvc;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// Action返回类
+    /// </summary>
+    /// <typeparam name="T">对象,不能为BsonDocument</typeparam>
     public class ResponseModel<T> : ContentResult
     {
         public ResponseModel(ErrorCode code, T t, long count = 0)
