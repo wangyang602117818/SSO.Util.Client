@@ -57,6 +57,13 @@ namespace SSO.Util.Client
         /// </summary>
         task_not_complete = 300,
         /// <summary>
+        /// 配置文件缺失
+        /// </summary>
+        baseUrl_not_config = 600,
+        secretKey_not_config = 601,
+        cookieKey_not_config = 602,
+        cookieTime_not_config = 603,
+        /// <summary>
         /// 未知错误
         /// </summary>
         server_exception = -1000

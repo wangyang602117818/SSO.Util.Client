@@ -22,8 +22,6 @@ namespace SSO.Util.Client
         public static string baseUrl = AppSettings.GetValue("ssoBaseUrl");
         public static string cookieKey = AppSettings.GetValue("ssoCookieKey");
         public static string cookieTime = AppSettings.GetValue("ssoCookieTime");
-        public static string loginUrl = baseUrl.TrimEnd('/') + "/sso/login";
-        public static string getTokenUrl = baseUrl.TrimEnd('/') + "/sso/gettoken";
         public static UserData UserData = null;
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
@@ -42,6 +40,22 @@ namespace SSO.Util.Client
                 if (c.AttributeType.Name == "JwtAuthorizeAttribute") isAuthorization = true;
             }
             if (!isAuthorization) return;
+            if (baseUrl.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.baseUrl_not_config, "");
+            }
+            if (secretKey.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.secretKey_not_config, "");
+            }
+            if (cookieKey.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.cookieKey_not_config, "");
+            }
+            if (cookieTime.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.cookieTime_not_config, "");
+            }
             HttpRequestBase request = filterContext.HttpContext.Request;
             var ssourl = request.QueryString["ssourls"];
             if (!string.IsNullOrEmpty(ssourl)) //sso 退出
@@ -74,7 +88,7 @@ namespace SSO.Util.Client
             {
                 if (string.IsNullOrEmpty(ticket))
                 {
-                    filterContext.Result = new RedirectResult(loginUrl + "?returnUrl=" + request.Url);
+                    filterContext.Result = new RedirectResult(baseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + request.Url);
                     return;
                 }
                 else
@@ -118,7 +132,7 @@ namespace SSO.Util.Client
                     httpCookie.Expires = DateTime.Now.AddDays(-1);
                     filterContext.HttpContext.Response.Cookies.Add(httpCookie);
                 }
-                filterContext.Result = new RedirectResult(loginUrl + "?returnUrl=" + request.Url);
+                filterContext.Result = new RedirectResult(baseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + request.Url);
             }
         }
         public void ParseData(ClaimsPrincipal User)
@@ -157,7 +171,7 @@ namespace SSO.Util.Client
         }
         public static string GetTokenByTicket(string ticket, string audience)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(getTokenUrl + "?ticket=" + ticket + "&ip=" + audience);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl.TrimEnd('/') + "/sso/gettoken" + "?ticket=" + ticket + "&ip=" + audience);
             request.Method = "get";
             using (WebResponse response = request.GetResponse())
             {

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SSO.Util.Client</id>
-    <version>1.1.3</version>
+    <version>1.1.4</version>
     <title>SSO.Util.Client</title>
     <authors>Wang Yang</authors>
     <owners>Wang Yang</owners>
@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>该程序配置自动登录中心,基于role的权限控制</description>
     <releaseNotes>
-     改变 JwtManager 类为实例类
+     改变 JwtManager 类为实例类,优化验证过程,没有配置文件给出提示
     </releaseNotes>
     <copyright>Copyright 2020-01-18</copyright>
     <tags>SSO.Util.Client</tags>
