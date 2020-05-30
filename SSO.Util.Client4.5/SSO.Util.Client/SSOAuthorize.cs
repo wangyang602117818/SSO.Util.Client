@@ -43,18 +43,22 @@ namespace SSO.Util.Client
             if (baseUrl.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.baseUrl_not_config, "");
+                return;
             }
             if (secretKey.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.secretKey_not_config, "");
+                return;
             }
             if (cookieKey.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.cookieKey_not_config, "");
+                return;
             }
             if (cookieTime.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.cookieTime_not_config, "");
+                return;
             }
             HttpRequestBase request = filterContext.HttpContext.Request;
             var ssourl = request.QueryString["ssourls"];
