@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -114,6 +115,37 @@ namespace SSO.Util.Client
         {
             base64 = Base64SecureURL.Decode(base64);
             return Encoding.UTF8.GetString(Convert.FromBase64String(base64));
+        }
+        /// <summary>
+        /// 替换由 ToJson() 转换的json字符串 中 ObjectId("") 和 ISODate("2020-05-30T08:50:10.048Z") 
+        /// </summary>
+        /// <param name="toJsonStr"></param>
+        /// <returns></returns>
+        public static string ReplaceJsonString(this string str)
+        {
+            str = new Regex("ISODate\\(\"(.*?)\"\\)", RegexOptions.IgnoreCase | RegexOptions.Multiline).Replace(str, JsonReplacement);
+            str = new Regex("ObjectId\\(\"(.*?)\"\\)", RegexOptions.IgnoreCase | RegexOptions.Multiline).Replace(str, "\"$1\"");
+            return str;
+        }
+        private static string JsonReplacement(Match match)
+        {
+            var time = match.Groups[1].Value.Replace("Z", "").Replace("T", " ");
+            return "\"" + DateTime.Parse(time).ToLocalTime().ToString(AppSettings.DateTimeFormat) + "\"";
+        }
+        /// <summary>
+        /// 替换由 .ToJson(new JsonWriterSettings() { OutputMode = JsonOutputMode.Strict }) 转换的json字符串 中{"$date": ""} 和{"$oid": ""}
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string ReplaceStrictJsonString(this string str)
+        {
+            str = new Regex("{\\s+\"\\$date\".+?(\\w{13}).+?}", RegexOptions.IgnoreCase | RegexOptions.Multiline).Replace(str, StrictJsonReplacement);
+            str = new Regex("{\\s+\"\\$oid\".+?(\\w{24}).+?}", RegexOptions.IgnoreCase | RegexOptions.Multiline).Replace(str, "\"$1\"");
+            return str;
+        }
+        private static string StrictJsonReplacement(Match match)
+        {
+            return "\"" + match.Groups[1].Value.MilliTimeStampToDateTime().ToLocalTime().ToString(AppSettings.DateTimeFormat) + "\"";
         }
     }
 }

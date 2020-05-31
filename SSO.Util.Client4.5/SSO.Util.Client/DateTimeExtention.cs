@@ -8,14 +8,32 @@ namespace SSO.Util.Client
 {
     public static class DateTimeExtention
     {
+        /// <summary>
+        /// 获取DateTime时间的UTC时间戳
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
         public static string UTCTimeStamp(this DateTime dateTime)
         {
             return ((dateTime.Ticks - 621355968000000000) / 10000000).ToString();
         }
-
+        /// <summary>
+        /// 获取DateTime时间的北京时间戳
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
         public static string BeijingTimeStamp(this DateTime dateTime)
         {
             return ((dateTime.Ticks - 621355968000000000) / 10000000).ToString();
+        }
+        /// <summary>
+        /// 毫秒时间戳转DateTime,如果是TUC时间则需要调用 .ToLocalTime() 转成当地时间
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static DateTime MilliTimeStampToDateTime(this string time)
+        {
+            return new DateTime((Convert.ToInt64(time) * 10000) + 621355968000000000);
         }
     }
 }

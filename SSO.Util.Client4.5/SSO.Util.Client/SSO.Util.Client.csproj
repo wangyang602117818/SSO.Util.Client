@@ -57,6 +57,8 @@
     <Compile Include="JsonSerializerHelper.cs" />
     <Compile Include="JwtManager.cs" />
     <Compile Include="Log4Net.cs" />
+    <Compile Include="LogCenterService.cs" />
+    <Compile Include="LogModel.cs" />
     <Compile Include="MsQueue.cs" />
     <Compile Include="MyHandleErrorAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
