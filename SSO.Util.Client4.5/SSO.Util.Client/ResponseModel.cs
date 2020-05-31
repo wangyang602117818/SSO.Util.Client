@@ -15,9 +15,17 @@ namespace SSO.Util.Client
     {
         public ResponseModel(ErrorCode code, T t, long count = 0)
         {
-            if (t is string && t.ToString().Trim(' ') != "")
+            if (t is string)
             {
-                Content = "{\"code\":" + (int)code + ",\"message\":\"" + code.ToString() + "\",\"result\":" + t + ",\"count\":" + count + "}";
+                string str = t.ToString();
+                if ((str.Contains("{") && str.Contains("}")) || (str.Contains("[") && str.Contains("]")))
+                {
+                }
+                else
+                {
+                    str = JsonSerializerHelper.Serialize(t);
+                }
+                Content = "{\"code\":" + (int)code + ",\"message\":\"" + code.ToString() + "\",\"result\":" + str + ",\"count\":" + count + "}";
             }
             else
             {

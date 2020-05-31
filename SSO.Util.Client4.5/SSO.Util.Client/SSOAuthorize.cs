@@ -65,7 +65,7 @@ namespace SSO.Util.Client
             if (!string.IsNullOrEmpty(ssourl)) //sso 退出
             {
                 ////////清除本站cookie
-                List<string> ssoUrls = JsonConvert.DeserializeObject<List<string>>(Encoding.UTF8.GetString(Convert.FromBase64String(DecodeBase64(ssourl))));
+                List<string> ssoUrls = JsonSerializerHelper.Deserialize<List<string>>(Encoding.UTF8.GetString(Convert.FromBase64String(DecodeBase64(ssourl))));
                 var cookie = request.Cookies[cookieKey];
                 if (cookie != null)
                 {
@@ -180,7 +180,8 @@ namespace SSO.Util.Client
             using (WebResponse response = request.GetResponse())
             {
                 StreamReader reader = new StreamReader(response.GetResponseStream());
-                var result = JsonConvert.DeserializeObject<ResponseItem<string>>(reader.ReadToEnd());
+                string resp = reader.ReadToEnd();
+                var result = JsonSerializerHelper.Deserialize<ServiceModel<string>>(resp);
                 if (result.code == 0) return result.result;
                 return "";
             }
@@ -203,20 +204,5 @@ namespace SSO.Util.Client
             }
             return secureUrlBase64;
         }
-    }
-    public class UserData
-    {
-        public string UserId = null;
-        public string UserName = null;
-        public string Lang = null;
-        public IEnumerable<string> UserRoles = null;
-        public string Company = null;
-        public IEnumerable<string> Departments = null;
-    }
-    public class ResponseItem<T>
-    {
-        public int code { get; set; }
-        public string message { get; set; }
-        public T result { get; set; }
     }
 }

@@ -42,6 +42,7 @@ var company = SSOAuthorizeAttribute.UserData.Company;
 var dept = SSOAuthorizeAttribute.UserData.Departments;
 ```
 ### 第三步: 日志记录
+#### 1. 在当前项目中记录日志(使用的是log4net)
 日志的配置文件已经作为资源文件在 SSO.Util.Client.dll 中(SSO.Util.Client.log4net.config)
 ```
 //在应用程序启动的时候添加 
@@ -51,6 +52,13 @@ log4net.Config.XmlConfigurator.Configure(stream);
 //记录日志的方式
 Log4Net.InfoLog("xx");
 Log4Net.ErrorLog("xx");
+```
+#### 2. 使用远程api记录日志(项目logCenter.web的地址)
+```
+//实例化对象
+LogCenterService logCenterService = new LogCenterService(logBaseUrl);
+//from:日志来源, logType:日志类型,recordId:记录id,
+logCenterService.Insert(from, logType, recordId, content, userId, userName, userHost, userAgent);
 ```
 ### 第四步: 验证和返回值
 ```

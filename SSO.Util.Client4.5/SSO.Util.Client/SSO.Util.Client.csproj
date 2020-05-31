@@ -68,6 +68,7 @@
     <Compile Include="StreamExtention.cs" />
     <Compile Include="StringExtention.cs" />
     <Compile Include="SymmetricEncryptHelper.cs" />
+    <Compile Include="UserData.cs" />
     <Compile Include="ValidateModelStateAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
