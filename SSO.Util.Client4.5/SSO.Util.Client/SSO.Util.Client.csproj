@@ -57,12 +57,12 @@
     <Compile Include="JsonSerializerHelper.cs" />
     <Compile Include="JwtManager.cs" />
     <Compile Include="Log4Net.cs" />
-    <Compile Include="LogFilterAttribute.cs" />
+    <Compile Include="LogRecordAttribute.cs" />
     <Compile Include="LogCenterService.cs" />
     <Compile Include="LogModel.cs" />
     <Compile Include="MsQueue.cs" />
     <Compile Include="MyHandleErrorAttribute.cs" />
-    <Compile Include="NoneLogFilterAttribute.cs" />
+    <Compile Include="NoneLogRecordAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomExtention.cs" />
     <Compile Include="ResponseModel.cs" />

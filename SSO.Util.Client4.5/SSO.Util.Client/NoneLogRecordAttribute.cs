@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace SSO.Util.Client
 {
-    public class NoneLogAttribute: ActionFilterAttribute
+    public class NoneLogRecordAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {

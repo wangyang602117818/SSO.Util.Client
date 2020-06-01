@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace SSO.Util.Client
 {
-    public class LogFilterAttribute: ActionFilterAttribute
+    public class LogRecordAttribute: ActionFilterAttribute
     {
         public static string logBaseUrl = AppSettings.GetValue("logBaseUrl");
         public override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -23,13 +23,13 @@ namespace SSO.Util.Client
             bool isLog = true;
             foreach (var item in controllerAttributes)
             {
-                if (item.GetType().Name == "NoneLogAttribute") isLog = false;
-                if (item.GetType().Name == "LogFilterAttribute") isLog = true;
+                if (item.GetType().Name == "NoneLogRecordAttribute") isLog = false;
+                if (item.GetType().Name == "LogRecordAttribute") isLog = true;
             }
             foreach (CustomAttributeData c in methodAttributes)
             {
-                if (c.AttributeType.Name == "NoneLogAttribute") isLog = false;
-                if (c.AttributeType.Name == "LogFilterAttribute") isLog = true;
+                if (c.AttributeType.Name == "NoneLogRecordAttribute") isLog = false;
+                if (c.AttributeType.Name == "LogRecordAttribute") isLog = true;
             }
             if (!isLog) return;
             if (logBaseUrl.IsNullOrEmpty())
