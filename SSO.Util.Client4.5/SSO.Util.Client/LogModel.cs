@@ -13,16 +13,14 @@ namespace SSO.Util.Client
         /// 日志来源
         /// </summary>
         public string From { get; set; }
+        public string Controller { get; set; }
+        public string Action { get; set; }
         /// <summary>
-        /// 日志类型
+        /// 请求参数
         /// </summary>
-        public LogType Type { get; set; }
+        public string QueryString { get; set; }
         /// <summary>
-        /// 日志唯一id
-        /// </summary>
-        public string RecordId { get; set; }
-        /// <summary>
-        /// 日志内容
+        /// 请求内容
         /// </summary>
         public string Content { get; set; }
         /// <summary>
@@ -49,32 +47,5 @@ namespace SSO.Util.Client
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
-    }
-    public enum LogType
-    {
-        /// <summary>
-        /// 列表日志
-        /// </summary>
-        List = 0,
-        /// <summary>
-        /// 添加
-        /// </summary>
-        Add = 1,
-        /// <summary>
-        /// 详情日志
-        /// </summary>
-        Query = 2,
-        /// <summary>
-        /// 更新日志
-        /// </summary>
-        Update = 3,
-        /// <summary>
-        /// 删除日志
-        /// </summary>
-        Delete = 4,
-        /// <summary>
-        /// 错误日志
-        /// </summary>
-        Error = 1000,
     }
 }

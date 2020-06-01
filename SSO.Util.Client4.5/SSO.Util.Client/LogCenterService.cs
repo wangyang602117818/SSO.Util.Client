@@ -27,34 +27,39 @@ namespace SSO.Util.Client
         /// <param name="userAgent">用户代理</param>
         /// <param name="time">时长</param>
         /// <returns></returns>
-        public ServiceModel<string> Insert(string from, LogType type, string id, string content, string userId, string userName, string userHost, string userAgent, int time = 0)
+        public ServiceModel<string> Insert(string from, string controller, string action, string querystring, string content, string userId, string userName, string userHost, string userAgent, int time = 0)
         {
             LogModel logModel = new LogModel()
             {
                 From = from,
-                Type = type,
-                RecordId = id,
+                Controller = controller,
+                Action = action,
+                QueryString = querystring,
                 Content = content,
                 UserId = userId,
                 UserName = userName,
                 UserHost = userHost,
                 UserAgent = userAgent,
-                Time = time
+                Time = time,
+                CreateTime = DateTime.Now
             };
             var result = requestHelper.Post(baseUrl.TrimEnd('/') + "/log/insert", logModel, null);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
-        public ServiceModel<List<LogModel>> GetList(string from = null, LogType? type = null, string userId = null, Dictionary<string, string> sorts = null, int pageIndex = 1, int pageSize = 10)
+        public string GetListJsonString(string from = null, string userId = null, Dictionary<string, string> sorts = null, int pageIndex = 1, int pageSize = 10)
         {
             List<string> filter = new List<string>();
             filter.Add("pageIndex=" + pageIndex);
             filter.Add("pageSize=" + pageSize);
             if (!from.IsNullOrEmpty()) filter.Add("from=" + from);
-            if (type != null) filter.Add("type=" + type);
             if (userId != null) filter.Add("userId=" + userId);
             if (sorts != null) filter.Add("sorts=" + JsonSerializerHelper.Serialize(sorts));
             string query = string.Join("&", filter);
-            var result = requestHelper.Get(baseUrl.TrimEnd('/') + "/log/getlist?" + query, null);
+            return requestHelper.Get(baseUrl.TrimEnd('/') + "/log/getlist?" + query, null);
+        }
+        public ServiceModel<List<LogModel>> GetList(string from = null, string userId = null, Dictionary<string, string> sorts = null, int pageIndex = 1, int pageSize = 10)
+        {
+            var result = GetListJsonString(from, userId, sorts, pageIndex, pageSize);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<LogModel>>>(result);
         }
     }

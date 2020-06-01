@@ -40,32 +40,14 @@ namespace SSO.Util.Client
                 if (c.AttributeType.Name == "JwtAuthorizeAttribute") isAuthorization = true;
             }
             if (!isAuthorization) return;
-            if (baseUrl.IsNullOrEmpty())
-            {
-                filterContext.Result = new ResponseModel<string>(ErrorCode.baseUrl_not_config, "");
-                return;
-            }
-            if (secretKey.IsNullOrEmpty())
-            {
-                filterContext.Result = new ResponseModel<string>(ErrorCode.secretKey_not_config, "");
-                return;
-            }
-            if (cookieKey.IsNullOrEmpty())
-            {
-                filterContext.Result = new ResponseModel<string>(ErrorCode.cookieKey_not_config, "");
-                return;
-            }
-            if (cookieTime.IsNullOrEmpty())
-            {
-                filterContext.Result = new ResponseModel<string>(ErrorCode.cookieTime_not_config, "");
-                return;
-            }
+            //验证配置文件
+            if (!VerifyConfig(filterContext)) return;
             HttpRequestBase request = filterContext.HttpContext.Request;
             var ssourl = request.QueryString["ssourls"];
             if (!string.IsNullOrEmpty(ssourl)) //sso 退出
             {
                 ////////清除本站cookie
-                List<string> ssoUrls = JsonSerializerHelper.Deserialize<List<string>>(Encoding.UTF8.GetString(Convert.FromBase64String(DecodeBase64(ssourl))));
+                List<string> ssoUrls = JsonSerializerHelper.Deserialize<List<string>>(Encoding.UTF8.GetString(Convert.FromBase64String(Base64SecureURL.Decode(ssourl))));
                 var cookie = request.Cookies[cookieKey];
                 if (cookie != null)
                 {
@@ -85,8 +67,7 @@ namespace SSO.Util.Client
                 }
                 return;
             }
-            string authorization = request.Cookies[cookieKey] == null ? "" : request.Cookies[cookieKey].Value;
-            if (string.IsNullOrEmpty(authorization)) authorization = request.Headers["Authorization"] ?? "";
+            string authorization = GetAuthorization(request);
             string ticket = request.QueryString["ticket"];
             if (string.IsNullOrEmpty(authorization))
             {
@@ -111,20 +92,8 @@ namespace SSO.Util.Client
             }
             try
             {
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var symmetricKey = Convert.FromBase64String(secretKey);
-                var validationParameters = new TokenValidationParameters()
-                {
-                    RequireExpirationTime = true,
-                    ValidateLifetime = false,
-                    ValidateIssuer = false,
-                    ValidAudience = HttpContext.Current.Request.UserHostAddress,
-                    ValidateAudience = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
-                };
-                SecurityToken securityToken;
-                var principal = tokenHandler.ValidateToken(authorization, validationParameters, out securityToken);
-                ParseData(principal);
+                var principal = ParseAuthorization(authorization);
+                UserData = ParseUserData(principal);
                 filterContext.HttpContext.User = principal;
                 if (!CheckRole(filterContext)) filterContext.Result = new HttpUnauthorizedResult();
             }
@@ -139,9 +108,9 @@ namespace SSO.Util.Client
                 filterContext.Result = new RedirectResult(baseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + request.Url);
             }
         }
-        public void ParseData(ClaimsPrincipal User)
+        public static UserData ParseUserData(ClaimsPrincipal User)
         {
-            UserData = new UserData()
+            return new UserData()
             {
                 UserId = User.Identity.Name,
                 UserName = User.Claims.Where(w => w.Type == "StaffName").Select(s => s.Value).FirstOrDefault(),
@@ -186,23 +155,52 @@ namespace SSO.Util.Client
                 return "";
             }
         }
-        private string Encode(string text)
+        public static string GetAuthorization(HttpRequestBase request)
         {
-            return text.Replace('+', '-').Replace('/', '_').TrimEnd('=');
+            string authorization = request.Cookies[cookieKey] == null ? "" : request.Cookies[cookieKey].Value;
+            if (string.IsNullOrEmpty(authorization)) authorization = request.Headers["Authorization"] ?? "";
+            return authorization;
         }
-        private string DecodeBase64(string secureUrlBase64)
+        public static ClaimsPrincipal ParseAuthorization(string authorization)
         {
-            secureUrlBase64 = secureUrlBase64.Replace('-', '+').Replace('_', '/');
-            switch (secureUrlBase64.Length % 4)
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var symmetricKey = Convert.FromBase64String(secretKey);
+            var validationParameters = new TokenValidationParameters()
             {
-                case 2:
-                    secureUrlBase64 += "==";
-                    break;
-                case 3:
-                    secureUrlBase64 += "=";
-                    break;
+                RequireExpirationTime = true,
+                ValidateLifetime = false,
+                ValidateIssuer = false,
+                ValidAudience = HttpContext.Current.Request.UserHostAddress,
+                ValidateAudience = true,
+                IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
+            };
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(authorization, validationParameters, out securityToken);
+            return principal;
+        }
+        public bool VerifyConfig(AuthorizationContext filterContext)
+        {
+            if (baseUrl.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.baseUrl_not_config, "");
+                return false;
             }
-            return secureUrlBase64;
+            if (secretKey.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.secretKey_not_config, "");
+                return false;
+            }
+            if (cookieKey.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.cookieKey_not_config, "");
+                return false;
+            }
+            if (cookieTime.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.cookieTime_not_config, "");
+                return false;
+            }
+            return true;
         }
     }
 }

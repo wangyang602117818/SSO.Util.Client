@@ -63,6 +63,7 @@ namespace SSO.Util.Client
         secretKey_not_config = 601,
         cookieKey_not_config = 602,
         cookieTime_not_config = 603,
+        logBaseUrl_not_config = 604,
         /// <summary>
         /// 未知错误
         /// </summary>

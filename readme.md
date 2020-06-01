@@ -5,6 +5,14 @@ Newtonsoft.Json<br>
 Microsoft.AspNet.Mvc<br>
 log4net<br>
 System.IdentityModel.Tokens.Jwt<br>
+```
+包含过滤器列表
+SSOAuthorizeAttribute: sso验证过滤器(作用于全局|controller|action)
+AllowAnonymousAttribute: 匿名验证过滤器(这是系统自带的)
+MyHandleErrorAttribute: 错误处理过滤器(一般作用于全局)
+ValidateModelStateAttribute: model验证过滤器(一般作用于全局)
+LogActionFilterAttribute: 远程日志记录过滤器(一般作用于全局)
+```
 ## 第一步: 安装 和 配置
 ```
 nuget上搜索 SSO.Util.Client 关键词安装
@@ -17,8 +25,10 @@ nuget上搜索 SSO.Util.Client 关键词安装
 <add key="ssoCookieKey" value="c.web.auth"/>
 //cookie保存的时间
 <add key="ssoCookieTime" value="session"/>
+//log记录地址
+<add key="logBaseUrl" value="">
 ```
-### 错误处理
+### 编译错误处理
 
 如果出现了 Could not load file or assembly 的错误,请更新相应的程序集到最新版本
 
@@ -55,10 +65,9 @@ Log4Net.ErrorLog("xx");
 ```
 #### 2. 使用远程api记录日志(项目logCenter.web的地址)
 ```
-//实例化对象
-LogCenterService logCenterService = new LogCenterService(logBaseUrl);
-//from:日志来源, logType:日志类型,recordId:记录id,
-logCenterService.Insert(from, logType, recordId, content, userId, userName, userHost, userAgent);
+//在controller action 或者全局加上 [LogActionFilter]
+并且在web.confg中配置 logBaseUrl 节点
+
 ```
 ### 第四步: 验证和返回值
 ```
@@ -67,7 +76,14 @@ filters.Add(new MyHandleErrorAttribute());
 //注册全局model验证过滤器
 filters.Add(new ValidateModelStateAttribute());
 ErrorCode :返回值枚举
-ResponseModel :返回值对象
+ResponseModel :返回值对象(ContentResult的子类,类型为 application/json)
+案例:
+    //返回字符串
+    return new ResponseModel<string>(ErrorCode.success, "");
+    //返回序列化好的json字符串
+    return new ResponseModel<string>(ErrorCode.success, json);
+    //返回可以序列化的对象
+    return new ResponseModel<Object>(ErrorCode.success, obj);
 ```
 ### 第五步: 其他工具方法
 ```
