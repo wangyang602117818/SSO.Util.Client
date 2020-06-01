@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SSO.Util.Client</id>
-    <version>1.2.6</version>
+    <version>1.2.8</version>
     <title>SSO.Util.Client</title>
     <authors>Wang Yang</authors>
     <owners>Wang Yang</owners>
@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>该程序配置自动登录中心,基于role的权限控制</description>
     <releaseNotes>
-     添加日志过滤器
+     添加不记录日志的过滤器
     </releaseNotes>
     <copyright>Copyright 2020-01-18</copyright>
     <tags>SSO.Util.Client</tags>

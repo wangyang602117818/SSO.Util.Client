@@ -11,7 +11,8 @@ SSOAuthorizeAttribute: sso验证过滤器(作用于全局|controller|action)
 AllowAnonymousAttribute: 匿名验证过滤器(这是系统自带的)
 MyHandleErrorAttribute: 错误处理过滤器(一般作用于全局)
 ValidateModelStateAttribute: model验证过滤器(一般作用于全局)
-LogActionFilterAttribute: 远程日志记录过滤器(一般作用于全局)
+LogFilterAttribute: 远程日志记录过滤器(一般作用于全局)
+NoneLogAttribute: 不记录日志过滤器(一般作用于controller|action)
 ```
 ## 第一步: 安装 和 配置
 ```
@@ -65,7 +66,7 @@ Log4Net.ErrorLog("xx");
 ```
 #### 2. 使用远程api记录日志(项目logCenter.web的地址)
 ```
-//在controller action 或者全局加上 [LogActionFilter]
+//在controller action 或者全局加上 [LogFilter]
 并且在web.confg中配置 logBaseUrl 节点
 
 ```

@@ -46,7 +46,7 @@ namespace SSO.Util.Client
             var result = requestHelper.Post(baseUrl.TrimEnd('/') + "/log/insert", logModel, null);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
-        public string GetListJsonString(string from = null, string userId = null, Dictionary<string, string> sorts = null, int pageIndex = 1, int pageSize = 10)
+        public string GetListJson(string from = null, string userId = null, Dictionary<string, string> sorts = null, int pageIndex = 1, int pageSize = 10)
         {
             List<string> filter = new List<string>();
             filter.Add("pageIndex=" + pageIndex);
@@ -59,7 +59,7 @@ namespace SSO.Util.Client
         }
         public ServiceModel<List<LogModel>> GetList(string from = null, string userId = null, Dictionary<string, string> sorts = null, int pageIndex = 1, int pageSize = 10)
         {
-            var result = GetListJsonString(from, userId, sorts, pageIndex, pageSize);
+            var result = GetListJson(from, userId, sorts, pageIndex, pageSize);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<LogModel>>>(result);
         }
     }

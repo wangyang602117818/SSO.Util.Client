@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,27 @@ using System.Web.Mvc;
 
 namespace SSO.Util.Client
 {
-    public class LogActionFilterAttribute: ActionFilterAttribute
+    public class LogFilterAttribute: ActionFilterAttribute
     {
         public static string logBaseUrl = AppSettings.GetValue("logBaseUrl");
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            var reflectedActionDescriptor = (ReflectedActionDescriptor)filterContext.ActionDescriptor;
+            IEnumerable<CustomAttributeData> methodAttributes = reflectedActionDescriptor.MethodInfo.CustomAttributes;
+            var controllerAttributes = reflectedActionDescriptor.ControllerDescriptor.GetCustomAttributes(true);
+            //是否记录日志标记
+            bool isLog = true;
+            foreach (var item in controllerAttributes)
+            {
+                if (item.GetType().Name == "NoneLogAttribute") isLog = false;
+                if (item.GetType().Name == "LogFilterAttribute") isLog = true;
+            }
+            foreach (CustomAttributeData c in methodAttributes)
+            {
+                if (c.AttributeType.Name == "NoneLogAttribute") isLog = false;
+                if (c.AttributeType.Name == "LogFilterAttribute") isLog = true;
+            }
+            if (!isLog) return;
             if (logBaseUrl.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.logBaseUrl_not_config, "");
