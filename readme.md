@@ -17,7 +17,7 @@ NoneLogRecordAttribute: 不记录日志过滤器(一般作用于controller|actio
 ## 第一步: 安装 和 配置
 ```
 nuget上搜索 SSO.Util.Client 关键词安装
-并在 web.config 中配置一下4个节点
+并在 web.config 中配置一下5个节点
 //项目的基本地址
 <add key="ssoBaseUrl" value=""/>
 //解密秘钥,要和基本地址的秘钥一致
@@ -66,7 +66,7 @@ Log4Net.ErrorLog("xx");
 ```
 #### 2. 使用远程api记录日志(项目logCenter.web的地址)
 ```
-//在controller action 或者全局加上 [LogRecord]
+//在controller action 或者全局加上 [LogRecord] 或者 [NoneLogRecord]
 并且在web.confg中配置 logBaseUrl 节点
 
 ```

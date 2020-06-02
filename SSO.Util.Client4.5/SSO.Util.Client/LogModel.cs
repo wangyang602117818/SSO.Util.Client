@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
-
     public class LogModel
     {
         /// <summary>
@@ -47,5 +47,21 @@ namespace SSO.Util.Client
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+    }
+
+    public class LogOpCountModel
+    {
+        public string date { get; set; }
+        public int count { get; set; }
+    }
+    public class LogListModel
+    {
+        private int pageIndex = 1;
+        private int pageSize = 10;
+        public string From { get; set; }
+        public string UserId { get; set; }
+        public Dictionary<string, string> Sorts { get; set; }
+        public int PageIndex { get => pageIndex; set => pageIndex = value; }
+        public int PageSize { get => pageSize; set => pageSize = value; }
     }
 }

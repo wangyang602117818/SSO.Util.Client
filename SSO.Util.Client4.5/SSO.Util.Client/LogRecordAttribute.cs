@@ -46,8 +46,10 @@ namespace SSO.Util.Client
             var querystring = request.Url.Query;
             Stream sm = request.InputStream;
             sm.Position = 0;
-            var content = (new StreamReader(sm)).ReadToEnd();
+            var content = (new StreamReader(sm)).ReadToEnd().Replace("\n", "").Replace("\t", "");
             sm.Position = 0;
+            //屏蔽登录表单铭感信息
+            if (action.ToLower() == "login" && content.Trim().Length > 0) content = "*";
             string userId = "", userName = "";
             string authorization = SSOAuthorizeAttribute.GetAuthorization(request);
             if (!authorization.IsNullOrEmpty())

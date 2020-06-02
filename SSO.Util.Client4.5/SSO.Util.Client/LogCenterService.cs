@@ -48,19 +48,29 @@ namespace SSO.Util.Client
         }
         public string GetListJson(string from = null, string userId = null, Dictionary<string, string> sorts = null, int pageIndex = 1, int pageSize = 10)
         {
-            List<string> filter = new List<string>();
-            filter.Add("pageIndex=" + pageIndex);
-            filter.Add("pageSize=" + pageSize);
-            if (!from.IsNullOrEmpty()) filter.Add("from=" + from);
-            if (userId != null) filter.Add("userId=" + userId);
-            if (sorts != null) filter.Add("sorts=" + JsonSerializerHelper.Serialize(sorts));
-            string query = string.Join("&", filter);
-            return requestHelper.Get(baseUrl.TrimEnd('/') + "/log/getlist?" + query, null);
+            LogListModel logModel = new LogListModel()
+            {
+                From = from,
+                UserId = userId,
+                Sorts = sorts,
+                PageIndex = pageIndex,
+                PageSize = pageSize
+            };
+            return requestHelper.Post(baseUrl.TrimEnd('/') + "/log/getlist?", logModel, null);
         }
         public ServiceModel<List<LogModel>> GetList(string from = null, string userId = null, Dictionary<string, string> sorts = null, int pageIndex = 1, int pageSize = 10)
         {
             var result = GetListJson(from, userId, sorts, pageIndex, pageSize);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<LogModel>>>(result);
+        }
+        public string GetOpRecordByDayJson(int last = 30)
+        {
+            return requestHelper.Get(baseUrl.TrimEnd('/') + "/log/recordbyday?last=" + last, null);
+        }
+        public ServiceModel<List<LogOpCountModel>> GetOpRecordByDay(int last = 30)
+        {
+            var result = GetOpRecordByDayJson(last);
+            return JsonSerializerHelper.Deserialize<ServiceModel<List<LogOpCountModel>>>(result);
         }
     }
 }
