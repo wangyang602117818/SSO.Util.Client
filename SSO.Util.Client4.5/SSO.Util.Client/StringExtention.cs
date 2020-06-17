@@ -147,5 +147,14 @@ namespace SSO.Util.Client
         {
             return "\"" + match.Groups[1].Value.MilliTimeStampToDateTime().ToLocalTime().ToString(AppSettings.DateTimeFormat) + "\"";
         }
+        /// <summary>
+        /// 替换 http://www. 后者 https://www. 为""
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string ReplaceHttpPrefix(this string str)
+        {
+            return new Regex("https?://www.", RegexOptions.IgnoreCase | RegexOptions.Multiline).Replace(str, "");
+        }
     }
 }

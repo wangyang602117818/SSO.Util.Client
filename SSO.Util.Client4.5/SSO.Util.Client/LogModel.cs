@@ -15,6 +15,7 @@ namespace SSO.Util.Client
         public string From { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
+        public string Route { get; set; }
         /// <summary>
         /// 请求参数
         /// </summary>
@@ -59,9 +60,35 @@ namespace SSO.Util.Client
         private int pageIndex = 1;
         private int pageSize = 10;
         public string From { get; set; }
+        public string ControllerName { get; set; }
+        public string ActionName { get; set; }
         public string UserId { get; set; }
+        public string UserName { get; set; }
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
         public Dictionary<string, string> Sorts { get; set; }
         public int PageIndex { get => pageIndex; set => pageIndex = value; }
         public int PageSize { get => pageSize; set => pageSize = value; }
+    }
+    public class FromCountModel
+    {
+        public string from { get; set; }
+        public int count { get; set; }
+    }
+    public class ControllerCountModel
+    {
+        public string controller { get; set; }
+        public int count { get; set; }
+    }
+    public class ActionCountModel
+    {
+        public string action { get; set; }
+        public int count { get; set; }
+    }
+    public class OperationsCountModel
+    {
+        public long lastmonth { get; set; }
+        public long lastday { get; set; }
+        public long all { get; set; }
     }
 }

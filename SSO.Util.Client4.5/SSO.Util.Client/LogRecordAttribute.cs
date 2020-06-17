@@ -11,9 +11,14 @@ using System.Web.Mvc;
 
 namespace SSO.Util.Client
 {
-    public class LogRecordAttribute: ActionFilterAttribute
+    public class LogRecordAttribute : ActionFilterAttribute
     {
         public static string logBaseUrl = AppSettings.GetValue("logBaseUrl");
+        public bool RecordQuerystring = true;
+        /// <summary>
+        /// 是否记录请求体
+        /// </summary>
+        public bool RecordContent = true;
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var reflectedActionDescriptor = (ReflectedActionDescriptor)filterContext.ActionDescriptor;
@@ -41,15 +46,28 @@ namespace SSO.Util.Client
             HttpRequestBase request = filterContext.HttpContext.Request;
             //日志来源
             var from = request.Url.Scheme + "://" + request.Url.Host + ":" + request.Url.Port + request.ApplicationPath;
-            var controller = filterContext.RouteData.Values["controller"].ToString();
-            var action = filterContext.RouteData.Values["action"].ToString();
-            var querystring = request.Url.Query;
-            Stream sm = request.InputStream;
-            sm.Position = 0;
-            var content = (new StreamReader(sm)).ReadToEnd().Replace("\n", "").Replace("\t", "");
-            sm.Position = 0;
-            //屏蔽登录表单铭感信息
-            if (action.ToLower() == "login" && content.Trim().Length > 0) content = "*";
+            //不使用路由中的字符串因为用户可能输入大小写,不利于统计
+            var controller = reflectedActionDescriptor.ControllerDescriptor.ControllerName;
+            var action = reflectedActionDescriptor.MethodInfo.Name;
+            //路由,解决 home/index/1 后面的1无法记录
+            var route = "";
+            foreach (var item in filterContext.RouteData.Values)
+            {
+                var value = item.Value.ToString().ToLower();
+                if (value == controller.ToLower() || value == action.ToLower()) continue;
+                route += item.Key + "=" + item.Value.ToString() + "&";
+            }
+            route = route.TrimEnd('&');
+            var querystring = "*";
+            if (RecordQuerystring) querystring = request.Url.Query;
+            var content = "*";
+            if (RecordContent)
+            {
+                Stream sm = request.InputStream;
+                sm.Position = 0;
+                content = (new StreamReader(sm)).ReadToEnd().Replace("\n", "").Replace("\t", "");
+                sm.Position = 0;
+            }
             string userId = "", userName = "";
             string authorization = SSOAuthorizeAttribute.GetAuthorization(request);
             if (!authorization.IsNullOrEmpty())
@@ -61,7 +79,7 @@ namespace SSO.Util.Client
             }
             string userHost = request.UserHostAddress;
             string userAgent = request.UserAgent;
-            logService.Insert(from, controller, action, querystring, content, userId, userName, userHost, userAgent);
+            logService.Insert(from.ReplaceHttpPrefix().TrimEnd('/'), controller, action, route, querystring, content, userId, userName, userHost, userAgent);
             base.OnActionExecuting(filterContext);
         }
     }

@@ -42,7 +42,7 @@ namespace SSO.Util.Client
         /// <param name="ip"></param>
         /// <param name="minutes"></param>
         /// <returns></returns>
-        public string GenerateToken(string userId, string userName, string lang, string company, IEnumerable<string> departments, IEnumerable<string> roles, string ip, int minutes)
+        public string GenerateToken(string userId, string userName, string lang, string company, IEnumerable<string> departments, IEnumerable<string> roles, string ip, int minutes, Dictionary<string, string> extra = null)
         {
             var symmetricKey = Convert.FromBase64String(secretKey);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -54,7 +54,13 @@ namespace SSO.Util.Client
                 foreach (string dept in departments) claims.Add(new Claim("Department", dept));
             if (roles != null)
                 foreach (string role in roles) claims.Add(new Claim(ClaimTypes.Role, role));
-
+            if (extra != null)
+            {
+                foreach(var item in extra)
+                {
+                    claims.Add(new Claim(item.Key, item.Value));
+                }
+            }
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),  //token数据

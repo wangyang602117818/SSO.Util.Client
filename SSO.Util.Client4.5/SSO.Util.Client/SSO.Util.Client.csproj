@@ -56,6 +56,7 @@
     <Compile Include="ImageExtention.cs" />
     <Compile Include="JsonSerializerHelper.cs" />
     <Compile Include="JwtManager.cs" />
+    <Compile Include="KeyValueForm.cs" />
     <Compile Include="Log4Net.cs" />
     <Compile Include="LogRecordAttribute.cs" />
     <Compile Include="LogCenterService.cs" />
