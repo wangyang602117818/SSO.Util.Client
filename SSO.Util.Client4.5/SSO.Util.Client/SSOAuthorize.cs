@@ -22,7 +22,6 @@ namespace SSO.Util.Client
         public static string baseUrl = AppSettings.GetValue("ssoBaseUrl");
         public static string cookieKey = AppSettings.GetValue("ssoCookieKey");
         public static string cookieTime = AppSettings.GetValue("ssoCookieTime");
-        public static UserData UserData = null;
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             var reflectedActionDescriptor = (ReflectedActionDescriptor)filterContext.ActionDescriptor;
@@ -32,12 +31,12 @@ namespace SSO.Util.Client
             foreach (var item in controllerAttributes)
             {
                 if (item.GetType().Name == "AllowAnonymousAttribute") isAuthorization = false;
-                if (item.GetType().Name == "JwtAuthorizeAttribute") isAuthorization = true;
+                if (item.GetType().Name == "SSOAuthorizeAttribute") isAuthorization = true;
             }
             foreach (CustomAttributeData c in methodAttributes)
             {
                 if (c.AttributeType.Name == "AllowAnonymousAttribute") isAuthorization = false;
-                if (c.AttributeType.Name == "JwtAuthorizeAttribute") isAuthorization = true;
+                if (c.AttributeType.Name == "SSOAuthorizeAttribute") isAuthorization = true;
             }
             if (!isAuthorization) return;
             //验证配置文件
@@ -46,6 +45,7 @@ namespace SSO.Util.Client
             var ssourl = request.QueryString["ssourls"];
             if (!string.IsNullOrEmpty(ssourl)) //sso 退出
             {
+                var returnUrl = request.QueryString["returnUrl"];
                 ////////清除本站cookie
                 List<string> ssoUrls = JsonSerializerHelper.Deserialize<List<string>>(Encoding.UTF8.GetString(Convert.FromBase64String(Base64SecureURL.Decode(ssourl))));
                 var cookie = request.Cookies[cookieKey];
@@ -59,11 +59,11 @@ namespace SSO.Util.Client
                 for (var i = 0; i < ssoUrls.Count; i++) if (request.Url.AbsoluteUri.Contains(ssoUrls[i])) index = i;
                 if (index < ssoUrls.Count - 1)
                 {
-                    filterContext.Result = new RedirectResult(ssoUrls[index + 1] + "?ssourls=" + ssourl);
+                    filterContext.Result = new RedirectResult(ssoUrls[index + 1] + "?ssourls=" + ssourl + "&returnUrl=" + returnUrl);
                 }
                 else //最后一个
                 {
-                    filterContext.Result = new RedirectResult(baseUrl);
+                    filterContext.Result = new RedirectResult(baseUrl + "?returnUrl=" + returnUrl);
                 }
                 return;
             }
@@ -93,9 +93,8 @@ namespace SSO.Util.Client
             try
             {
                 var principal = ParseAuthorization(authorization);
-                UserData = ParseUserData(principal);
                 filterContext.HttpContext.User = principal;
-                if (!CheckRole(filterContext)) filterContext.Result = new HttpUnauthorizedResult();
+                if (!CheckRole(filterContext, authorization)) filterContext.Result = new ResponseModel<string>(ErrorCode.authorize_fault, "");
             }
             catch (Exception ex) //token失效
             {
@@ -115,28 +114,32 @@ namespace SSO.Util.Client
                 UserId = User.Identity.Name,
                 UserName = User.Claims.Where(w => w.Type == "StaffName").Select(s => s.Value).FirstOrDefault(),
                 Lang = User.Claims.Where(w => w.Type == "Lang").Select(s => s.Value).FirstOrDefault(),
-                UserRoles = User.Claims.Where(w => w.Type == ClaimTypes.Role).Select(s => s.Value),
-                Company = User.Claims.Where(w => w.Type == "Company").Select(s => s.Value).FirstOrDefault(),
-                Departments = User.Claims.Where(w => w.Type == "Department").Select(s => s.Value)
             };
         }
-        private bool CheckRole(AuthorizationContext filterContext)
+        public static UserData ParseUserData(string authorization)
+        {
+            var principal = ParseAuthorization(authorization);
+            return ParseUserData(principal);
+        }
+        private bool CheckRole(AuthorizationContext filterContext, string authorization)
         {
             bool access = true;
             IEnumerable<CustomAttributeData> customAttributes = ((ReflectedActionDescriptor)filterContext.ActionDescriptor).MethodInfo.CustomAttributes;
             foreach (CustomAttributeData c in customAttributes)
             {
-                if (c.AttributeType.Name == "JwtAuthorizeAttribute")
+                if (c.AttributeType.Name == "SSOAuthorizeAttribute")
                 {
                     if (c.NamedArguments.Count == 0) return access;
                     access = false;
                     foreach (var item in c.NamedArguments)
                     {
-                        string[] name = item.TypedValue.Value.ToString().Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                        foreach (string n in name)
-                        {
-                            if (filterContext.HttpContext.User.IsInRole(n)) access = true;
-                        }
+                        if (item.MemberName != "Roles") continue;
+                        //特性上的role
+                        string[] roles = item.TypedValue.Value.ToString().Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                        //数据库中的role
+                        string[] dataRoles = GetRoles(authorization);
+                        //如果有交集,可以访问
+                        if (roles.Intersect(dataRoles).Count() > 0) access = true;
                     }
                 }
             }
@@ -153,6 +156,21 @@ namespace SSO.Util.Client
                 var result = JsonSerializerHelper.Deserialize<ServiceModel<string>>(resp);
                 if (result.code == 0) return result.result;
                 return "";
+            }
+        }
+        public static string[] GetRoles(string authorization)
+        {
+            var userId = ParseUserData(authorization).UserId;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl.TrimEnd('/') + "/user/getroles?userId=" + userId);
+            request.Method = "get";
+            request.Headers.Add("Authorization", authorization);
+            using (WebResponse response = request.GetResponse())
+            {
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                string resp = reader.ReadToEnd();
+                var result = JsonSerializerHelper.Deserialize<ServiceModel<string[]>>(resp);
+                if (result.code == 0) return result.result;
+                return new string[] { };
             }
         }
         public static string GetAuthorization(HttpRequestBase request)

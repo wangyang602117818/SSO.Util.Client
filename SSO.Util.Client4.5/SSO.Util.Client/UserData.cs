@@ -11,8 +11,5 @@ namespace SSO.Util.Client
         public string UserId = null;
         public string UserName = null;
         public string Lang = null;
-        public IEnumerable<string> UserRoles = null;
-        public string Company = null;
-        public IEnumerable<string> Departments = null;
     }
 }

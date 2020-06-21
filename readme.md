@@ -41,16 +41,12 @@ nuget上搜索 SSO.Util.Client 关键词安装
 //也可以通过注册全局验证过滤器来启用验证
 filters.Add(new SSOAuthorizeAttribute());
 //访问用户id
-var userId = User.Identity.Name; //或者
-var userId = SSOAuthorizeAttribute.UserData.UserId;
-//访问用户名称 
-var userName = SSOAuthorizeAttribute.UserData.UserName;
-//访问角色
-var roles = SSOAuthorizeAttribute.UserData.UserRoles;
-//访问公司
-var company = SSOAuthorizeAttribute.UserData.Company;
-//访问部门
-var dept = SSOAuthorizeAttribute.UserData.Departments;
+var userId = User.Identity.Name;
+//获取authorization
+var authorization = SSOAuthorizeAttribute.GetAuthorization(request)
+//访问用户其他信息
+var userData = SSOAuthorizeAttribute.ParseUserData(authorization)
+
 ```
 ### 第三步: 日志记录
 #### 1. 在当前项目中记录日志(使用的是log4net)
