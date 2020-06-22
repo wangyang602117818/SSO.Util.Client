@@ -60,7 +60,7 @@ namespace SSO.Util.Client
             Message message = new Message(data) { Recoverable = recoverable };
             message.AdministrationQueue = new MessageQueue(managerpath);
             message.AcknowledgeType = AcknowledgeTypes.PositiveReceive | AcknowledgeTypes.PositiveArrival;
-            messageQueue.Send(message);
+            messageQueue.Send(message, label);
         }
         /// <summary>
         /// 事务性队列只能发送事务性消息,发送普通消息会丢弃
