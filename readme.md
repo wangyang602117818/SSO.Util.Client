@@ -26,8 +26,8 @@ nuget上搜索 SSO.Util.Client 关键词安装
 <add key="ssoCookieKey" value="c.web.auth"/>
 //cookie保存的时间
 <add key="ssoCookieTime" value="session"/>
-//log记录地址
-<add key="logBaseUrl" value="">
+//message记录地址
+<add key="messageBaseUrl" value="">
 ```
 ### 编译错误处理
 

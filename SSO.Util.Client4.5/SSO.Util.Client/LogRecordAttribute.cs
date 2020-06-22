@@ -13,7 +13,7 @@ namespace SSO.Util.Client
 {
     public class LogRecordAttribute : ActionFilterAttribute
     {
-        public static string logBaseUrl = AppSettings.GetValue("logBaseUrl");
+        public static string messageBaseUrl = AppSettings.GetValue("messageBaseUrl");
         public bool RecordQuerystring = true;
         /// <summary>
         /// 是否记录请求体
@@ -37,12 +37,12 @@ namespace SSO.Util.Client
                 if (c.AttributeType.Name == "LogRecordAttribute") isLog = true;
             }
             if (!isLog) return;
-            if (logBaseUrl.IsNullOrEmpty())
+            if (messageBaseUrl.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.logBaseUrl_not_config, "");
                 return;
             }
-            LogCenterService logService = new LogCenterService(logBaseUrl);
+            MessageCenterService messageService = new MessageCenterService(messageBaseUrl);
             HttpRequestBase request = filterContext.HttpContext.Request;
             //日志来源
             var from = request.Url.Scheme + "://" + request.Url.Host + ":" + request.Url.Port + request.ApplicationPath;
@@ -79,7 +79,7 @@ namespace SSO.Util.Client
             }
             string userHost = request.UserHostAddress;
             string userAgent = request.UserAgent;
-            logService.Insert(from.ReplaceHttpPrefix().TrimEnd('/'), controller, action, route, querystring, content, userId, userName, userHost, userAgent);
+            messageService.InsertLog(from.ReplaceHttpPrefix().TrimEnd('/'), controller, action, route, querystring, content, userId, userName, userHost, userAgent);
             base.OnActionExecuting(filterContext);
         }
     }

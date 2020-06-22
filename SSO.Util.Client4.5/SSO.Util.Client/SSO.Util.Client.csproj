@@ -59,7 +59,8 @@
     <Compile Include="KeyValueForm.cs" />
     <Compile Include="Log4Net.cs" />
     <Compile Include="LogRecordAttribute.cs" />
-    <Compile Include="LogCenterService.cs" />
+    <Compile Include="LogService.cs" />
+    <Compile Include="MessageCenterService.cs" />
     <Compile Include="LogModel.cs" />
     <Compile Include="MsQueue.cs" />
     <Compile Include="MyHandleErrorAttribute.cs" />
