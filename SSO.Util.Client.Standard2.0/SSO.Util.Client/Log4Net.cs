@@ -1,7 +1,8 @@
 ﻿using log4net;
+using log4net.Config;
+using log4net.Repository;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -12,17 +13,14 @@ namespace SSO.Util.Client
     //默认log的位置  App_Data\Log\
     public static class Log4Net
     {
-        private static readonly ILog infoLog = LogManager.GetLogger("FileLogAppender");
+        static string repositoryName = "NETCoreRepository";
+        static ILoggerRepository repository = LogManager.CreateRepository(repositoryName);
+        private static readonly ILog infoLog = LogManager.GetLogger(repositoryName, "FileLogAppender");
         static Log4Net()
         {
-            string path = AppDomain.CurrentDomain.BaseDirectory + "bin\\SSO.Util.Client.dll";
-            if (!File.Exists(path))
-            {
-                path = AppDomain.CurrentDomain.BaseDirectory + "SSO.Util.Client.dll";
-            }
-            var assembly = Assembly.LoadFrom(path);
+            var assembly = Assembly.LoadFrom(AppDomain.CurrentDomain.BaseDirectory + "SSO.Util.Client.dll");
             var stream = assembly.GetManifestResourceStream("SSO.Util.Client.log4net.config");
-            log4net.Config.XmlConfigurator.Configure(stream);
+            XmlConfigurator.Configure(repository, stream);
         }
         /// <summary>
         /// 错误日志 

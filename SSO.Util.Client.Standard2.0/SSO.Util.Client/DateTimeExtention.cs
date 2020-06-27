@@ -13,9 +13,9 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="dateTime"></param>
         /// <returns></returns>
-        public static long UTCTimeStamp(this DateTime dateTime)
+        public static string UTCTimeStamp(this DateTime dateTime)
         {
-            return ((dateTime.Ticks - 621355968000000000) / 10000000);
+            return ((dateTime.Ticks - 621355968000000000) / 10000000).ToString();
         }
         /// <summary>
         /// 获取DateTime时间的毫秒时间戳

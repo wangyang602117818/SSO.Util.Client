@@ -53,6 +53,7 @@
     <Compile Include="ErrorCode.cs" />
     <Compile Include="HashEncryptHelper.cs" />
     <Compile Include="HttpRequestHelper.cs" />
+    <Compile Include="HttpRequestState.cs" />
     <Compile Include="ImageExtention.cs" />
     <Compile Include="JsonSerializerHelper.cs" />
     <Compile Include="JwtManager.cs" />

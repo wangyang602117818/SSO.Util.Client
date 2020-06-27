@@ -52,10 +52,7 @@ var userData = SSOAuthorizeAttribute.ParseUserData(authorization)
 #### 1. 在当前项目中记录日志(使用的是log4net)
 日志的配置文件已经作为资源文件在 SSO.Util.Client.dll 中(SSO.Util.Client.log4net.config)
 ```
-//在应用程序启动的时候添加 
-var assembly = Assembly.LoadFrom(AppDomain.CurrentDomain.BaseDirectory + "bin\\SSO.Util.Client.dll");
-var stream = assembly.GetManifestResourceStream("SSO.Util.Client.log4net.config");
-log4net.Config.XmlConfigurator.Configure(stream);
+//log4net已经自动添加了配置文件
 //记录日志的方式
 Log4Net.InfoLog("xx");
 Log4Net.ErrorLog("xx");

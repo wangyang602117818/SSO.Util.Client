@@ -1,9 +1,12 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -130,17 +133,16 @@ namespace SSO.Util.Client
             if (diff.TotalSeconds > ticketTime) return "";
             return userId;
         }
-
         /// <summary>
         /// 获取cookie或者请求header中的jwt token
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cookieKey"></param>
         /// <returns></returns>
-        public static string GetAuthorization(HttpRequestBase request, string cookieKey)
+        public static string GetAuthorization(HttpRequest request, string cookieKey)
         {
-            string authorization = request.Cookies[cookieKey] == null ? "" : request.Cookies[cookieKey].Value;
-            if (string.IsNullOrEmpty(authorization)) authorization = request.Headers["Authorization"] ?? "";
+            string authorization = request.Cookies[cookieKey] == null ? "" : request.Cookies[cookieKey];
+            if (string.IsNullOrEmpty(authorization)) authorization = request.Headers["Authorization"].ToString() ?? "";
             return authorization;
         }
         public static UserData ParseUserData(ClaimsPrincipal User)
@@ -152,16 +154,16 @@ namespace SSO.Util.Client
                 Lang = User.Claims.Where(w => w.Type == "Lang").Select(s => s.Value).FirstOrDefault(),
             };
         }
-        public static UserData ParseUserData(string authorization, string secretKey)
+        public static UserData ParseUserData(string authorization, string secretKey, HttpContext httpContext)
         {
-            var principal = ParseAuthorization(authorization, secretKey);
+            var principal = ParseAuthorization(authorization, secretKey, httpContext);
             return ParseUserData(principal);
         }
-        public static ClaimsPrincipal ParseAuthorization(string authorization, string secretKey)
+        public static ClaimsPrincipal ParseAuthorization(string authorization, string secretKey, HttpContext httpContext)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var symmetricKey = Convert.FromBase64String(secretKey);
-            string ip = HttpContext.Current.Request.UserHostAddress;
+            var ip = httpContext.Connection.RemoteIpAddress.ToString();
             if (ip == "::1") ip = "127.0.0.1";
             var validationParameters = new TokenValidationParameters()
             {
