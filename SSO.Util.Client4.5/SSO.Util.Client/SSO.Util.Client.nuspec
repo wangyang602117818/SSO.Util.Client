@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SSO.Util.Client</id>
-    <version>1.5.8</version>
+    <version>1.6.8</version>
     <title>SSO.Util.Client</title>
     <authors>Wang Yang</authors>
     <owners>Wang Yang</owners>
@@ -10,15 +10,27 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>该程序配置自动登录中心,基于role的权限控制</description>
     <releaseNotes>
-     添加不记录查询字符串和请求体的标记
+       bug
     </releaseNotes>
     <copyright>Copyright 2020-01-18</copyright>
     <tags>SSO.Util.Client</tags>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="12.0.3" />
-      <dependency id="Microsoft.AspNet.Mvc" version="5.2.7" />
-      <dependency id="System.IdentityModel.Tokens.Jwt" version="6.6.0" />
-      <dependency id="log4net" version="2.0.8" />
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers"/>
+        <dependency id="Microsoft.AspNet.Mvc" version="5.2.7" exclude="Build,Analyzers"/>
+        <dependency id="System.IdentityModel.Tokens.Jwt" version="6.7.0" exclude="Build,Analyzers"/>
+        <dependency id="log4net" version="2.0.8" exclude="Build,Analyzers"/>
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.AspNetCore.Mvc.Core" version="2.2.5" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Mvc.ViewFeatures" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration" version="3.1.5" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.Json" version="3.1.5" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
+        <dependency id="System.Drawing.Common" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.IdentityModel.Tokens.Jwt" version="6.7.0" exclude="Build,Analyzers" />
+        <dependency id="log4net" version="2.0.8" exclude="Build,Analyzers" />
+      </group>
     </dependencies>
   </metadata>
 </package>

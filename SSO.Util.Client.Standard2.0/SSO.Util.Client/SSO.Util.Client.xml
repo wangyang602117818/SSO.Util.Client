@@ -1,0 +1,501 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SSO.Util.Client</name>
+    </assembly>
+    <members>
+        <member name="F:SSO.Util.Client.AppSettings.DateTimeFormat">
+            <summary>
+            yyyy-MM-dd HH:mm:ss
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.AsymmetricEncryptHelper">
+            <summary>
+            非对称加密算法
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.AsymmetricEncryptHelper.RSAEncode(System.String,System.String)">
+            <summary>
+            RSA加密
+            </summary>
+            <param name="sourceString">需要加密的字符串</param>
+            <param name="key">base64形式的key</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.AsymmetricEncryptHelper.RSADecode(System.String,System.String)">
+            <summary>
+            RSA解密，私钥分成2种格式 pkcs1 pkcs8 ，.net只支持pkcs1,java是pkcs8格式
+            </summary>
+            <param name="secretString">加密以后的字符串</param>
+            <param name="priKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.AsymmetricEncryptHelper.ParseFromPemPublicKey(System.String)">
+            <summary>          
+            将pem格式公钥转换为RSAParameters         
+            </summary> <param name="pemFileConent">pem公钥内容</param>         
+            <returns>转换得到的RSAParamenters</returns>          
+        </member>
+        <member name="M:SSO.Util.Client.AsymmetricEncryptHelper.ParseFromPemPrivateKey(System.String)">
+            <summary>          
+            将pem格式私钥转换为RSAParameters,仅支持pkcs1        
+            </summary>          
+            <param name="pemFileConent">pem私钥内容</param>        
+            <returns>转换得到的RSAParamenters</returns>         
+        </member>
+        <member name="M:SSO.Util.Client.AsymmetricEncryptHelper.ConverToPkcs1(System.String)">
+            <summary>
+            pkcs8转pkcs1
+            </summary>
+            <param name="pkcs8"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.Base64SecureURL.Encode(System.String)">
+            <summary>
+            字符串编码
+            </summary>
+            <param name="text">待编码的文本字符串</param>
+            <returns>编码的文本字符串.</returns>
+        </member>
+        <member name="M:SSO.Util.Client.Base64SecureURL.Decode(System.String)">
+            <summary>
+            解码安全的URL文本字符串的Base64
+            </summary>
+            <param name="secureUrlBase64">Base64编码字符串安全的URL.</param>
+            <returns>Cadena de texto decodificada.</returns>
+        </member>
+        <member name="M:SSO.Util.Client.DateTimeExtention.UTCTimeStamp(System.DateTime)">
+            <summary>
+            获取DateTime时间的时间戳
+            </summary>
+            <param name="dateTime"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.DateTimeExtention.UTCMillisecondTimeStamp(System.DateTime)">
+            <summary>
+            获取DateTime时间的毫秒时间戳
+            </summary>
+            <param name="dateTime"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.DateTimeExtention.MilliTimeStampToDateTime(System.String)">
+            <summary>
+            毫秒时间戳转DateTime,如果是TUC时间则需要调用 .ToLocalTime() 转成当地时间
+            </summary>
+            <param name="time"></param>
+            <returns></returns>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.success">
+            <summary>
+            成功
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.redirect">
+            <summary>
+            重定向
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.record_not_exist">
+            <summary>
+            不存在
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.record_exist">
+            <summary>
+            已存在
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.authorize_fault">
+            <summary>
+            权限不足
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.task_not_complete">
+            <summary>
+            任务未完成
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.baseUrl_not_config">
+            <summary>
+            配置文件缺失
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.server_exception">
+            <summary>
+            未知错误
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.HashEncryptHelper">
+            <summary>
+            Hash散列算法
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.HashEncryptHelper.StringMd5(System.String)">
+            <summary>
+            字符串md5计算,不可逆，生成32位字符串
+            </summary>
+            <param name="str">要计算的字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.HashEncryptHelper.FileMd5(System.String)">
+            <summary>
+            文件MD5计算
+            </summary>
+            <param name="path">要计算的文件的本地路径</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.HashEncryptHelper.FileMd5(System.IO.Stream)">
+            <summary>
+            文件MD5计算
+            </summary>
+            <param name="stream">文件流</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.HashEncryptHelper.StringSHA1(System.String)">
+            <summary>
+            SHA1加密，不可逆，生成40位字符串
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.JwtManager">
+            <summary>
+            Jwt管理类,使用之前需要在web.config配置 secretKey issuer(颁发者) ticketTime(url上面的票据有效时间,单位秒)
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.JwtManager.#ctor(System.String,System.String,System.Int32)">
+            <summary>
+            生成JwtToken的类
+            </summary>
+            <param name="secretKey">秘钥</param>
+            <param name="issuer">颁发者</param>
+            <param name="ticketTime">url上面的ticket过期时间(秒)</param>
+        </member>
+        <member name="M:SSO.Util.Client.JwtManager.GenerateToken(System.String,System.String,System.String,System.String,System.Int32,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            生成JwtToken类
+            </summary>
+            <param name="userId"></param>
+            <param name="userName"></param>
+            <param name="lang"></param>
+            <param name="company"></param>
+            <param name="departments"></param>
+            <param name="roles"></param>
+            <param name="ip"></param>
+            <param name="minutes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.JwtManager.ModifyTokenLang(System.String,System.String,System.Int32)">
+            <summary>
+            改变语言,并且返回新token
+            </summary>
+            <param name="token"></param>
+            <param name="lang"></param>
+            <param name="minutes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.JwtManager.GenerateTicket(System.String)">
+            <summary>
+            生成url上面的Ticket,一般只有几秒有效期
+            </summary>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.JwtManager.DecodeTicket(System.String)">
+            <summary>
+            解析url上面的Ticket
+            </summary>
+            <param name="ticket"></param>
+            <returns>用户id,如果过期就返回""</returns>
+        </member>
+        <member name="M:SSO.Util.Client.JwtManager.GetAuthorization(Microsoft.AspNetCore.Http.HttpRequest,System.String)">
+            <summary>
+            获取cookie或者请求header中的jwt token
+            </summary>
+            <param name="request"></param>
+            <param name="cookieKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.Log4Net.ErrorLog(System.Exception)">
+            <summary>
+            错误日志 
+            </summary>
+            <param name="ex">异常信息</param>
+        </member>
+        <member name="M:SSO.Util.Client.Log4Net.ErrorLog(System.String)">
+            <summary>
+            错误日志 
+            </summary>
+            <param name="str">异常信息</param>
+        </member>
+        <member name="M:SSO.Util.Client.Log4Net.InfoLog(System.Exception)">
+            <summary>
+            文本日志
+            </summary>
+            <param name="ex"></param>
+        </member>
+        <member name="M:SSO.Util.Client.Log4Net.InfoLog(System.String)">
+            <summary>
+            文本日志
+            </summary>
+            <param name="str"></param>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.From">
+            <summary>
+            日志来源
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.QueryString">
+            <summary>
+            请求参数
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.Content">
+            <summary>
+            请求内容
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.UserId">
+            <summary>
+            日志关联人
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.UserName">
+            <summary>
+            日志关联人
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.UserHost">
+            <summary>
+            用户ip
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.UserAgent">
+            <summary>
+            用户代理
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.Time">
+            <summary>
+            响应时间(毫秒)
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.Exception">
+            <summary>
+            是否有错误
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.LogRecordAttribute">
+            <summary>
+            .net core 中request.Body默认读取一次就销毁了,所以该过滤器一定要在model binding之前执行,
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.LogRecordAttribute.RecordQuerystring">
+            <summary>
+            是否记录url查询
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.LogRecordAttribute.RecordContent">
+            <summary>
+            是否记录请求体
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.MessageCenterService.InsertLog(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64,System.Boolean)">
+            <summary>
+            记录日志
+            </summary>
+            <param name="from">日志来源</param>
+            <param name="type">日志类型</param>
+            <param name="id">日志唯一id</param>
+            <param name="content">日志内容</param>
+            <param name="userId">用户id</param>
+            <param name="userName">用户名称</param>
+            <param name="userHost">用户主机</param>
+            <param name="userAgent">用户代理</param>
+            <param name="time">时长</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.RandomExtention.RandomCode(System.Random,System.Int32)">
+            <summary>
+            获取随机字符串，
+            </summary>
+            <param name="random"></param>
+            <param name="numb">随机字符串个数</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.RandomExtention.GetRandomCodes(System.Random,System.Int32,System.Int32)">
+            <summary>
+            获取[0,max]之间的len个不重复随机整数列表
+            </summary>
+            <param name="random"></param>
+            <param name="max"></param>
+            <param name="len"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.RandomExtention.Probability(System.Random,System.Double)">
+            <summary>
+            概率获取
+            </summary>
+            <param name="random"></param>
+            <param name="percent">0-1</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.RandomExtention.RandomCodeHex(System.Random,System.Int32)">
+            <summary>
+            随机16精制字符串
+            </summary>
+            <param name="random"></param>
+            <param name="numb">16精制字符串长度</param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.ResponseModel`1">
+            <summary>
+            Action返回类
+            </summary>
+            <typeparam name="T">对象,不能为BsonDocument,如果为string,则string必须为json格式</typeparam>
+        </member>
+        <member name="T:SSO.Util.Client.ServiceModel`1">
+            <summary>
+            解析Action返回类
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SSO.Util.Client.StreamExtention.GetMD5(System.IO.Stream)">
+            <summary>
+            获取文件的MD5码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.StrToBuffer(System.String)">
+            <summary>
+            字符串转UTF8字节数组
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.Base64StrToBuffer(System.String)">
+            <summary>
+            base64字符串转UTF8字节数组
+            </summary>
+            <param name="base64Str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.StrToBase64(System.String)">
+            <summary>
+            string 转成 url 安全的base64 编码
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.Base64ToStr(System.String)">
+            <summary>
+            url 安全的base64 编码 转 string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.ReplaceJsonString(System.String)">
+            <summary>
+            替换由 ToJson() 转换的json字符串 中 ObjectId("") 和 ISODate("2020-05-30T08:50:10.048Z") 
+            </summary>
+            <param name="toJsonStr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.ReplaceStrictJsonString(System.String)">
+            <summary>
+            替换由 .ToJson(new JsonWriterSettings() { OutputMode = JsonOutputMode.Strict }) 转换的json字符串 中{"$date": ""} 和{"$oid": ""}
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.ReplaceHttpPrefix(System.String)">
+            <summary>
+            替换 http://www. 后者 https://www. 为""
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.SymmetricEncryptHelper">
+            <summary>
+            对称加密算法
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.AesEncode(System.String,System.String,System.Boolean)">
+            <summary>
+            Aes加密算法，替代des
+            </summary>
+            <param name="sourceString">待加密字符串</param>
+            <param name="key">base64形式的key,256位。如果为明文字符串则长度只能是：16/24/32</param>
+            <param name="isBase64Key">是否是base64形式的key</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.AesDecode(System.String,System.String,System.Boolean)">
+            <summary>
+            Aes解密算法
+            </summary>
+            <param name="secretString">密文</param>
+            <param name="key">base64形式的key，256位</param>
+            <param name="isBase64Key">是否是base64形式的key</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.DESEncode(System.String,System.String)">
+            <summary>
+            DES加密，8个长度的字符串秘钥（64位，其中第8、16、24、32、40、48、56、64位是校验位）,校验位不参与密码计算
+            所以可能会出现，不同的key加密出来的字符串是一样的，不同的key可以解密相同的字符串
+            </summary>
+            <param name="sourceString"></param>
+            <param name="key">字符串长度为8的key</param>
+            <returns>返回base64编码的密文</returns>
+        </member>
+        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.DESDecode(System.String,System.String)">
+            <summary>
+            DES解密
+            </summary>
+            <param name="secretString">base64加密字符串</param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.TripleDESEncode(System.String,System.String)">
+            <summary>
+            3DES加密，为DES向AES过度的版本
+            </summary>
+            <param name="sourceString">要加密的字符串</param>
+            <param name="key">base64形式的key</param>
+            <returns>返回base64编码的密文</returns>
+        </member>
+        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.TripleDESDecode(System.String,System.String)">
+            <summary>
+            3DES解密
+            </summary>
+            <param name="secretString">密文</param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="P:SSO.Util.Client.SymmetricEncryptHelper.GenerateDESKey">
+            <summary>
+            生成DES加密密钥
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:SSO.Util.Client.SymmetricEncryptHelper.GenerateTripleDESKey">
+            <summary>
+            生成TripleDES加密密钥
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.SymmetricEncryptHelper.GenerateAESKey">
+            <summary>
+            生成256位的AES加密密钥
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.ValidateModelStateAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            检测ModelState,对mvc框架自动Model验证以后的结果进行分析
+            </summary>
+            <param name="actionContext"></param>
+        </member>
+    </members>
+</doc>

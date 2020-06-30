@@ -71,6 +71,7 @@ namespace SSO.Util.Client
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public Dictionary<string, string> Sorts { get; set; }
+        public bool? Exception { get; set; }
         public int PageIndex { get => pageIndex; set => pageIndex = value; }
         public int PageSize { get => pageSize; set => pageSize = value; }
     }

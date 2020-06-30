@@ -14,7 +14,7 @@ namespace SSO.Util.Client
         {
             this.baseUrl = baseUrl;
         }
-        public string GetListJson(string from = null, string controller = null, string action = null, DateTime? startTime = null, DateTime? endTime = null, string userId = null, string userName = null, Dictionary<string, string> sorts = null, int pageIndex = 1, int pageSize = 10)
+        public string GetListJson(string from = null, string controller = null, string action = null, DateTime? startTime = null, DateTime? endTime = null, string userId = null, string userName = null, Dictionary<string, string> sorts = null, bool? exception = null, int pageIndex = 1, int pageSize = 10)
         {
             LogListModel logModel = new LogListModel()
             {
@@ -26,17 +26,18 @@ namespace SSO.Util.Client
                 UserId = userId,
                 UserName = userName,
                 Sorts = sorts,
+                Exception = exception,
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
             return requestHelper.Post(baseUrl.TrimEnd('/') + "/log/getlist?", logModel, null);
         }
-        public ServiceModel<List<LogModel>> GetList(string from = null, string controller = null, string action = null, DateTime? startTime = null, DateTime? endTime = null, string userId = null, string userName = null, Dictionary<string, string> sorts = null, int pageIndex = 1, int pageSize = 10)
+        public ServiceModel<List<LogModel>> GetList(string from = null, string controller = null, string action = null, DateTime? startTime = null, DateTime? endTime = null, string userId = null, string userName = null, Dictionary<string, string> sorts = null, bool? exception = null, int pageIndex = 1, int pageSize = 10)
         {
-            var result = GetListJson(from, controller, action, startTime, endTime, userId, userName, sorts, pageIndex, pageSize);
+            var result = GetListJson(from, controller, action, startTime, endTime, userId, userName, sorts, exception, pageIndex, pageSize);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<LogModel>>>(result);
         }
-        public string GetListSimpleJson(string from = null, string controller = null, string action = null, DateTime? startTime = null, DateTime? endTime = null, string userId = null, string userName = null, Dictionary<string, string> sorts = null, int pageIndex = 1, int pageSize = 10)
+        public string GetListSimpleJson(string from = null, string controller = null, string action = null, DateTime? startTime = null, DateTime? endTime = null, string userId = null, string userName = null, Dictionary<string, string> sorts = null, bool? exception = null, int pageIndex = 1, int pageSize = 10)
         {
             LogListModel logModel = new LogListModel()
             {
@@ -48,14 +49,15 @@ namespace SSO.Util.Client
                 UserId = userId,
                 UserName = userName,
                 Sorts = sorts,
+                Exception = exception,
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
             return requestHelper.Post(baseUrl.TrimEnd('/') + "/log/getlistsimple?", logModel, null);
         }
-        public ServiceModel<List<LogModel>> GetListSimple(string from = null, string controller = null, string action = null, DateTime? startTime = null, DateTime? endTime = null, string userId = null, string userName = null, Dictionary<string, string> sorts = null, int pageIndex = 1, int pageSize = 10)
+        public ServiceModel<List<LogModel>> GetListSimple(string from = null, string controller = null, string action = null, DateTime? startTime = null, DateTime? endTime = null, string userId = null, string userName = null, Dictionary<string, string> sorts = null, bool? exception = null, int pageIndex = 1, int pageSize = 10)
         {
-            var result = GetListSimpleJson(from, controller, action, startTime, endTime, userId, userName, sorts, pageIndex, pageSize);
+            var result = GetListSimpleJson(from, controller, action, startTime, endTime, userId, userName, sorts, exception, pageIndex, pageSize);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<LogModel>>>(result);
         }
         public string GetByIdJson(string id)

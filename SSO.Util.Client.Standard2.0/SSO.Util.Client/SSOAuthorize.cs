@@ -113,6 +113,11 @@ namespace SSO.Util.Client
                             filterContext.HttpContext.Response.Cookies.Append(CookieKey, authorization);
                         }
                     }
+                    else
+                    {
+                        filterContext.Result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + absoluteUrl);
+                        return;
+                    }
                 }
             }
             try
@@ -123,6 +128,7 @@ namespace SSO.Util.Client
             }
             catch (Exception ex) //token失效
             {
+                Log4Net.ErrorLog(ex);
                 var httpCookie = filterContext.HttpContext.Request.Cookies[CookieKey];
                 if (httpCookie != null)
                 {

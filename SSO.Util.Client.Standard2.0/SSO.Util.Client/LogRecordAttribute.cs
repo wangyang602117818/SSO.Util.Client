@@ -19,7 +19,7 @@ namespace SSO.Util.Client
     /// <summary>
     /// .net core 中request.Body默认读取一次就销毁了,所以该过滤器一定要在model binding之前执行,
     /// </summary>
-    public class LogRecordAttribute : Attribute, IResourceFilter
+    public class LogRecordAttribute : Attribute, IActionFilter, IResourceFilter
     {
         public string BaseUrl = AppSettings.GetValue("messageBaseUrl");
         public string SecretKey = AppSettings.GetValue("ssoSecretKey");
@@ -34,15 +34,39 @@ namespace SSO.Util.Client
         public bool RecordContent = true;
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
-            //验证配置文件
-            if (!VerifyConfig(context)) return;
             context.HttpContext.Request.EnableBuffering();
-            context.HttpContext.Items.Add("log_time_start", DateTime.UtcNow.UTCMillisecondTimeStamp());
         }
         public void OnResourceExecuted(ResourceExecutedContext context)
         {
-            //没通过验证的请求不记录日志,和.netframework版本保持一致
-            if (!context.ModelState.IsValid) return;
+        }
+        public bool VerifyConfig(ActionExecutingContext filterContext)
+        {
+            if (BaseUrl.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.messageBaseUrl_not_config, "");
+                return false;
+            }
+            if (SecretKey.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.secretKey_not_config, "");
+                return false;
+            }
+            if (CookieKey.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.cookieKey_not_config, "");
+                return false;
+            }
+            return true;
+        }
+
+        public void OnActionExecuting(ActionExecutingContext context)
+        {
+            //验证配置文件
+            if (!VerifyConfig(context)) return;
+            context.HttpContext.Items.Add("log_time_start", DateTime.UtcNow.UTCMillisecondTimeStamp());
+        }
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
             var actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
             IEnumerable<CustomAttributeData> methodAttributes = actionDescriptor.MethodInfo.CustomAttributes;
             IEnumerable<CustomAttributeData> controllerAttributes = actionDescriptor.ControllerTypeInfo.CustomAttributes;
@@ -98,25 +122,6 @@ namespace SSO.Util.Client
             var time = DateTime.UtcNow.UTCMillisecondTimeStamp() - (long)context.HttpContext.Items["log_time_start"];
             bool exception = context.Exception != null;
             messageService.InsertLog(from.ReplaceHttpPrefix().TrimEnd('/'), controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
-        }
-        public bool VerifyConfig(ResourceExecutingContext filterContext)
-        {
-            if (BaseUrl.IsNullOrEmpty())
-            {
-                filterContext.Result = new ResponseModel<string>(ErrorCode.messageBaseUrl_not_config, "");
-                return false;
-            }
-            if (SecretKey.IsNullOrEmpty())
-            {
-                filterContext.Result = new ResponseModel<string>(ErrorCode.secretKey_not_config, "");
-                return false;
-            }
-            if (CookieKey.IsNullOrEmpty())
-            {
-                filterContext.Result = new ResponseModel<string>(ErrorCode.cookieKey_not_config, "");
-                return false;
-            }
-            return true;
         }
     }
 }
