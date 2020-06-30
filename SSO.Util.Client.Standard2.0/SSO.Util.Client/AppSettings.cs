@@ -22,21 +22,13 @@ namespace SSO.Util.Client
         {
             string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var builder = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(AppContext.BaseDirectory));
+            .SetBasePath(Directory.GetCurrentDirectory());
+            var jsonFile = $"appsettings.json";
             if (environment == "Development")
             {
-                builder
-                    .AddJsonFile(
-                        Path.Combine(AppContext.BaseDirectory, string.Format("..{0}..{0}..{0}", Path.DirectorySeparatorChar), $"appsettings.{environment}.json"),
-                        optional: false
-                    );
+                jsonFile = "appsettings.Development.json";
             }
-            else
-            {
-                builder
-                    .AddJsonFile($"appsettings.{environment}.json", optional: false);
-            }
-            Configuration = builder.Build();
+            Configuration = builder.AddJsonFile(jsonFile, optional: false).Build();
         }
         /// <summary>
         /// 获取配置文件
@@ -54,7 +46,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public static string GetAbsoluteUri(HttpRequest httpRequest)
         {
-            return httpRequest.Scheme + "://" + httpRequest.Host.ToString() + httpRequest.Path.ToString() + httpRequest.QueryString.ToString();
+            return httpRequest.Scheme + "://" + httpRequest.Host.ToString() + httpRequest.PathBase.Value + httpRequest.Path.Value + httpRequest.QueryString.ToString();
         }
     }
 }
