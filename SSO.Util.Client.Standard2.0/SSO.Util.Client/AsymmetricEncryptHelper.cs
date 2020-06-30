@@ -17,7 +17,7 @@ namespace SSO.Util.Client
         /// RSA加密
         /// </summary>
         /// <param name="sourceString">需要加密的字符串</param>
-        /// <param name="key">base64形式的key</param>
+        /// <param name="pubKey">base64形式的key</param>
         /// <returns></returns>
         public static string RSAEncode(string sourceString, string pubKey)
         {
@@ -45,7 +45,7 @@ namespace SSO.Util.Client
         }
         /// <summary>          
         /// 将pem格式公钥转换为RSAParameters         
-        /// </summary> <param name="pemFileConent">pem公钥内容</param>         
+        /// </summary> <param name="pemPubKey">pem公钥内容</param>         
         /// <returns>转换得到的RSAParamenters</returns>          
         private static RSAParameters ParseFromPemPublicKey(string pemPubKey)
         {
@@ -63,7 +63,7 @@ namespace SSO.Util.Client
         /// <summary>          
         /// 将pem格式私钥转换为RSAParameters,仅支持pkcs1        
         /// </summary>          
-        /// <param name="pemFileConent">pem私钥内容</param>        
+        /// <param name="pemPriKey">pem私钥内容</param>        
         /// <returns>转换得到的RSAParamenters</returns>         
         private static RSAParameters ParseFromPemPrivateKey(string pemPriKey)
         {
@@ -172,7 +172,7 @@ namespace SSO.Util.Client
         /// <summary>
         /// pkcs8转pkcs1
         /// </summary>
-        /// <param name="pkcs8"></param>
+        /// <param name="pkcs8str"></param>
         /// <returns></returns>
         public static string ConverToPkcs1(string pkcs8str)
         {

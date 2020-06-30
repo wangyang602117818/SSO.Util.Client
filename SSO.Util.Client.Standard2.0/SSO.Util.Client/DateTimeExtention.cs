@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// 时间扩展类
+    /// </summary>
     public static class DateTimeExtention
     {
         /// <summary>
