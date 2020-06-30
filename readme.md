@@ -1,7 +1,6 @@
 ﻿# SSO.Client 使用文档
 该工具集成在 .NetFramework 或者 .netcore 的项目中.
 ## 过滤器
----
 ### .netframework
 ```
 filters.Add(new MyHandleErrorAttribute());  //全局错误处理过滤器
@@ -23,7 +22,6 @@ services.AddControllers(options =>
 - `AllowAnonymousAttribute`:  //匿名验证过滤器
 - `NoneLogRecordAttribute`:   //不记录日志过滤器
 ## 配置文件
----
 ### .netframework
 ```
 <add key="ssoBaseUrl" value=""/>  <!--项目的基本地址-->
