@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -52,7 +53,7 @@ namespace SSO.Util.Client
             MessageCenterService messageService = new MessageCenterService(messageBaseUrl);
             HttpRequestBase request = filterContext.HttpContext.Request;
             //日志来源
-            var from = request.Url.Scheme + "://" + request.Url.Host + ":" + request.Url.Port + request.ApplicationPath;
+            var from = AppSettings.GetApplicationUrl(request);
             //不使用路由中的字符串因为用户可能输入大小写,不利于统计
             var controller = reflectedActionDescriptor.ControllerDescriptor.ControllerName;
             var action = reflectedActionDescriptor.MethodInfo.Name;
@@ -70,10 +71,21 @@ namespace SSO.Util.Client
             var content = "*";
             if (RecordContent)
             {
-                Stream sm = request.InputStream;
-                sm.Position = 0;
-                content = (new StreamReader(sm)).ReadToEnd().Replace("\n", "").Replace("\t", "").Replace("\r", "");
-                sm.Position = 0;
+                var files = request.Files;
+                if (files.Count > 0)
+                {
+                    List<string> fileNames = new List<string>();
+                    for (var i = 0; i < files.Count; i++)
+                        fileNames.Add(files[i].FileName);
+                    content = string.Join(",", fileNames);
+                }
+                else
+                {
+                    Stream sm = request.InputStream;
+                    sm.Position = 0;
+                    content = (new StreamReader(sm)).ReadToEnd().Replace("\n", "").Replace("\t", "").Replace("\r", "");
+                    sm.Position = 0;
+                }
             }
             string userId = "", userName = "";
             string authorization = JwtManager.GetAuthorization(request, cookieKey);

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace SSO.Util.Client
 {
@@ -24,6 +25,24 @@ namespace SSO.Util.Client
         public static string GetValue(string key)
         {
             return ConfigurationManager.AppSettings[key];
+        }
+        /// <summary>
+        /// 获取应用程序的根路径
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static string GetApplicationUrl(HttpRequestBase request)
+        {
+            return request.Url.Scheme + "://" + request.Url.Host + ":" + request.Url.Port + request.ApplicationPath;
+        }
+        /// <summary>
+        /// 获取当前请求的完整路径
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static string GetAbsoluteUri(HttpRequestBase request)
+        {
+            return request.Url.Scheme + "://" + request.Url.Host + ":" + request.Url.Port + request.ApplicationPath;
         }
     }
 }

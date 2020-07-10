@@ -40,7 +40,16 @@ namespace SSO.Util.Client
             return Configuration.GetSection(key).Value;
         }
         /// <summary>
-        /// 获取系统的当前url
+        /// 获取应用程序的根路径
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static string GetApplicationUrl(HttpRequest request)
+        {
+            return request.Scheme + "://" + request.Host + request.PathBase.Value;
+        }
+        /// <summary>
+        /// 获取当前请求的完整路径
         /// </summary>
         /// <param name="httpRequest"></param>
         /// <returns></returns>

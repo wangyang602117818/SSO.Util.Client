@@ -98,7 +98,8 @@ namespace SSO.Util.Client
                 }
                 else
                 {
-                    authorization = GetTokenByTicket(ticket, request.HttpContext.Connection.RemoteIpAddress.ToString());
+                    string from = AppSettings.GetApplicationUrl(request).ReplaceHttpPrefix().TrimEnd('/');
+                    authorization = GetTokenByTicket(from, ticket, request.HttpContext.Connection.RemoteIpAddress.ToString());
                     if (!string.IsNullOrEmpty(authorization))
                     {
                         if (CookieTime != "session")
@@ -147,9 +148,9 @@ namespace SSO.Util.Client
             if (roles.Intersect(dataRoles).Count() > 0) return true;
             return false;
         }
-        public string GetTokenByTicket(string ticket, string audience)
+        public string GetTokenByTicket(string from, string ticket, string audience)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseUrl.TrimEnd('/') + "/sso/gettoken" + "?ticket=" + ticket + "&ip=" + audience);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseUrl.TrimEnd('/') + "/sso/gettoken?from=" + from + "&ticket=" + ticket + "&ip=" + audience);
             request.Method = "get";
             using (WebResponse response = request.GetResponse())
             {

@@ -58,7 +58,6 @@ namespace SSO.Util.Client
             }
             return true;
         }
-
         public void OnActionExecuting(ActionExecutingContext context)
         {
             //验证配置文件
@@ -85,7 +84,7 @@ namespace SSO.Util.Client
             if (!isLog) return;
             MessageCenterService messageService = new MessageCenterService(BaseUrl);
             HttpRequest request = context.HttpContext.Request;
-            var from = request.Scheme + "://" + request.Host + request.PathBase.Value;
+            var from = AppSettings.GetApplicationUrl(request);
             //不使用路由中的字符串因为用户可能输入大小写,不利于统计
             var controller = actionDescriptor.ControllerName;
             var action = actionDescriptor.ActionName;
@@ -103,10 +102,21 @@ namespace SSO.Util.Client
             var content = "*";
             if (RecordContent)
             {
-                request.Body.Seek(0, SeekOrigin.Begin);
-                var reader = new StreamReader(request.Body);
-                content = reader.ReadToEndAsync().Result.Replace("\n", "").Replace("\t", "").Replace("\r", "");
-                request.Body.Seek(0, SeekOrigin.Begin);
+                var hasForm = request.HasFormContentType;
+                if (hasForm && request.Form.Files.Count > 0)
+                {
+                    List<string> fileNames = new List<string>();
+                    for (var i = 0; i < request.Form.Files.Count; i++)
+                        fileNames.Add(request.Form.Files[i].FileName);
+                    content = string.Join(",", fileNames);
+                }
+                else
+                {
+                    request.Body.Seek(0, SeekOrigin.Begin);
+                    var reader = new StreamReader(request.Body);
+                    content = reader.ReadToEndAsync().Result.Replace("\n", "").Replace("\t", "").Replace("\r", "");
+                    request.Body.Seek(0, SeekOrigin.Begin);
+                }
             }
             string userId = "", userName = "";
             string authorization = JwtManager.GetAuthorization(request, CookieKey);
