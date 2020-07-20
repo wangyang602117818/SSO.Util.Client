@@ -42,6 +42,7 @@ namespace SSO.Util.Client
                 UserHost = userHost,
                 UserAgent = userAgent,
                 Time = time,
+                CountPerMinute = 1,
                 Exception = exception,
                 CreateTime = DateTime.Now
             };

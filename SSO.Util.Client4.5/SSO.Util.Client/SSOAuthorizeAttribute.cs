@@ -18,10 +18,15 @@ namespace SSO.Util.Client
 {
     public class SSOAuthorizeAttribute : AuthorizeAttribute
     {
-        public static string secretKey = AppSettings.GetValue("ssoSecretKey");
-        public static string baseUrl = AppSettings.GetValue("ssoBaseUrl");
-        public static string cookieKey = AppSettings.GetValue("ssoCookieKey");
-        public static string cookieTime = AppSettings.GetValue("ssoCookieTime");
+        public static string SecretKey = AppSettings.GetValue("ssoSecretKey");
+        public static string BaseUrl = AppSettings.GetValue("ssoBaseUrl");
+        public static string CookieKey = AppSettings.GetValue("ssoCookieKey");
+        public static string CookieTime = AppSettings.GetValue("ssoCookieTime");
+        public bool UnAuthorizedRedirect = true;
+        public SSOAuthorizeAttribute(bool unAuthorizedRedirect = true)
+        {
+            UnAuthorizedRedirect = unAuthorizedRedirect;
+        }
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             var reflectedActionDescriptor = (ReflectedActionDescriptor)filterContext.ActionDescriptor;
@@ -54,12 +59,13 @@ namespace SSO.Util.Client
             if (!VerifyConfig(filterContext)) return;
             HttpRequestBase request = filterContext.HttpContext.Request;
             var ssourl = request.QueryString["ssourls"];
+            var absoluteUrl = AppSettings.GetAbsoluteUri(request);
             if (!string.IsNullOrEmpty(ssourl)) //sso 退出
             {
                 var returnUrl = request.QueryString["returnUrl"];
                 ////////清除本站cookie
                 List<string> ssoUrls = JsonSerializerHelper.Deserialize<List<string>>(Encoding.UTF8.GetString(Convert.FromBase64String(Base64SecureURL.Decode(ssourl))));
-                var cookie = request.Cookies[cookieKey];
+                var cookie = request.Cookies[CookieKey];
                 if (cookie != null)
                 {
                     cookie.Expires = DateTime.Now.AddYears(-1);
@@ -68,7 +74,7 @@ namespace SSO.Util.Client
                 /////////////////////
                 for (var i = 0; i < ssoUrls.Count; i++)
                 {
-                    if (request.Url.AbsoluteUri.Contains(ssoUrls[i]))
+                    if (absoluteUrl.Contains(ssoUrls[i]))
                     {
                         ssoUrls.RemoveAt(i);
                         break;
@@ -81,17 +87,17 @@ namespace SSO.Util.Client
                 }
                 else //最后一个
                 {
-                    filterContext.Result = new RedirectResult(baseUrl + "?returnUrl=" + returnUrl);
+                    filterContext.Result = new RedirectResult(BaseUrl + "?returnUrl=" + returnUrl);
                 }
                 return;
             }
-            string authorization = JwtManager.GetAuthorization(request, cookieKey);
+            string authorization = JwtManager.GetAuthorization(request, CookieKey);
             string ticket = request.QueryString["ticket"];
             if (string.IsNullOrEmpty(authorization))
             {
                 if (string.IsNullOrEmpty(ticket))
                 {
-                    filterContext.Result = new RedirectResult(baseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + request.Url);
+                    filterContext.Result = GetActionResult(absoluteUrl);
                     return;
                 }
                 else
@@ -100,37 +106,43 @@ namespace SSO.Util.Client
                     authorization = GetTokenByTicket(from, ticket, request.UserHostAddress);
                     if (!string.IsNullOrEmpty(authorization))
                     {
-                        HttpCookie httpCookie = new HttpCookie(cookieKey, authorization);
-                        if (cookieTime != "session")
+                        HttpCookie httpCookie = new HttpCookie(CookieKey, authorization);
+                        if (CookieTime != "session")
                         {
-                            httpCookie.Expires = DateTime.Now.AddMinutes(Convert.ToInt32(cookieTime));
+                            httpCookie.Expires = DateTime.Now.AddMinutes(Convert.ToInt32(CookieTime));
                         }
                         filterContext.HttpContext.Response.Cookies.Add(httpCookie);
                     }
                     else
                     {
-                        filterContext.Result = new RedirectResult(baseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + request.Url);
+                        filterContext.Result = GetActionResult(absoluteUrl);
                         return;
                     }
                 }
             }
             try
             {
-                var principal = JwtManager.ParseAuthorization(authorization, secretKey);
+                var principal = JwtManager.ParseAuthorization(authorization, SecretKey);
                 filterContext.HttpContext.User = principal;
                 if (!CheckRole(roles, authorization)) filterContext.Result = new ResponseModel<string>(ErrorCode.authorize_fault, "");
             }
             catch (Exception ex) //token失效
             {
                 Log4Net.ErrorLog(ex);
-                HttpCookie httpCookie = filterContext.HttpContext.Request.Cookies[cookieKey];
+                HttpCookie httpCookie = filterContext.HttpContext.Request.Cookies[CookieKey];
                 if (httpCookie != null)
                 {
                     httpCookie.Expires = DateTime.Now.AddYears(-1);
                     filterContext.HttpContext.Response.Cookies.Add(httpCookie);
                 }
-                filterContext.Result = new RedirectResult(baseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + request.Url);
+                filterContext.Result = GetActionResult(absoluteUrl);
             }
+        }
+        private ActionResult GetActionResult(string returnUrl)
+        {
+            ActionResult result = new ResponseModel<string>(ErrorCode.authorize_fault, "");
+            if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + returnUrl);
+            return result;
         }
         private bool CheckRole(IEnumerable<string> roles, string authorization)
         {
@@ -143,7 +155,7 @@ namespace SSO.Util.Client
         }
         public static string GetTokenByTicket(string from, string ticket, string audience)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl.TrimEnd('/') + "/sso/gettoken" + "?from=" + from + "&ticket=" + ticket + "&ip=" + audience);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseUrl.TrimEnd('/') + "/sso/gettoken" + "?from=" + from + "&ticket=" + ticket + "&ip=" + audience);
             request.Method = "get";
             using (WebResponse response = request.GetResponse())
             {
@@ -156,7 +168,7 @@ namespace SSO.Util.Client
         }
         public static string[] GetRoles(string authorization)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl.TrimEnd('/') + "/user/getroles");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseUrl.TrimEnd('/') + "/user/getroles");
             request.Method = "get";
             request.Headers.Add("Authorization", authorization);
             using (WebResponse response = request.GetResponse())
@@ -170,22 +182,22 @@ namespace SSO.Util.Client
         }
         public bool VerifyConfig(AuthorizationContext filterContext)
         {
-            if (baseUrl.IsNullOrEmpty())
+            if (BaseUrl.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.baseUrl_not_config, "");
                 return false;
             }
-            if (secretKey.IsNullOrEmpty())
+            if (SecretKey.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.secretKey_not_config, "");
                 return false;
             }
-            if (cookieKey.IsNullOrEmpty())
+            if (CookieKey.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.cookieKey_not_config, "");
                 return false;
             }
-            if (cookieTime.IsNullOrEmpty())
+            if (CookieTime.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.cookieTime_not_config, "");
                 return false;

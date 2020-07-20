@@ -36,6 +36,10 @@
         invalid_password = 205,
         file_type_not_match = 206,
         /// <summary>
+        /// 请求已经超过次数
+        /// </summary>
+        requests_has_been_exceeded = 220,
+        /// <summary>
         /// 已存在
         /// </summary>
         record_exist = 400,

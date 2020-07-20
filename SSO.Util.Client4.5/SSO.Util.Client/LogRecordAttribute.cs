@@ -25,6 +25,11 @@ namespace SSO.Util.Client
         /// 是否记录请求体
         /// </summary>
         public bool RecordContent = true;
+        public LogRecordAttribute(bool recordQuerystring = true, bool recordContent = true)
+        {
+            RecordQuerystring = recordQuerystring;
+            RecordContent = recordContent;
+        }
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             //验证配置文件

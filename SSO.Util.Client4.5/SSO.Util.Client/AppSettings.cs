@@ -42,7 +42,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public static string GetAbsoluteUri(HttpRequestBase request)
         {
-            return request.Url.Scheme + "://" + request.Url.Host + ":" + request.Url.Port + request.ApplicationPath;
+            return request.Url.AbsoluteUri;
         }
     }
 }

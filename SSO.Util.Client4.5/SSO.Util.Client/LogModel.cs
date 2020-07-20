@@ -45,6 +45,10 @@ namespace SSO.Util.Client
         /// </summary>
         public long Time { get; set; }
         /// <summary>
+        /// 一分钟请求的次数
+        /// </summary>
+        public int CountPerMinute { get; set; }
+        /// <summary>
         /// 是否有错误
         /// </summary>
         public bool Exception { get; set; }

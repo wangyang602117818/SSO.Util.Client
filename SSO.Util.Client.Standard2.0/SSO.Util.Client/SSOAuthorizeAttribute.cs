@@ -24,6 +24,11 @@ namespace SSO.Util.Client
         public string CookieKey = AppSettings.GetValue("ssoCookieKey");
         public string CookieTime = AppSettings.GetValue("ssoCookieTime");
         public string Roles { get; set; }
+        public bool UnAuthorizedRedirect = true;
+        public SSOAuthorizeAttribute(bool unAuthorizedRedirect = true)
+        {
+            UnAuthorizedRedirect = unAuthorizedRedirect;
+        }
         public void OnAuthorization(AuthorizationFilterContext filterContext)
         {
             var actionDescriptor = (ControllerActionDescriptor)filterContext.ActionDescriptor;
@@ -93,7 +98,7 @@ namespace SSO.Util.Client
             {
                 if (string.IsNullOrEmpty(ticket))
                 {
-                    filterContext.Result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + absoluteUrl);
+                    filterContext.Result = GetActionResult(absoluteUrl);
                     return;
                 }
                 else
@@ -116,7 +121,7 @@ namespace SSO.Util.Client
                     }
                     else
                     {
-                        filterContext.Result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + absoluteUrl);
+                        filterContext.Result = GetActionResult(absoluteUrl);
                         return;
                     }
                 }
@@ -135,10 +140,15 @@ namespace SSO.Util.Client
                 {
                     filterContext.HttpContext.Response.Cookies.Delete(CookieKey);
                 }
-                filterContext.Result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + absoluteUrl);
+                filterContext.Result = GetActionResult(absoluteUrl);
             }
         }
-
+        private ActionResult GetActionResult(string returnUrl)
+        {
+            ActionResult result = new ResponseModel<string>(ErrorCode.authorize_fault, "");
+            if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + returnUrl);
+            return result;
+        }
         private bool CheckRole(IEnumerable<string> roles, string authorization)
         {
             if (roles.Count() == 0) return true;

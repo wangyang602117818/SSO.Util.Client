@@ -32,31 +32,17 @@ namespace SSO.Util.Client
         /// 是否记录请求体
         /// </summary>
         public bool RecordContent = true;
+        public LogRecordAttribute(bool recordQuerystring = true, bool recordContent = true)
+        {
+            RecordQuerystring = recordQuerystring;
+            RecordContent = recordContent;
+        }
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
             context.HttpContext.Request.EnableBuffering();
         }
         public void OnResourceExecuted(ResourceExecutedContext context)
         {
-        }
-        public bool VerifyConfig(ActionExecutingContext filterContext)
-        {
-            if (BaseUrl.IsNullOrEmpty())
-            {
-                filterContext.Result = new ResponseModel<string>(ErrorCode.messageBaseUrl_not_config, "");
-                return false;
-            }
-            if (SecretKey.IsNullOrEmpty())
-            {
-                filterContext.Result = new ResponseModel<string>(ErrorCode.secretKey_not_config, "");
-                return false;
-            }
-            if (CookieKey.IsNullOrEmpty())
-            {
-                filterContext.Result = new ResponseModel<string>(ErrorCode.cookieKey_not_config, "");
-                return false;
-            }
-            return true;
         }
         public void OnActionExecuting(ActionExecutingContext context)
         {
@@ -132,6 +118,25 @@ namespace SSO.Util.Client
             var time = DateTime.UtcNow.UTCMillisecondTimeStamp() - (long)context.HttpContext.Items["log_time_start"];
             bool exception = context.Exception != null;
             messageService.InsertLog(from.ReplaceHttpPrefix().TrimEnd('/'), controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
+        }
+        public bool VerifyConfig(ActionExecutingContext filterContext)
+        {
+            if (BaseUrl.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.messageBaseUrl_not_config, "");
+                return false;
+            }
+            if (SecretKey.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.secretKey_not_config, "");
+                return false;
+            }
+            if (CookieKey.IsNullOrEmpty())
+            {
+                filterContext.Result = new ResponseModel<string>(ErrorCode.cookieKey_not_config, "");
+                return false;
+            }
+            return true;
         }
     }
 }
