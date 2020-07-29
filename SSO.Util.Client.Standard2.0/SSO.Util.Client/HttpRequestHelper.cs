@@ -9,8 +9,21 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// http请求类
+    /// </summary>
     public class HttpRequestHelper
     {
+        /// <summary>
+        /// 发送文件
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="type"></param>
+        /// <param name="fileName"></param>
+        /// <param name="fileStream"></param>
+        /// <param name="paras"></param>
+        /// <param name="headers"></param>
+        /// <returns></returns>
         public string PostFile(string url, string type, string fileName, Stream fileStream, Dictionary<string, string> paras = null, Dictionary<string, string> headers = null)
         {
             string boundary = "----" + Guid.NewGuid().ToString().Replace("-", "").Substring(0, 30);
@@ -61,6 +74,13 @@ namespace SSO.Util.Client
                 }
             }
         }
+        /// <summary>
+        /// post请求
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="obj"></param>
+        /// <param name="headers"></param>
+        /// <returns></returns>
         public string Post(string url, object obj, Dictionary<string, string> headers)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -86,6 +106,12 @@ namespace SSO.Util.Client
                 }
             }
         }
+        /// <summary>
+        /// get请求
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="headers"></param>
+        /// <returns></returns>
         public string Get(string url, Dictionary<string, string> headers)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -104,6 +130,34 @@ namespace SSO.Util.Client
                     return reader.ReadToEnd();
                 }
             }
+        }
+        /// <summary>
+        /// 下载文件
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="headers"></param>
+        /// <returns></returns>
+        public DownloadFileItem GetFile(string url, Dictionary<string, string> headers)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "get";
+            if (headers != null)
+            {
+                foreach (var kv in headers)
+                {
+                    request.Headers.Add(kv.Key, kv.Value);
+                }
+            }
+            WebResponse response = request.GetResponse();
+            if (response.Headers["Content-Disposition"] == null) return new DownloadFileItem() { };
+            string name = response.Headers["Content-Disposition"].Split('=')[1].Trim('"');
+            return new DownloadFileItem()
+            {
+                FileName = name,
+                ContentType = response.ContentType,
+                ContentLength = response.ContentLength,
+                FileStream = response.GetResponseStream()
+            };
         }
     }
 }

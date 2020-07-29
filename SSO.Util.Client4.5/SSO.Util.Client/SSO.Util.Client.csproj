@@ -31,8 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>..\..\SSO.Util.Client.Standard2.0\SSO.Util.Client\bin\Release\net45\SSO.Util.Client.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -53,13 +52,13 @@
     <Compile Include="AsymmetricEncryptHelper.cs" />
     <Compile Include="Base64SecureURL.cs" />
     <Compile Include="DateTimeExtention.cs" />
+    <Compile Include="DownloadFileItem.cs" />
     <Compile Include="ErrorCode.cs" />
     <Compile Include="HashEncryptHelper.cs" />
     <Compile Include="HttpRequestHelper.cs" />
     <Compile Include="ImageExtention.cs" />
     <Compile Include="JsonSerializerHelper.cs" />
     <Compile Include="JwtManager.cs" />
-    <Compile Include="KeyValueForm.cs" />
     <Compile Include="Log4Net.cs" />
     <Compile Include="LogRecordAttribute.cs" />
     <Compile Include="LogService.cs" />
@@ -75,7 +74,7 @@
     <Compile Include="StreamExtention.cs" />
     <Compile Include="StringExtention.cs" />
     <Compile Include="SymmetricEncryptHelper.cs" />
-    <Compile Include="ThrottlingFilterAttribute.cs" />
+    <Compile Include="ThrottlingAttribute.cs" />
     <Compile Include="UserData.cs" />
     <Compile Include="ValidateModelStateAttribute.cs" />
   </ItemGroup>

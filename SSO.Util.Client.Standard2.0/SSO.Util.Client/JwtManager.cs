@@ -40,9 +40,7 @@ namespace SSO.Util.Client
         /// <param name="userId"></param>
         /// <param name="userName"></param>
         /// <param name="lang"></param>
-        /// <param name="company"></param>
-        /// <param name="departments"></param>
-        /// <param name="roles"></param>
+        /// <param name="extra"></param>
         /// <param name="ip"></param>
         /// <param name="minutes"></param>
         /// <returns></returns>
@@ -145,6 +143,11 @@ namespace SSO.Util.Client
             if (string.IsNullOrEmpty(authorization)) authorization = request.Headers["Authorization"].ToString() ?? "";
             return authorization;
         }
+        /// <summary>
+        /// 解析出用户信息
+        /// </summary>
+        /// <param name="User"></param>
+        /// <returns></returns>
         public static UserData ParseUserData(ClaimsPrincipal User)
         {
             return new UserData()
@@ -154,11 +157,25 @@ namespace SSO.Util.Client
                 Lang = User.Claims.Where(w => w.Type == "Lang").Select(s => s.Value).FirstOrDefault(),
             };
         }
+        /// <summary>
+        /// 根据cookie和key解析用户信息
+        /// </summary>
+        /// <param name="authorization"></param>
+        /// <param name="secretKey"></param>
+        /// <param name="httpContext"></param>
+        /// <returns></returns>
         public static UserData ParseUserData(string authorization, string secretKey, HttpContext httpContext)
         {
             var principal = ParseAuthorization(authorization, secretKey, httpContext);
             return ParseUserData(principal);
         }
+        /// <summary>
+        /// 根据cookie和key解析用户信息
+        /// </summary>
+        /// <param name="authorization"></param>
+        /// <param name="secretKey"></param>
+        /// <param name="httpContext"></param>
+        /// <returns></returns>
         public static ClaimsPrincipal ParseAuthorization(string authorization, string secretKey, HttpContext httpContext)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

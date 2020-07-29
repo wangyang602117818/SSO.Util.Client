@@ -7,6 +7,9 @@ using System.Web.Mvc;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// model类验证过滤器
+    /// </summary>
     public class ValidateModelStateAttribute : ActionFilterAttribute
     {
         /// <summary>

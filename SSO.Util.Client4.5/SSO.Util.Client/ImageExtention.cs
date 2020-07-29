@@ -9,8 +9,16 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// 图片扩展方法
+    /// </summary>
     public static class ImageExtention
     {
+        /// <summary>
+        /// 根据后缀判断图片类型
+        /// </summary>
+        /// <param name="ext"></param>
+        /// <returns></returns>
         public static ImageFormat GetImageFormat(string ext)
         {
             switch (ext.ToLower())
@@ -32,6 +40,11 @@ namespace SSO.Util.Client
             }
             return ImageFormat.Jpeg;
         }
+        /// <summary>
+        /// 获取图片的content-type
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
         public static string GetContentType(byte[] buffer)
         {
             switch (GetImageType(buffer).ToLower())
@@ -57,16 +70,31 @@ namespace SSO.Util.Client
             }
             return "image/*";
         }
+        /// <summary>
+        /// 根据流获取图片类型 result: JPG|TIFF|BMP|GIF|PNG|XML|""
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         public static string GetImageType(Stream stream)
         {
             string header = GetHeaderInfo(stream).ToUpper();
             return GetImageTypeFromHeader(header);
         }
+        /// <summary>
+        /// 根据字节获取图片类型 result: JPG|TIFF|BMP|GIF|PNG|XML|""
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
         public static string GetImageType(byte[] buffer)
         {
             string header = GetHeaderInfo(buffer).ToUpper();
             return GetImageTypeFromHeader(header);
         }
+        /// <summary>
+        /// 根据header获取图片类型 result: JPG|TIFF|BMP|GIF|PNG|XML|""
+        /// </summary>
+        /// <param name="header"></param>
+        /// <returns></returns>
         public static string GetImageTypeFromHeader(string header)
         {
             if (header.StartsWith("FFD8FF"))
@@ -98,7 +126,7 @@ namespace SSO.Util.Client
                 return "";
             }
         }
-        public static string GetHeaderInfo(byte[] buffer)
+        private static string GetHeaderInfo(byte[] buffer)
         {
             StringBuilder sb = new StringBuilder();
             for (var i = 0; i < 8; i++)
@@ -107,7 +135,7 @@ namespace SSO.Util.Client
             }
             return sb.ToString();
         }
-        public static string GetHeaderInfo(Stream stream)
+        private static string GetHeaderInfo(Stream stream)
         {
             byte[] buffer = new byte[8];
             BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true);
@@ -118,12 +146,22 @@ namespace SSO.Util.Client
                 sb.Append(b.ToString("X2"));
             return sb.ToString();
         }
+        /// <summary>
+        /// 获取Image的宽高
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         public static Size GetImageSize(this Stream stream)
         {
             Image image = Image.FromStream(stream);
             stream.Position = 0;
             return image.Size;
         }
+        /// <summary>
+        /// 获取Image的宽高
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
         public static Size GetImageSize(this byte[] bytes)
         {
             using (Stream stream = new MemoryStream(bytes))

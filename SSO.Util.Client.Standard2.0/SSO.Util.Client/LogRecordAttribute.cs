@@ -21,9 +21,9 @@ namespace SSO.Util.Client
     /// </summary>
     public class LogRecordAttribute : Attribute, IActionFilter, IResourceFilter
     {
-        public string BaseUrl = AppSettings.GetValue("messageBaseUrl");
-        public string SecretKey = AppSettings.GetValue("ssoSecretKey");
-        public string CookieKey = AppSettings.GetValue("ssoCookieKey");
+        private string BaseUrl = AppSettings.GetValue("messageBaseUrl");
+        private string SecretKey = AppSettings.GetValue("ssoSecretKey");
+        private string CookieKey = AppSettings.GetValue("ssoCookieKey");
         /// <summary>
         /// 是否记录url查询
         /// </summary>
@@ -32,24 +32,44 @@ namespace SSO.Util.Client
         /// 是否记录请求体
         /// </summary>
         public bool RecordContent = true;
+        /// <summary>
+        /// 日志记录
+        /// </summary>
+        /// <param name="recordQuerystring"></param>
+        /// <param name="recordContent"></param>
         public LogRecordAttribute(bool recordQuerystring = true, bool recordContent = true)
         {
             RecordQuerystring = recordQuerystring;
             RecordContent = recordContent;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
             context.HttpContext.Request.EnableBuffering();
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public void OnResourceExecuted(ResourceExecutedContext context)
         {
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            //验证配置文件
             if (!VerifyConfig(context)) return;
             context.HttpContext.Items.Add("log_time_start", DateTime.UtcNow.UTCMillisecondTimeStamp());
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public void OnActionExecuted(ActionExecutedContext context)
         {
             var actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
@@ -119,6 +139,11 @@ namespace SSO.Util.Client
             bool exception = context.Exception != null;
             messageService.InsertLog(from.ReplaceHttpPrefix().TrimEnd('/'), controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
         }
+        /// <summary>
+        /// 验证配置文件
+        /// </summary>
+        /// <param name="filterContext"></param>
+        /// <returns></returns>
         public bool VerifyConfig(ActionExecutingContext filterContext)
         {
             if (BaseUrl.IsNullOrEmpty())

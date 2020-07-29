@@ -7,8 +7,15 @@ using System.Web.Mvc;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// 错误处理
+    /// </summary>
     public class MyHandleErrorAttribute : HandleErrorAttribute
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filterContext"></param>
         public override void OnException(ExceptionContext filterContext)
         {
             filterContext.ExceptionHandled = true;

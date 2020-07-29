@@ -21,6 +21,8 @@ services.AddControllers(options =>
 ### 排除过滤器
 - `AllowAnonymousAttribute`:  //匿名验证过滤器
 - `NoneLogRecordAttribute`:   //不记录日志过滤器
+### 限流过滤器
+- `ThrottlingAttribute` 
 ## 配置文件
 ### .netframework
 ```

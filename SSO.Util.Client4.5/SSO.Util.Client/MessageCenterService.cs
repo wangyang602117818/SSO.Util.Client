@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// 队列信息中心服务
+    /// </summary>
     public class MessageCenterService
     {
         private string baseUrl = "";
         HttpRequestHelper requestHelper = new HttpRequestHelper();
+        /// <summary>
+        /// 消息中心
+        /// </summary>
+        /// <param name="baseUrl">消息中心项目的基本url</param>
         public MessageCenterService(string baseUrl)
         {
             this.baseUrl = baseUrl;
@@ -17,15 +24,18 @@ namespace SSO.Util.Client
         /// <summary>
         /// 记录日志
         /// </summary>
-        /// <param name="from">日志来源</param>
-        /// <param name="type">日志类型</param>
-        /// <param name="id">日志唯一id</param>
-        /// <param name="content">日志内容</param>
-        /// <param name="userId">用户id</param>
-        /// <param name="userName">用户名称</param>
-        /// <param name="userHost">用户主机</param>
-        /// <param name="userAgent">用户代理</param>
-        /// <param name="time">时长</param>
+        /// <param name="from"></param>
+        /// <param name="controller"></param>
+        /// <param name="action"></param>
+        /// <param name="route"></param>
+        /// <param name="querystring"></param>
+        /// <param name="content"></param>
+        /// <param name="userId"></param>
+        /// <param name="userName"></param>
+        /// <param name="userHost"></param>
+        /// <param name="userAgent"></param>
+        /// <param name="time"></param>
+        /// <param name="exception"></param>
         /// <returns></returns>
         public ServiceModel<string> InsertLog(string from, string controller, string action, string route, string querystring, string content, string userId, string userName, string userHost, string userAgent, long time = 0, bool exception = false)
         {
@@ -49,6 +59,17 @@ namespace SSO.Util.Client
             var result = requestHelper.Post(baseUrl.TrimEnd('/') + "/log/insert", logModel, null);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
-
+        /// <summary>
+        /// 添加转换任务
+        /// </summary>
+        /// <param name="machineName">发往那个机器</param>
+        /// <param name="collectionName"></param>
+        /// <param name="collectionId"></param>
+        /// <returns></returns>
+        public ServiceModel<string> InsertConvertTask(string machineName, string collectionName, string collectionId)
+        {
+            var result = requestHelper.Post(baseUrl.TrimEnd('/') + "/filetask/insert", new { machineName,collectionName,collectionId }, null);
+            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
+        }
     }
 }

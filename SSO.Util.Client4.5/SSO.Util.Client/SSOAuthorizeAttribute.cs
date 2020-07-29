@@ -16,17 +16,28 @@ using System.Web.Mvc;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// sso验证
+    /// </summary>
     public class SSOAuthorizeAttribute : AuthorizeAttribute
     {
-        public static string SecretKey = AppSettings.GetValue("ssoSecretKey");
-        public static string BaseUrl = AppSettings.GetValue("ssoBaseUrl");
-        public static string CookieKey = AppSettings.GetValue("ssoCookieKey");
-        public static string CookieTime = AppSettings.GetValue("ssoCookieTime");
-        public bool UnAuthorizedRedirect = true;
+        private static string SecretKey = AppSettings.GetValue("ssoSecretKey");
+        private static string BaseUrl = AppSettings.GetValue("ssoBaseUrl");
+        private static string CookieKey = AppSettings.GetValue("ssoCookieKey");
+        private static string CookieTime = AppSettings.GetValue("ssoCookieTime");
+        private bool UnAuthorizedRedirect = true;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="unAuthorizedRedirect">验证不通过是否跳转到sso登录页面</param>
         public SSOAuthorizeAttribute(bool unAuthorizedRedirect = true)
         {
             UnAuthorizedRedirect = unAuthorizedRedirect;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filterContext"></param>
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             var reflectedActionDescriptor = (ReflectedActionDescriptor)filterContext.ActionDescriptor;
@@ -153,6 +164,13 @@ namespace SSO.Util.Client
             if (roles.Intersect(dataRoles).Count() > 0) return true;
             return false;
         }
+        /// <summary>
+        /// 根据url上面的ticket获取token
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="ticket"></param>
+        /// <param name="audience"></param>
+        /// <returns></returns>
         public static string GetTokenByTicket(string from, string ticket, string audience)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseUrl.TrimEnd('/') + "/sso/gettoken" + "?from=" + from + "&ticket=" + ticket + "&ip=" + audience);
@@ -166,6 +184,11 @@ namespace SSO.Util.Client
                 return "";
             }
         }
+        /// <summary>
+        /// 根据token获取roles列表
+        /// </summary>
+        /// <param name="authorization"></param>
+        /// <returns></returns>
         public static string[] GetRoles(string authorization)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseUrl.TrimEnd('/') + "/user/getroles");
@@ -180,6 +203,11 @@ namespace SSO.Util.Client
                 return new string[] { };
             }
         }
+        /// <summary>
+        /// 验证配置文件
+        /// </summary>
+        /// <param name="filterContext"></param>
+        /// <returns></returns>
         public bool VerifyConfig(AuthorizationContext filterContext)
         {
             if (BaseUrl.IsNullOrEmpty())

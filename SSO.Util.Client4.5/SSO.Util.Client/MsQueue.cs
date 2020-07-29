@@ -7,10 +7,19 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// 微软messagequeue
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class MsQueue<T>
     {
-        public string path = "";
-        public string managerpath = "";
+        private string path = "";
+        private string managerpath = "";
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path">FormatName:DIRECT=OS:computename\\private$\\task_queue</param>
+        /// <param name="managerpath"></param>
         public MsQueue(string path, string managerpath = "")
         {
             this.path = path;
@@ -20,7 +29,7 @@ namespace SSO.Util.Client
         /// 不能操作远程队列,只能由本地的程序创建队列,程序只能对远程的队列发送消息
         /// 创建队列需要消耗较多资源,确保只创建一次
         /// </summary>
-        /// <param name="path">FormatName:DIRECT=OS:computename\\private$\\task_queue</param>
+        /// <param name="transactional">是否是事务队列</param>
         public void CreateQueue(bool transactional = false)
         {
             try
@@ -76,6 +85,10 @@ namespace SSO.Util.Client
             messageQueue.Send(message, label, myTransaction);
             myTransaction.Commit();
         }
+        /// <summary>
+        /// 接收消息
+        /// </summary>
+        /// <param name="action"></param>
         public void ReceiveMessage(Action<T> action)
         {
             MessageQueue messageQueue = new MessageQueue(path);
@@ -87,6 +100,10 @@ namespace SSO.Util.Client
                 action(t);
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
         public void ReceiveDeadletterMessage(Action<T> action)
         {
             MessageQueue deadLetter = new MessageQueue(".\\DeadLetter$");
@@ -98,6 +115,10 @@ namespace SSO.Util.Client
                 action(t);
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="func"></param>
         public void ReceiveMessageAck(Func<T, bool> func)
         {
             MessageQueue messageQueue = new MessageQueue(path);
@@ -114,6 +135,10 @@ namespace SSO.Util.Client
                 }
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="func"></param>
         public void ReceiveMessageTransactional(Func<T, bool> func)
         {
             MessageQueue messageQueue = new MessageQueue(path);
@@ -137,6 +162,11 @@ namespace SSO.Util.Client
                 }
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageId"></param>
+        /// <param name="queuePath"></param>
         public void ReceiveAcknowledgment(string messageId, string queuePath)
         {
             bool found = false;

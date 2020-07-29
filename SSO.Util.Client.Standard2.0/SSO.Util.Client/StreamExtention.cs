@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// 流扩展
+    /// </summary>
     public static class StreamExtention
     {
         /// <summary>
@@ -26,6 +29,11 @@ namespace SSO.Util.Client
             fileStream.Position = 0;
             return sb.ToString();
         }
+        /// <summary>
+        /// 获取字节的md5码
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
         public static string GetMD5(this byte[] bytes)
         {
             MD5 md5 = new MD5CryptoServiceProvider();
@@ -37,6 +45,11 @@ namespace SSO.Util.Client
             }
             return sb.ToString();
         }
+        /// <summary>
+        /// 获取流的sha56
+        /// </summary>
+        /// <param name="fileStream"></param>
+        /// <returns></returns>
         public static string GetSha256(this Stream fileStream)
         {
             SHA256Managed Sha256 = new SHA256Managed();

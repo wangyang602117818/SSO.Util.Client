@@ -13,8 +13,17 @@ namespace SSO.Util.Client
         /// 日志来源
         /// </summary>
         public string From { get; set; }
+        /// <summary>
+        /// 日志访问的Controller
+        /// </summary>
         public string Controller { get; set; }
+        /// <summary>
+        /// 日志访问的Action
+        /// </summary>
         public string Action { get; set; }
+        /// <summary>
+        /// 日志的路由信息
+        /// </summary>
         public string Route { get; set; }
         /// <summary>
         /// 请求参数

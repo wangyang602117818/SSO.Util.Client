@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// base64编码解码类
+    /// </summary>
     public class Base64SecureURL
     {
         /// <summary>

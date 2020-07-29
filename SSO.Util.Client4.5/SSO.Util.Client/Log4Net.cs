@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
-    //默认log的位置  App_Data\Log\
+    /// <summary>
+    /// 默认log的位置  App_Data\Log\
+    /// </summary>
     public static class Log4Net
     {
         private static readonly ILog infoLog = LogManager.GetLogger("FileLogAppender");

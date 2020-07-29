@@ -7,16 +7,28 @@ using System.Text;
 
 namespace SSO.Util.Client
 {
-    public class ThrottlingFilterAttribute : ActionFilterAttribute
+    /// <summary>
+    /// 流量过滤特性类
+    /// </summary>
+    public class ThrottlingAttribute : ActionFilterAttribute
     {
         private readonly ThrottleStore store = new ThrottleStore();
-        public int MaxRequests { get; set; }
-        public TimeSpan TimeSpan { get; set; }
-        public ThrottlingFilterAttribute(int maxRequests, int minuts = 1)
+        private int MaxRequests { get; set; }
+        private TimeSpan TimeSpan { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maxRequests">最大请求数</param>
+        /// <param name="minuts">分钟数</param>
+        public ThrottlingAttribute(int maxRequests, int minuts = 1)
         {
             MaxRequests = maxRequests;
             TimeSpan = TimeSpan.FromMinutes(minuts);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filterContext"></param>
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             HttpRequest request = filterContext.HttpContext.Request;

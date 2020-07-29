@@ -19,24 +19,39 @@ namespace SSO.Util.Client
     {
         private static string messageBaseUrl = AppSettings.GetValue("messageBaseUrl");
         private static string cookieKey = AppSettings.GetValue("ssoCookieKey");
-        public static string secretKey = AppSettings.GetValue("ssoSecretKey");
+        private static string secretKey = AppSettings.GetValue("ssoSecretKey");
+        /// <summary>
+        /// 是否记录querystring
+        /// </summary>
         public bool RecordQuerystring = true;
         /// <summary>
         /// 是否记录请求体
         /// </summary>
         public bool RecordContent = true;
+        /// <summary>
+        /// 日志记录
+        /// </summary>
+        /// <param name="recordQuerystring"></param>
+        /// <param name="recordContent"></param>
         public LogRecordAttribute(bool recordQuerystring = true, bool recordContent = true)
         {
             RecordQuerystring = recordQuerystring;
             RecordContent = recordContent;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filterContext"></param>
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            //验证配置文件
             if (!VerifyConfig(filterContext)) return;
             filterContext.HttpContext.Items.Add("log_time_start", DateTime.UtcNow.UTCMillisecondTimeStamp());
             base.OnActionExecuting(filterContext);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filterContext"></param>
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             var reflectedActionDescriptor = (ReflectedActionDescriptor)filterContext.ActionDescriptor;
@@ -108,6 +123,11 @@ namespace SSO.Util.Client
             messageService.InsertLog(from.ReplaceHttpPrefix().TrimEnd('/'), controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
             base.OnActionExecuted(filterContext);
         }
+        /// <summary>
+        /// 验证配置文件
+        /// </summary>
+        /// <param name="filterContext"></param>
+        /// <returns></returns>
         public bool VerifyConfig(ActionExecutingContext filterContext)
         {
             if (messageBaseUrl.IsNullOrEmpty())

@@ -10,8 +10,16 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// 字符串扩展类
+    /// </summary>
     public static class StringExtention
     {
+        /// <summary>
+        /// 字符串转md5
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static string ToMD5(this string str)
         {
             using (MD5 md5 = MD5.Create())
@@ -25,6 +33,11 @@ namespace SSO.Util.Client
                 return sb.ToString();
             }
         }
+        /// <summary>
+        /// 字符串转sha256
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static string GetSha256(this string str)
         {
             byte[] SHA256Data = Encoding.UTF8.GetBytes(str);
@@ -32,12 +45,22 @@ namespace SSO.Util.Client
             byte[] by = Sha256.ComputeHash(SHA256Data);
             return BitConverter.ToString(by).Replace("-", "").ToLower();
         }
+        /// <summary>
+        /// 文件流转字符串
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         public static string ToStr(this Stream stream)
         {
             stream.Position = 0;
             StreamReader reader = new StreamReader(stream, Encoding.UTF8);
             return reader.ReadToEnd();
         }
+        /// <summary>
+        /// 字符串转文件流
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static Stream ToStream(this string str)
         {
             byte[] array = Encoding.UTF8.GetBytes(str);
@@ -45,17 +68,32 @@ namespace SSO.Util.Client
             stream.Position = 0;
             return stream;
         }
+        /// <summary>
+        /// 文件流转字节数组
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         public static byte[] ToBytes(this Stream stream)
         {
             byte[] bytes = new byte[stream.Length];
             stream.Read(bytes, 0, bytes.Length);
             return bytes;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static string GetMachineName(this string str)
         {
             Match match = Regex.Match(str, @"\\\\(.+?)\\");
             return match.Groups[1].Value;
         }
+        /// <summary>
+        /// 字符串转UTF8字节数组
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static string RemoveHtml(this string str)
         {
             return Regex.Replace(str, "<[^>]+>", "").Replace("&[^;]+;", "");
@@ -78,21 +116,41 @@ namespace SSO.Util.Client
         {
             return Convert.FromBase64String(base64Str);
         }
+        /// <summary>
+        /// 获取路径中的文件名
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static string GetFileName(this string str)
         {
             var index = str.LastIndexOf("\\");
             return str.Substring(index + 1);
         }
+        /// <summary>
+        /// 获取文件的扩展名
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static string GetFileExt(this string str)
         {
             var index = str.LastIndexOf(".");
             if (index == -1) return "";
             return str.Substring(index);
         }
+        /// <summary>
+        /// IsNullOrEmpty封装
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static bool IsNullOrEmpty(this string str)
         {
             return string.IsNullOrEmpty(str);
         }
+        /// <summary>
+        /// 格式化成2位的日期
+        /// </summary>
+        /// <param name="month"></param>
+        /// <returns></returns>
         public static string FormatMonth(this int month)
         {
             return month < 10 ? "0" + month : month.ToString();

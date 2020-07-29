@@ -7,8 +7,15 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// 错误处理
+    /// </summary>
     public class MyHandleErrorAttribute : Attribute, IExceptionFilter
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public void OnException(ExceptionContext context)
         {
             context.ExceptionHandled = true;

@@ -27,7 +27,13 @@ namespace SSO.Util.Client
             byte[] bytes = Encoding.UTF8.GetBytes(sourceString);
             return Convert.ToBase64String(AesEncode(new MemoryStream(bytes), key, isBase64Key).ToArray());
         }
-
+        /// <summary>
+        /// Aes加密算法，替代des
+        /// </summary>
+        /// <param name="sourceStream"></param>
+        /// <param name="key"></param>
+        /// <param name="isBase64Key"></param>
+        /// <returns></returns>
         public static MemoryStream AesEncode(Stream sourceStream, string key, bool isBase64Key = true)
         {
             byte[] keyBytes = isBase64Key ? key.Base64StrToBuffer() : key.StrToBuffer();
@@ -58,7 +64,13 @@ namespace SSO.Util.Client
             byte[] bytes = Convert.FromBase64String(secretString);
             return AesDecode(new MemoryStream(bytes), key, isBase64Key).ToStr();
         }
-
+        /// <summary>
+        /// Aes解密算法
+        /// </summary>
+        /// <param name="sourceStream"></param>
+        /// <param name="key"></param>
+        /// <param name="isBase64Key"></param>
+        /// <returns></returns>
         public static MemoryStream AesDecode(Stream sourceStream, string key, bool isBase64Key = true)
         {
             byte[] keyBytes = isBase64Key ? key.Base64StrToBuffer() : key.StrToBuffer();

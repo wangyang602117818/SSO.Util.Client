@@ -4,10 +4,41 @@
         <name>SSO.Util.Client</name>
     </assembly>
     <members>
+        <member name="T:SSO.Util.Client.AppSettings">
+            <summary>
+            系统设置类
+            </summary>
+        </member>
         <member name="F:SSO.Util.Client.AppSettings.DateTimeFormat">
             <summary>
             yyyy-MM-dd HH:mm:ss
             </summary>
+        </member>
+        <member name="F:SSO.Util.Client.AppSettings.Configuration">
+            <summary>
+            配置类,相当于.net的 ConfigurationManager
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.AppSettings.GetValue(System.String)">
+            <summary>
+            获取配置文件
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.AppSettings.GetApplicationUrl(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            获取应用程序的根路径
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.AppSettings.GetAbsoluteUri(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            获取当前请求的完整路径
+            </summary>
+            <param name="httpRequest"></param>
+            <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.AsymmetricEncryptHelper">
             <summary>
@@ -19,7 +50,7 @@
             RSA加密
             </summary>
             <param name="sourceString">需要加密的字符串</param>
-            <param name="key">base64形式的key</param>
+            <param name="pubKey">base64形式的key</param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.AsymmetricEncryptHelper.RSADecode(System.String,System.String)">
@@ -33,22 +64,27 @@
         <member name="M:SSO.Util.Client.AsymmetricEncryptHelper.ParseFromPemPublicKey(System.String)">
             <summary>          
             将pem格式公钥转换为RSAParameters         
-            </summary> <param name="pemFileConent">pem公钥内容</param>         
+            </summary> <param name="pemPubKey">pem公钥内容</param>         
             <returns>转换得到的RSAParamenters</returns>          
         </member>
         <member name="M:SSO.Util.Client.AsymmetricEncryptHelper.ParseFromPemPrivateKey(System.String)">
             <summary>          
             将pem格式私钥转换为RSAParameters,仅支持pkcs1        
             </summary>          
-            <param name="pemFileConent">pem私钥内容</param>        
+            <param name="pemPriKey">pem私钥内容</param>        
             <returns>转换得到的RSAParamenters</returns>         
         </member>
         <member name="M:SSO.Util.Client.AsymmetricEncryptHelper.ConverToPkcs1(System.String)">
             <summary>
             pkcs8转pkcs1
             </summary>
-            <param name="pkcs8"></param>
+            <param name="pkcs8str"></param>
             <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.Base64SecureURL">
+            <summary>
+            base64编码解码类
+            </summary>
         </member>
         <member name="M:SSO.Util.Client.Base64SecureURL.Encode(System.String)">
             <summary>
@@ -63,6 +99,11 @@
             </summary>
             <param name="secureUrlBase64">Base64编码字符串安全的URL.</param>
             <returns>Cadena de texto decodificada.</returns>
+        </member>
+        <member name="T:SSO.Util.Client.DateTimeExtention">
+            <summary>
+            时间扩展类
+            </summary>
         </member>
         <member name="M:SSO.Util.Client.DateTimeExtention.UTCTimeStamp(System.DateTime)">
             <summary>
@@ -85,6 +126,31 @@
             <param name="time"></param>
             <returns></returns>
         </member>
+        <member name="T:SSO.Util.Client.DownloadFileItem">
+            <summary>
+            下载文件的描述
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.DownloadFileItem.FileName">
+            <summary>
+            文件描述
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.DownloadFileItem.ContentType">
+            <summary>
+            ContentType类型
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.DownloadFileItem.ContentLength">
+            <summary>
+            Content长度
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.DownloadFileItem.FileStream">
+            <summary>
+            文件流
+            </summary>
+        </member>
         <member name="F:SSO.Util.Client.ErrorCode.success">
             <summary>
             成功
@@ -98,6 +164,11 @@
         <member name="F:SSO.Util.Client.ErrorCode.record_not_exist">
             <summary>
             不存在
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.requests_has_been_exceeded">
+            <summary>
+            请求已经超过次数
             </summary>
         </member>
         <member name="F:SSO.Util.Client.ErrorCode.record_exist">
@@ -158,6 +229,122 @@
             <param name="str"></param>
             <returns></returns>
         </member>
+        <member name="T:SSO.Util.Client.HttpRequestHelper">
+            <summary>
+            http请求类
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.HttpRequestHelper.PostFile(System.String,System.String,System.String,System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            发送文件
+            </summary>
+            <param name="url"></param>
+            <param name="type"></param>
+            <param name="fileName"></param>
+            <param name="fileStream"></param>
+            <param name="paras"></param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.HttpRequestHelper.Post(System.String,System.Object,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            post请求
+            </summary>
+            <param name="url"></param>
+            <param name="obj"></param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.HttpRequestHelper.Get(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            get请求
+            </summary>
+            <param name="url"></param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.HttpRequestHelper.GetFile(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            下载文件
+            </summary>
+            <param name="url"></param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.ImageExtention">
+            <summary>
+            图片扩展方法
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.ImageExtention.GetImageFormat(System.String)">
+            <summary>
+            根据后缀判断图片类型
+            </summary>
+            <param name="ext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.ImageExtention.GetContentType(System.Byte[])">
+            <summary>
+            获取图片的content-type
+            </summary>
+            <param name="buffer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.ImageExtention.GetImageType(System.IO.Stream)">
+            <summary>
+            根据流获取图片类型 result: JPG|TIFF|BMP|GIF|PNG|XML|""
+            </summary>
+            <param name="stream"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.ImageExtention.GetImageType(System.Byte[])">
+            <summary>
+            根据字节获取图片类型 result: JPG|TIFF|BMP|GIF|PNG|XML|""
+            </summary>
+            <param name="buffer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.ImageExtention.GetImageTypeFromHeader(System.String)">
+            <summary>
+            根据header获取图片类型 result: JPG|TIFF|BMP|GIF|PNG|XML|""
+            </summary>
+            <param name="header"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.ImageExtention.GetImageSize(System.IO.Stream)">
+            <summary>
+            获取Image的宽高
+            </summary>
+            <param name="stream"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.ImageExtention.GetImageSize(System.Byte[])">
+            <summary>
+            获取Image的宽高
+            </summary>
+            <param name="bytes"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.JsonSerializerHelper">
+            <summary>
+            json序列化
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.JsonSerializerHelper.Serialize(System.Object)">
+            <summary>
+            序列化对象
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.JsonSerializerHelper.Deserialize``1(System.String)">
+            <summary>
+            反序列化对象
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
         <member name="T:SSO.Util.Client.JwtManager">
             <summary>
             Jwt管理类,使用之前需要在web.config配置 secretKey issuer(颁发者) ticketTime(url上面的票据有效时间,单位秒)
@@ -178,9 +365,7 @@
             <param name="userId"></param>
             <param name="userName"></param>
             <param name="lang"></param>
-            <param name="company"></param>
-            <param name="departments"></param>
-            <param name="roles"></param>
+            <param name="extra"></param>
             <param name="ip"></param>
             <param name="minutes"></param>
             <returns></returns>
@@ -216,6 +401,36 @@
             <param name="cookieKey"></param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.JwtManager.ParseUserData(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            解析出用户信息
+            </summary>
+            <param name="User"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.JwtManager.ParseUserData(System.String,System.String,Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            根据cookie和key解析用户信息
+            </summary>
+            <param name="authorization"></param>
+            <param name="secretKey"></param>
+            <param name="httpContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.JwtManager.ParseAuthorization(System.String,System.String,Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            根据cookie和key解析用户信息
+            </summary>
+            <param name="authorization"></param>
+            <param name="secretKey"></param>
+            <param name="httpContext"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.Log4Net">
+            <summary>
+            默认log的位置  App_Data\Log\
+            </summary>
+        </member>
         <member name="M:SSO.Util.Client.Log4Net.ErrorLog(System.Exception)">
             <summary>
             错误日志 
@@ -243,6 +458,21 @@
         <member name="P:SSO.Util.Client.LogModel.From">
             <summary>
             日志来源
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.Controller">
+            <summary>
+            日志访问的Controller
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.Action">
+            <summary>
+            日志访问的Action
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.LogModel.Route">
+            <summary>
+            日志的路由信息
             </summary>
         </member>
         <member name="P:SSO.Util.Client.LogModel.QueryString">
@@ -280,6 +510,11 @@
             响应时间(毫秒)
             </summary>
         </member>
+        <member name="P:SSO.Util.Client.LogModel.CountPerMinute">
+            <summary>
+            一分钟请求的次数
+            </summary>
+        </member>
         <member name="P:SSO.Util.Client.LogModel.Exception">
             <summary>
             是否有错误
@@ -305,20 +540,269 @@
             是否记录请求体
             </summary>
         </member>
+        <member name="M:SSO.Util.Client.LogRecordAttribute.#ctor(System.Boolean,System.Boolean)">
+            <summary>
+            日志记录
+            </summary>
+            <param name="recordQuerystring"></param>
+            <param name="recordContent"></param>
+        </member>
+        <member name="M:SSO.Util.Client.LogRecordAttribute.OnResourceExecuting(Microsoft.AspNetCore.Mvc.Filters.ResourceExecutingContext)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:SSO.Util.Client.LogRecordAttribute.OnResourceExecuted(Microsoft.AspNetCore.Mvc.Filters.ResourceExecutedContext)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:SSO.Util.Client.LogRecordAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:SSO.Util.Client.LogRecordAttribute.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:SSO.Util.Client.LogRecordAttribute.VerifyConfig(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            验证配置文件
+            </summary>
+            <param name="filterContext"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.LogService">
+            <summary>
+            日志服务类
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="baseUrl">日志项目的url</param>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetListJson(System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Int32,System.Int32)">
+            <summary>
+            获取日志列表的json字符串
+            </summary>
+            <param name="from"></param>
+            <param name="controller"></param>
+            <param name="action"></param>
+            <param name="startTime"></param>
+            <param name="endTime"></param>
+            <param name="userId"></param>
+            <param name="userName"></param>
+            <param name="sorts"></param>
+            <param name="exception"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetList(System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Int32,System.Int32)">
+            <summary>
+            获取日志对象列表
+            </summary>
+            <param name="from"></param>
+            <param name="controller"></param>
+            <param name="action"></param>
+            <param name="startTime"></param>
+            <param name="endTime"></param>
+            <param name="userId"></param>
+            <param name="userName"></param>
+            <param name="sorts"></param>
+            <param name="exception"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetListSimpleJson(System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Int32,System.Int32)">
+            <summary>
+            获取日志列表的json字符串简单模式
+            </summary>
+            <param name="from"></param>
+            <param name="controller"></param>
+            <param name="action"></param>
+            <param name="startTime"></param>
+            <param name="endTime"></param>
+            <param name="userId"></param>
+            <param name="userName"></param>
+            <param name="sorts"></param>
+            <param name="exception"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetListSimple(System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Int32,System.Int32)">
+            <summary>
+            获取日志对象列表的简单模式
+            </summary>
+            <param name="from"></param>
+            <param name="controller"></param>
+            <param name="action"></param>
+            <param name="startTime"></param>
+            <param name="endTime"></param>
+            <param name="userId"></param>
+            <param name="userName"></param>
+            <param name="sorts"></param>
+            <param name="exception"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetByIdJson(System.String)">
+            <summary>
+            通过id获取日志详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetById(System.String)">
+            <summary>
+            通过id获取日志详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetOpRecordByDayJson(System.Int32)">
+            <summary>
+            获取最新的日志,按天统计
+            </summary>
+            <param name="last">最近多少天</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetOpRecordByDay(System.Int32)">
+            <summary>
+            获取最新的日志,按天统计
+            </summary>
+            <param name="last">最近多少天</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetFromListJson">
+            <summary>
+            获取from列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetFromList">
+            <summary>
+            获取from列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetControllersByFromJson(System.String)">
+            <summary>
+            获取from中Controller列表
+            </summary>
+            <param name="from"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetControllersByFrom(System.String)">
+            <summary>
+            获取from中Controller列表
+            </summary>
+            <param name="from"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetActionsByControllerJson(System.String,System.String)">
+            <summary>
+            获取from中action列表
+            </summary>
+            <param name="from"></param>
+            <param name="controllerName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetActionsByController(System.String,System.String)">
+            <summary>
+            获取from中action列表
+            </summary>
+            <param name="from"></param>
+            <param name="controllerName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetOperationsJson">
+            <summary>
+            统计昨天,上月,全部日志
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetOperations">
+            <summary>
+            统计昨天,上月,全部日志
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.MessageCenterService">
+            <summary>
+            队列信息中心服务
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.MessageCenterService.#ctor(System.String)">
+            <summary>
+            消息中心
+            </summary>
+            <param name="baseUrl">消息中心项目的基本url</param>
+        </member>
         <member name="M:SSO.Util.Client.MessageCenterService.InsertLog(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64,System.Boolean)">
             <summary>
             记录日志
             </summary>
-            <param name="from">日志来源</param>
-            <param name="type">日志类型</param>
-            <param name="id">日志唯一id</param>
-            <param name="content">日志内容</param>
-            <param name="userId">用户id</param>
-            <param name="userName">用户名称</param>
-            <param name="userHost">用户主机</param>
-            <param name="userAgent">用户代理</param>
-            <param name="time">时长</param>
+            <param name="from"></param>
+            <param name="controller"></param>
+            <param name="action"></param>
+            <param name="route"></param>
+            <param name="querystring"></param>
+            <param name="content"></param>
+            <param name="userId"></param>
+            <param name="userName"></param>
+            <param name="userHost"></param>
+            <param name="userAgent"></param>
+            <param name="time"></param>
+            <param name="exception"></param>
             <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.MessageCenterService.InsertConvertTask(System.String,System.String,System.String)">
+            <summary>
+            添加转换任务
+            </summary>
+            <param name="machineName">发往那个机器</param>
+            <param name="collectionName"></param>
+            <param name="collectionId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.MyHandleErrorAttribute">
+            <summary>
+            错误处理
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.MyHandleErrorAttribute.OnException(Microsoft.AspNetCore.Mvc.Filters.ExceptionContext)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:SSO.Util.Client.NoneLogRecordAttribute">
+            <summary>
+            不记录日志
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.NoneLogRecordAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            
+            </summary>
+            <param name="filterContext"></param>
+        </member>
+        <member name="T:SSO.Util.Client.RandomExtention">
+            <summary>
+            随机数扩展
+            </summary>
         </member>
         <member name="M:SSO.Util.Client.RandomExtention.RandomCode(System.Random,System.Int32)">
             <summary>
@@ -345,6 +829,15 @@
             <param name="percent">0-1</param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.RandomExtention.GetRewardIdsDecrease(System.Random,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="random"></param>
+            <param name="all"></param>
+            <param name="len"></param>
+            <returns></returns>
+        </member>
         <member name="M:SSO.Util.Client.RandomExtention.RandomCodeHex(System.Random,System.Int32)">
             <summary>
             随机16精制字符串
@@ -359,16 +852,158 @@
             </summary>
             <typeparam name="T">对象,不能为BsonDocument,如果为string,则string必须为json格式</typeparam>
         </member>
+        <member name="M:SSO.Util.Client.ResponseModel`1.#ctor(SSO.Util.Client.ErrorCode,`0,System.Int64)">
+            <summary>
+            
+            </summary>
+            <param name="code"></param>
+            <param name="t"></param>
+            <param name="count"></param>
+        </member>
         <member name="T:SSO.Util.Client.ServiceModel`1">
             <summary>
             解析Action返回类
             </summary>
             <typeparam name="T"></typeparam>
         </member>
+        <member name="P:SSO.Util.Client.ServiceModel`1.code">
+            <summary>
+            返回码
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.ServiceModel`1.message">
+            <summary>
+            返回信息
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.ServiceModel`1.result">
+            <summary>
+            返回内容
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.ServiceModel`1.count">
+            <summary>
+            返回数据的总数
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.SSOAuthorizeAttribute">
+            <summary>
+            sso验证
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.#ctor(System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="roles">有权限访问的role</param>
+            <param name="unAuthorizedRedirect">验证不通过是否跳转到sso登录页面</param>
+        </member>
+        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.OnAuthorization(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
+            <summary>
+            
+            </summary>
+            <param name="filterContext"></param>
+        </member>
+        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.GetTokenByTicket(System.String,System.String,System.String)">
+            <summary>
+            根据url上面的ticket获取token
+            </summary>
+            <param name="from"></param>
+            <param name="ticket"></param>
+            <param name="audience"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.GetRoles(System.String)">
+            <summary>
+            根据token获取roles列表
+            </summary>
+            <param name="authorization"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.VerifyConfig(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
+            <summary>
+            验证配置文件
+            </summary>
+            <param name="filterContext"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.StreamExtention">
+            <summary>
+            流扩展
+            </summary>
+        </member>
         <member name="M:SSO.Util.Client.StreamExtention.GetMD5(System.IO.Stream)">
             <summary>
             获取文件的MD5码
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StreamExtention.GetMD5(System.Byte[])">
+            <summary>
+            获取字节的md5码
+            </summary>
+            <param name="bytes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StreamExtention.GetSha256(System.IO.Stream)">
+            <summary>
+            获取流的sha56
+            </summary>
+            <param name="fileStream"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.StringExtention">
+            <summary>
+            字符串扩展类
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.ToMD5(System.String)">
+            <summary>
+            字符串转md5
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.GetSha256(System.String)">
+            <summary>
+            字符串转sha256
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.ToStr(System.IO.Stream)">
+            <summary>
+            文件流转字符串
+            </summary>
+            <param name="stream"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.ToStream(System.String)">
+            <summary>
+            字符串转文件流
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.ToBytes(System.IO.Stream)">
+            <summary>
+            文件流转字节数组
+            </summary>
+            <param name="stream"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.GetMachineName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.RemoveHtml(System.String)">
+            <summary>
+            字符串转UTF8字节数组
+            </summary>
+            <param name="str"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.StringExtention.StrToBuffer(System.String)">
@@ -383,6 +1018,34 @@
             base64字符串转UTF8字节数组
             </summary>
             <param name="base64Str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.GetFileName(System.String)">
+            <summary>
+            获取路径中的文件名
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.GetFileExt(System.String)">
+            <summary>
+            获取文件的扩展名
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.IsNullOrEmpty(System.String)">
+            <summary>
+            IsNullOrEmpty封装
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.FormatMonth(System.Int32)">
+            <summary>
+            格式化成2位的日期
+            </summary>
+            <param name="month"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.StringExtention.StrToBase64(System.String)">
@@ -433,11 +1096,29 @@
             <param name="isBase64Key">是否是base64形式的key</param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.AesEncode(System.IO.Stream,System.String,System.Boolean)">
+            <summary>
+            Aes加密算法，替代des
+            </summary>
+            <param name="sourceStream"></param>
+            <param name="key"></param>
+            <param name="isBase64Key"></param>
+            <returns></returns>
+        </member>
         <member name="M:SSO.Util.Client.SymmetricEncryptHelper.AesDecode(System.String,System.String,System.Boolean)">
             <summary>
             Aes解密算法
             </summary>
             <param name="secretString">密文</param>
+            <param name="key">base64形式的key，256位</param>
+            <param name="isBase64Key">是否是base64形式的key</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.AesDecode(System.IO.Stream,System.String,System.Boolean)">
+            <summary>
+            Aes解密算法
+            </summary>
+            <param name="sourceStream">密文</param>
             <param name="key">base64形式的key，256位</param>
             <param name="isBase64Key">是否是base64形式的key</param>
             <returns></returns>
@@ -489,6 +1170,29 @@
         <member name="P:SSO.Util.Client.SymmetricEncryptHelper.GenerateAESKey">
             <summary>
             生成256位的AES加密密钥
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.ThrottlingAttribute">
+            <summary>
+            流量过滤特性类
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.ThrottlingAttribute.#ctor(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="maxRequests">最大请求数</param>
+            <param name="minuts">分钟数</param>
+        </member>
+        <member name="M:SSO.Util.Client.ThrottlingAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            
+            </summary>
+            <param name="filterContext"></param>
+        </member>
+        <member name="T:SSO.Util.Client.ValidateModelStateAttribute">
+            <summary>
+            model类验证过滤器
             </summary>
         </member>
         <member name="M:SSO.Util.Client.ValidateModelStateAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">

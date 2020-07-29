@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// 随机数扩展
+    /// </summary>
     public static class RandomExtention
     {
         /// <summary>
@@ -83,6 +86,13 @@ namespace SSO.Util.Client
             int r = random.Next(0, 100);
             return result[r];
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="random"></param>
+        /// <param name="all"></param>
+        /// <param name="len"></param>
+        /// <returns></returns>
         public static IEnumerable<int> GetRewardIdsDecrease(this Random random, int all, int len)
         {
             List<int> result = new List<int>();
