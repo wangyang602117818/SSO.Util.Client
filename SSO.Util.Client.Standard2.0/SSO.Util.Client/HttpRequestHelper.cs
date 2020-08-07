@@ -149,8 +149,12 @@ namespace SSO.Util.Client
                 }
             }
             WebResponse response = request.GetResponse();
-            if (response.Headers["Content-Disposition"] == null) return new DownloadFileItem() { };
-            string name = response.Headers["Content-Disposition"].Split('=')[1].Trim('"');
+            string name = "";
+            if (response.Headers["Content-Disposition"] != null)
+            {
+                string[] names = response.Headers["Content-Disposition"].Split('=');
+                name = names[1].Trim('"');
+            }
             return new DownloadFileItem()
             {
                 FileName = name,

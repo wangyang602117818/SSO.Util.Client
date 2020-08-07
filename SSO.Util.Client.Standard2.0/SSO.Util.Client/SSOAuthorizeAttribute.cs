@@ -26,16 +26,17 @@ namespace SSO.Util.Client
         private string SecretKey = AppSettings.GetValue("ssoSecretKey");
         private string CookieKey = AppSettings.GetValue("ssoCookieKey");
         private string CookieTime = AppSettings.GetValue("ssoCookieTime");
-        private string Roles { get; set; }
+        /// <summary>
+        /// 可以访问的role列表 (,隔开)
+        /// </summary>
+        public string Roles { get; set; }
         private bool UnAuthorizedRedirect = true;
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="roles">有权限访问的role</param>
         /// <param name="unAuthorizedRedirect">验证不通过是否跳转到sso登录页面</param>
-        public SSOAuthorizeAttribute(string roles, bool unAuthorizedRedirect = true)
+        public SSOAuthorizeAttribute(bool unAuthorizedRedirect = true)
         {
-            Roles = roles;
             UnAuthorizedRedirect = unAuthorizedRedirect;
         }
         /// <summary>

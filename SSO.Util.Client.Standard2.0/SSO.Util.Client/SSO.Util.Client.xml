@@ -891,11 +891,15 @@
             sso验证
             </summary>
         </member>
-        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.#ctor(System.String,System.Boolean)">
+        <member name="P:SSO.Util.Client.SSOAuthorizeAttribute.Roles">
+            <summary>
+            可以访问的role列表 (,隔开)
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.#ctor(System.Boolean)">
             <summary>
             
             </summary>
-            <param name="roles">有权限访问的role</param>
             <param name="unAuthorizedRedirect">验证不通过是否跳转到sso登录页面</param>
         </member>
         <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.OnAuthorization(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">

@@ -183,6 +183,7 @@ namespace SSO.Util.Client
         {
             str = new Regex("ISODate\\(\"(.*?)\"\\)", RegexOptions.IgnoreCase | RegexOptions.Multiline).Replace(str, JsonReplacement);
             str = new Regex("ObjectId\\(\"(.*?)\"\\)", RegexOptions.IgnoreCase | RegexOptions.Multiline).Replace(str, "\"$1\"");
+            str = new Regex("NumberLong\\((.*?)\\)", RegexOptions.IgnoreCase | RegexOptions.Multiline).Replace(str, "\"$1\"");
             return str;
         }
         private static string JsonReplacement(Match match)

@@ -177,12 +177,13 @@ namespace SSO.Util.Client
         /// <summary>
         /// 替换由 ToJson() 转换的json字符串 中 ObjectId("") 和 ISODate("2020-05-30T08:50:10.048Z") 
         /// </summary>
-        /// <param name="toJsonStr"></param>
+        /// <param name="str"></param>
         /// <returns></returns>
         public static string ReplaceJsonString(this string str)
         {
             str = new Regex("ISODate\\(\"(.*?)\"\\)", RegexOptions.IgnoreCase | RegexOptions.Multiline).Replace(str, JsonReplacement);
             str = new Regex("ObjectId\\(\"(.*?)\"\\)", RegexOptions.IgnoreCase | RegexOptions.Multiline).Replace(str, "\"$1\"");
+            str = new Regex("NumberLong\\((.*?)\\)", RegexOptions.IgnoreCase | RegexOptions.Multiline).Replace(str, "\"$1\"");
             return str;
         }
         private static string JsonReplacement(Match match)
