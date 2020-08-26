@@ -196,6 +196,54 @@
             未知错误
             </summary>
         </member>
+        <member name="T:SSO.Util.Client.FileClientService">
+            <summary>
+            文件服务类
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.FileClientService.RemoteUrl">
+            <summary>
+            文件服务器的url
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.FileClientService.Token">
+            <summary>
+            jwt token
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.#ctor(System.String,System.String)">
+            <summary>
+            文件服务器的url
+            </summary>
+            <param name="remoteUrl"></param>
+            <param name="token"></param>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.Upload(System.String,System.String,System.IO.Stream)">
+            <summary>
+            上传文件
+            </summary>
+            <param name="fileName">文件名称</param>
+            <param name="contentType">文件contentType</param>
+            <param name="stream">文件流</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.DownloadFile(System.String,System.String,System.String)">
+            <summary>
+            下载文件
+            </summary>
+            <param name="id">文件id</param>
+            <param name="filename">文件名称</param>
+            <param name="flag">文件flag,图片才需要</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.DownloadFileIcon(System.String,System.String)">
+            <summary>
+            下载文件图标
+            </summary>
+            <param name="id">文件id</param>
+            <param name="filename">文件名称</param>
+            <returns></returns>
+        </member>
         <member name="T:SSO.Util.Client.HashEncryptHelper">
             <summary>
             Hash散列算法
@@ -234,13 +282,14 @@
             http请求类
             </summary>
         </member>
-        <member name="M:SSO.Util.Client.HttpRequestHelper.PostFile(System.String,System.String,System.String,System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:SSO.Util.Client.HttpRequestHelper.PostFile(System.String,System.String,System.String,System.String,System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             发送文件
             </summary>
             <param name="url"></param>
-            <param name="type"></param>
+            <param name="paramName"></param>
             <param name="fileName"></param>
+            <param name="contentType"></param>
             <param name="fileStream"></param>
             <param name="paras"></param>
             <param name="headers"></param>
@@ -886,6 +935,36 @@
             返回数据的总数
             </summary>
         </member>
+        <member name="T:SSO.Util.Client.FileResponse">
+            <summary>
+            上传文件返回类
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.FileResponse.FileId">
+            <summary>
+            文件id
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.FileResponse.FilePath">
+            <summary>
+            文件路径
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.FileResponse.FileName">
+            <summary>
+            文件名
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.FileResponse.FileSize">
+            <summary>
+            文件字节数(大小)
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.FileResponse.Message">
+            <summary>
+            错误信息
+            </summary>
+        </member>
         <member name="T:SSO.Util.Client.SSOAuthorizeAttribute">
             <summary>
             sso验证
@@ -930,6 +1009,75 @@
             </summary>
             <param name="filterContext"></param>
             <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.SSOService">
+            <summary>
+            sso服务类
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.SSOService.GetAllCompany">
+            <summary>
+            获取所有company
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOService.GetAllDepartment(System.String)">
+            <summary>
+            获取指定department列表
+            </summary>
+            <param name="companyCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOService.GetUserList(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            获取user列表
+            </summary>
+            <param name="companyCode"></param>
+            <param name="filter"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOService.GetRoleList(System.String,System.Int32,System.Int32)">
+            <summary>
+            获取角色列表
+            </summary>
+            <param name="filter"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOService.GetUserDetail(System.String)">
+            <summary>
+            获取user详情
+            </summary>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.CompanyItem">
+            <summary>
+            Company类
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.DepartmentItem">
+            <summary>
+            department类
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.UserItem">
+            <summary>
+            User列表类
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.UserDetail">
+            <summary>
+            用户详情类
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.RoleItem">
+            <summary>
+            角色列表项
+            </summary>
         </member>
         <member name="T:SSO.Util.Client.StreamExtention">
             <summary>

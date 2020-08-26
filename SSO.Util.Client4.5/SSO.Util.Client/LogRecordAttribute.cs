@@ -17,9 +17,9 @@ namespace SSO.Util.Client
     /// </summary>
     public class LogRecordAttribute : ActionFilterAttribute
     {
-        private static string messageBaseUrl = AppSettings.GetValue("messageBaseUrl");
-        private static string cookieKey = AppSettings.GetValue("ssoCookieKey");
-        private static string secretKey = AppSettings.GetValue("ssoSecretKey");
+        public static string messageBaseUrl = AppSettings.GetValue("messageBaseUrl");
+        public static string cookieKey = AppSettings.GetValue("ssoCookieKey");
+        public static string secretKey = AppSettings.GetValue("ssoSecretKey");
         /// <summary>
         /// 是否记录querystring
         /// </summary>

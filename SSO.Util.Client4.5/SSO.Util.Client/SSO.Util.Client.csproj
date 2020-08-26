@@ -54,6 +54,7 @@
     <Compile Include="DateTimeExtention.cs" />
     <Compile Include="DownloadFileItem.cs" />
     <Compile Include="ErrorCode.cs" />
+    <Compile Include="FileClientService.cs" />
     <Compile Include="HashEncryptHelper.cs" />
     <Compile Include="HttpRequestHelper.cs" />
     <Compile Include="ImageExtention.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="RandomExtention.cs" />
     <Compile Include="ResponseModel.cs" />
     <Compile Include="SSOAuthorizeAttribute.cs" />
+    <Compile Include="SSOService.cs" />
     <Compile Include="StreamExtention.cs" />
     <Compile Include="StringExtention.cs" />
     <Compile Include="SymmetricEncryptHelper.cs" />

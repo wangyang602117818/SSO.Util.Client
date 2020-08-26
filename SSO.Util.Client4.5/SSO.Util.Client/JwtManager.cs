@@ -135,8 +135,9 @@ namespace SSO.Util.Client
         /// <param name="request"></param>
         /// <param name="cookieKey"></param>
         /// <returns></returns>
-        public static string GetAuthorization(HttpRequestBase request, string cookieKey)
+        public static string GetAuthorization(HttpRequestBase request, string cookieKey = null)
         {
+            if (cookieKey == null) cookieKey = SSOAuthorizeAttribute.cookieKey;
             string authorization = request.Cookies[cookieKey] == null ? "" : request.Cookies[cookieKey].Value;
             if (string.IsNullOrEmpty(authorization)) authorization = request.Headers["Authorization"] ?? "";
             return authorization;

@@ -99,4 +99,5 @@ services.AddControllers(options =>
 > `StreamExtention`: 流扩展(流的md5,sha256)  
 > `StringExtention`: 字符串扩展(md5,sha256)  
 > `SymmetricEncryptHelper`: 对称加密算法  
-> `JwtManager`: JwtToken 生成类  
+> `JwtManager`: JwtToken 生成类 
+> `FileClientService`: 文件服务类 

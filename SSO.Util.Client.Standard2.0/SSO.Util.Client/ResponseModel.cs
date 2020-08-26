@@ -63,4 +63,30 @@ namespace SSO.Util.Client
         /// </summary>
         public int count { get; set; }
     }
+    /// <summary>
+    /// 上传文件返回类
+    /// </summary>
+    public class FileResponse
+    {
+        /// <summary>
+        /// 文件id
+        /// </summary>
+        public string FileId { get; set; }
+        /// <summary>
+        /// 文件路径
+        /// </summary>
+        public string FilePath { get; set; }
+        /// <summary>
+        /// 文件名
+        /// </summary>
+        public string FileName { get; set; }
+        /// <summary>
+        /// 文件字节数(大小)
+        /// </summary>
+        public long FileSize { get; set; }
+        /// <summary>
+        /// 错误信息
+        /// </summary>
+        public string Message { get; set; }
+    }
 }

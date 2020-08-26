@@ -18,13 +18,14 @@ namespace SSO.Util.Client
         /// 发送文件
         /// </summary>
         /// <param name="url"></param>
-        /// <param name="type"></param>
+        /// <param name="paramName"></param>
         /// <param name="fileName"></param>
+        /// <param name="contentType"></param>
         /// <param name="fileStream"></param>
         /// <param name="paras"></param>
         /// <param name="headers"></param>
         /// <returns></returns>
-        public string PostFile(string url, string type, string fileName, Stream fileStream, Dictionary<string, string> paras = null, Dictionary<string, string> headers = null)
+        public string PostFile(string url, string paramName, string fileName, string contentType, Stream fileStream, Dictionary<string, string> paras = null, Dictionary<string, string> headers = null)
         {
             string boundary = "----" + Guid.NewGuid().ToString().Replace("-", "").Substring(0, 30);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -41,7 +42,7 @@ namespace SSO.Util.Client
             using (Stream requestStream = request.GetRequestStream())
             {
                 //文件开始标记
-                string fileBegin = "--" + boundary + "\r\nContent-Disposition: form-data;name=\"" + type + "\";filename=\"" + fileName.GetFileName() + "\"\r\nContent-Type: application/octet-stream; charset=utf-8\r\n\r\n";
+                string fileBegin = "--" + boundary + "\r\nContent-Disposition: form-data;name=\"" + paramName + "\";filename=\"" + fileName.GetFileName() + "\"\r\nContent-Type: "+ contentType + "; charset=utf-8\r\n\r\n";
                 byte[] bytes = Encoding.UTF8.GetBytes(fileBegin);
                 requestStream.Write(bytes, 0, bytes.Length);
                 ////传文件数据
