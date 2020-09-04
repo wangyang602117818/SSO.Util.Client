@@ -17,9 +17,9 @@ namespace SSO.Util.Client
     /// </summary>
     public class LogRecordAttribute : ActionFilterAttribute
     {
-        public static string messageBaseUrl = AppSettings.GetValue("messageBaseUrl");
-        public static string cookieKey = AppSettings.GetValue("ssoCookieKey");
-        public static string secretKey = AppSettings.GetValue("ssoSecretKey");
+        public static string BaseUrl = AppSettings.GetValue("messageBaseUrl");
+        public static string CookieKey = AppSettings.GetValue("ssoCookieKey");
+        public static string SecretKey = AppSettings.GetValue("ssoSecretKey");
         /// <summary>
         /// 是否记录querystring
         /// </summary>
@@ -70,7 +70,7 @@ namespace SSO.Util.Client
                 if (c.AttributeType.Name == "LogRecordAttribute") isLog = true;
             }
             if (!isLog) return;
-            MessageCenterService messageService = new MessageCenterService(messageBaseUrl);
+            MessageCenterService messageService = new MessageCenterService(BaseUrl);
             HttpRequestBase request = filterContext.HttpContext.Request;
             //日志来源
             var from = AppSettings.GetApplicationUrl(request);
@@ -108,10 +108,10 @@ namespace SSO.Util.Client
                 }
             }
             string userId = "", userName = "";
-            string authorization = JwtManager.GetAuthorization(request, cookieKey);
+            string authorization = JwtManager.GetAuthorization(request, CookieKey);
             if (!authorization.IsNullOrEmpty())
             {
-                ClaimsPrincipal claimsPrincipal = JwtManager.ParseAuthorization(authorization, secretKey);
+                ClaimsPrincipal claimsPrincipal = JwtManager.ParseAuthorization(authorization, SecretKey);
                 UserData userData = JwtManager.ParseUserData(claimsPrincipal);
                 userId = userData.UserId;
                 userName = userData.UserName;
@@ -120,7 +120,7 @@ namespace SSO.Util.Client
             string userAgent = request.UserAgent;
             var time = DateTime.UtcNow.UTCMillisecondTimeStamp() - (long)filterContext.HttpContext.Items["log_time_start"];
             bool exception = filterContext.Exception != null;
-            messageService.InsertLog(from.ReplaceHttpPrefix().TrimEnd('/'), controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
+            messageService.InsertLog(from.ReplaceHttpPrefix().TrimEnd('/').ToLower(), controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
             base.OnActionExecuted(filterContext);
         }
         /// <summary>
@@ -130,17 +130,17 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public bool VerifyConfig(ActionExecutingContext filterContext)
         {
-            if (messageBaseUrl.IsNullOrEmpty())
+            if (BaseUrl.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.messageBaseUrl_not_config, "");
                 return false;
             }
-            if (secretKey.IsNullOrEmpty())
+            if (SecretKey.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.secretKey_not_config, "");
                 return false;
             }
-            if (cookieKey.IsNullOrEmpty())
+            if (CookieKey.IsNullOrEmpty())
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.cookieKey_not_config, "");
                 return false;

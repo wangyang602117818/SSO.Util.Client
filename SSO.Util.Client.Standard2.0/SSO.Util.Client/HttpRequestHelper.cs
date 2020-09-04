@@ -42,7 +42,7 @@ namespace SSO.Util.Client
             using (Stream requestStream = request.GetRequestStream())
             {
                 //文件开始标记
-                string fileBegin = "--" + boundary + "\r\nContent-Disposition: form-data;name=\"" + paramName + "\";filename=\"" + fileName.GetFileName() + "\"\r\nContent-Type: "+ contentType + "; charset=utf-8\r\n\r\n";
+                string fileBegin = "--" + boundary + "\r\nContent-Disposition: form-data;name=\"" + paramName + "\";filename=\"" + fileName.GetFileName() + "\"\r\nContent-Type: "+ contentType + "\r\n\r\n";
                 byte[] bytes = Encoding.UTF8.GetBytes(fileBegin);
                 requestStream.Write(bytes, 0, bytes.Length);
                 ////传文件数据

@@ -7,8 +7,15 @@ using System.Threading.Tasks;
 
 namespace SSO.Util.Client
 {
+    /// <summary>
+    /// 日志类
+    /// </summary>
     public class LogModel
     {
+        /// <summary>
+        /// id
+        /// </summary>
+        public string _id { get; set; }
         /// <summary>
         /// 日志来源
         /// </summary>

@@ -55,6 +55,7 @@
     <Compile Include="DownloadFileItem.cs" />
     <Compile Include="ErrorCode.cs" />
     <Compile Include="FileClientService.cs" />
+    <Compile Include="FileItem.cs" />
     <Compile Include="HashEncryptHelper.cs" />
     <Compile Include="HttpRequestHelper.cs" />
     <Compile Include="ImageExtention.cs" />
@@ -72,7 +73,7 @@
     <Compile Include="RandomExtention.cs" />
     <Compile Include="ResponseModel.cs" />
     <Compile Include="SSOAuthorizeAttribute.cs" />
-    <Compile Include="SSOService.cs" />
+    <Compile Include="SSOClientService.cs" />
     <Compile Include="StreamExtention.cs" />
     <Compile Include="StringExtention.cs" />
     <Compile Include="SymmetricEncryptHelper.cs" />
@@ -86,7 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="log4net">
-      <Version>2.0.8</Version>
+      <Version>2.0.9</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNet.Mvc">
       <Version>5.2.7</Version>

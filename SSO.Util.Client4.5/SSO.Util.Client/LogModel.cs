@@ -13,6 +13,10 @@ namespace SSO.Util.Client
     public class LogModel
     {
         /// <summary>
+        /// id
+        /// </summary>
+        public string _id { get; set; }
+        /// <summary>
         /// 日志来源
         /// </summary>
         public string From { get; set; }

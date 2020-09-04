@@ -21,9 +21,9 @@ namespace SSO.Util.Client
     /// </summary>
     public class LogRecordAttribute : Attribute, IActionFilter, IResourceFilter
     {
-        private string BaseUrl = AppSettings.GetValue("messageBaseUrl");
-        private string SecretKey = AppSettings.GetValue("ssoSecretKey");
-        private string CookieKey = AppSettings.GetValue("ssoCookieKey");
+        public static string BaseUrl = AppSettings.GetValue("messageBaseUrl");
+        public static string CookieKey = AppSettings.GetValue("ssoCookieKey");
+        public static string SecretKey = AppSettings.GetValue("ssoSecretKey");
         /// <summary>
         /// 是否记录url查询
         /// </summary>
@@ -137,7 +137,7 @@ namespace SSO.Util.Client
             string userAgent = request.Headers["User-Agent"];
             var time = DateTime.UtcNow.UTCMillisecondTimeStamp() - (long)context.HttpContext.Items["log_time_start"];
             bool exception = context.Exception != null;
-            messageService.InsertLog(from.ReplaceHttpPrefix().TrimEnd('/'), controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
+            messageService.InsertLog(from.ReplaceHttpPrefix().TrimEnd('/').ToLower(), controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
         }
         /// <summary>
         /// 验证配置文件

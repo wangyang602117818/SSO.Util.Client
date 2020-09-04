@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+
+
 namespace SSO.Util.Client
 {
     /// <summary>
@@ -26,7 +28,7 @@ namespace SSO.Util.Client
         /// <param name="token"></param>
         public FileClientService(string remoteUrl, string token)
         {
-            RemoteUrl = remoteUrl;
+            RemoteUrl = remoteUrl.TrimEnd('/');
             Token = token;
         }
         /// <summary>
@@ -74,6 +76,69 @@ namespace SSO.Util.Client
             Dictionary<string, string> headers = new Dictionary<string, string>();
             headers.Add("Authorization", Token);
             return requestHelper.GetFile(RemoteUrl + "/file/GetFileIconWrapId/" + id + filename.GetFileExt(), headers);
+        }
+        /// <summary>
+        /// 获取文件转换进度
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ServiceModel<int> FileState(string id)
+        {
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Authorization", Token);
+            string state = requestHelper.Get(RemoteUrl + "/data/FileState/" + id, headers);
+            return JsonSerializerHelper.Deserialize<ServiceModel<int>>(state);
+        }
+        /// <summary>
+        /// 获取文件列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="from"></param>
+        /// <param name="filter"></param>
+        /// <param name="fileType"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="sorts"></param>
+        /// <param name="delete"></param>
+        /// <returns></returns>
+        public ServiceModel<List<FileItem>> GetFileList(int pageIndex = 1, int pageSize = 10, string from = "", string filter = "", string fileType = "", DateTime? startTime = null, DateTime? endTime = null, Dictionary<string, string> sorts = null, bool delete = false)
+        {
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Authorization", Token);
+            var url = RemoteUrl + "/data/GetFiles?pageIndex=" + pageIndex + "&pageSize=" + pageSize;
+            if (!from.IsNullOrEmpty()) url += "&from=" + from;
+            if (!filter.IsNullOrEmpty()) url += "&filter=" + filter;
+            if (!fileType.IsNullOrEmpty()) url += "&fileType=" + fileType;
+            if (startTime != null) url += "&startTime=" + startTime.Value.ToString(AppSettings.DateTimeFormat);
+            if (endTime != null) url += "&endTime=" + endTime.Value.ToString(AppSettings.DateTimeFormat);
+            var index = 0;
+            if (sorts != null)
+            {
+                foreach (var item in sorts)
+                {
+                    var key = item.Key;
+                    var value = item.Value;
+                    url += "&sorts[" + index + "].key=" + key;
+                    url += "&sorts[" + index + "].value=" + value;
+                    index++;
+                }
+            }
+            url += "&delete=" + delete;
+            string list = requestHelper.Get(url, headers);
+            return JsonSerializerHelper.Deserialize<ServiceModel<List<FileItem>>>(list);
+        }
+        /// <summary>
+        /// 获取from列表
+        /// </summary>
+        /// <returns></returns>
+        public ServiceModel<List<string>> GetFromList()
+        {
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Authorization", Token);
+            var url = RemoteUrl + "/data/GetFromList";
+            string list = requestHelper.Get(url, headers);
+            return JsonSerializerHelper.Deserialize<ServiceModel<List<string>>>(list);
         }
     }
 }

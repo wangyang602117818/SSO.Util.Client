@@ -7,17 +7,39 @@ namespace SSO.Util.Client
     /// <summary>
     /// sso服务类
     /// </summary>
-    public class SSOService
+    public class SSOClientService
     {
-        private static string baseUrl = AppSettings.GetValue("ssoBaseUrl");
         private HttpRequestHelper requestHelper = new HttpRequestHelper();
+        /// <summary>
+        /// sso服务的url
+        /// </summary>
+        public string RemoteUrl { get; set; }
+        /// <summary>
+        /// jwt token
+        /// </summary>
+        public string Token { get; set; }
+        /// <summary>
+        /// 请求header
+        /// </summary>
+        Dictionary<string, string> headers = null;
+        /// <summary>
+        /// sso服务的url
+        /// </summary>
+        /// <param name="remoteUrl"></param>
+        /// <param name="token"></param>
+        public SSOClientService(string remoteUrl, string token)
+        {
+            RemoteUrl = remoteUrl.TrimEnd('/');
+            Token = token;
+            headers = new Dictionary<string, string>() { { "Authorization", token } };
+        }
         /// <summary>
         /// 获取所有company
         /// </summary>
         /// <returns></returns>
         public ServiceModel<List<CompanyItem>> GetAllCompany()
         {
-            string companys = requestHelper.Get(baseUrl.TrimEnd('/') + "/sso/getallcompany", null);
+            string companys = requestHelper.Get(RemoteUrl + "/sso/getallcompany", headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<CompanyItem>>>(companys);
         }
         /// <summary>
@@ -27,7 +49,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<DepartmentItem>> GetAllDepartment(string companyCode)
         {
-            string departments = requestHelper.Get(baseUrl.TrimEnd('/') + "/sso/getalldepartment/" + companyCode, null);
+            string departments = requestHelper.Get(RemoteUrl + "/sso/getalldepartment/" + companyCode, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<DepartmentItem>>>(departments);
         }
         /// <summary>
@@ -40,7 +62,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<UserItem>> GetUserList(string companyCode = "", string filter = "", int pageIndex = 1, int pageSize = 10)
         {
-            string users = requestHelper.Get(baseUrl.TrimEnd('/') + "/sso/getuserlist?companyCode=" + companyCode + "&filter=" + filter + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, null);
+            string users = requestHelper.Get(RemoteUrl + "/sso/getuserlist?companyCode=" + companyCode + "&filter=" + filter + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<UserItem>>>(users);
         }
         /// <summary>
@@ -52,7 +74,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<RoleItem>> GetRoleList(string filter = "", int pageIndex = 1, int pageSize = 10)
         {
-            string roles = requestHelper.Get(baseUrl.TrimEnd('/') + "/sso/getrolelist?filter=" + filter + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, null);
+            string roles = requestHelper.Get(RemoteUrl + "/sso/getrolelist?filter=" + filter + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<RoleItem>>>(roles);
         }
         /// <summary>
@@ -62,7 +84,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<UserDetail> GetUserDetail(string userId)
         {
-            string user = requestHelper.Get(baseUrl.TrimEnd('/') + "/sso/getuser/" + userId, null);
+            string user = requestHelper.Get(RemoteUrl + "/sso/getuser/" + userId, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<UserDetail>>(user);
         }
     }
