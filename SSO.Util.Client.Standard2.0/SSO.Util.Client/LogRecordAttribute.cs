@@ -90,7 +90,8 @@ namespace SSO.Util.Client
             if (!isLog) return;
             MessageCenterService messageService = new MessageCenterService(BaseUrl);
             HttpRequest request = context.HttpContext.Request;
-            var from = AppSettings.GetApplicationUrl(request);
+            //日志调用api
+            var to = AppSettings.GetApplicationUrl(request).ReplaceHttpPrefix().TrimEnd('/').ToLower();
             //不使用路由中的字符串因为用户可能输入大小写,不利于统计
             var controller = actionDescriptor.ControllerName;
             var action = actionDescriptor.ActionName;
@@ -124,7 +125,7 @@ namespace SSO.Util.Client
                     request.Body.Seek(0, SeekOrigin.Begin);
                 }
             }
-            string userId = "", userName = "";
+            string userId = "", userName = "", from = ""; ;
             string authorization = JwtManager.GetAuthorization(request, CookieKey);
             if (!authorization.IsNullOrEmpty())
             {
@@ -132,12 +133,13 @@ namespace SSO.Util.Client
                 UserData userData = JwtManager.ParseUserData(claimsPrincipal);
                 userId = userData.UserId;
                 userName = userData.UserName;
+                from = userData.From.ReplaceHttpPrefix().TrimEnd('/').ToLower();
             }
             string userHost = request.HttpContext.Connection.RemoteIpAddress.ToString();
             string userAgent = request.Headers["User-Agent"];
             var time = DateTime.UtcNow.UTCMillisecondTimeStamp() - (long)context.HttpContext.Items["log_time_start"];
             bool exception = context.Exception != null;
-            messageService.InsertLog(from.ReplaceHttpPrefix().TrimEnd('/').ToLower(), controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
+            messageService.InsertLog(from, to, controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
         }
         /// <summary>
         /// 验证配置文件

@@ -140,6 +140,7 @@ namespace SSO.Util.Client
             if (cookieKey == null) cookieKey = SSOAuthorizeAttribute.CookieKey;
             string authorization = request.Cookies[cookieKey] == null ? "" : request.Cookies[cookieKey].Value;
             if (string.IsNullOrEmpty(authorization)) authorization = request.Headers["Authorization"] ?? "";
+            if (string.IsNullOrEmpty(authorization)) authorization = request["Authorization"];
             return authorization;
         }
         /// <summary>
@@ -151,6 +152,7 @@ namespace SSO.Util.Client
         {
             return new UserData()
             {
+                From = User.Claims.Where(w => w.Type == "from").Select(s => s.Value).FirstOrDefault(),
                 UserId = User.Identity.Name,
                 UserName = User.Claims.Where(w => w.Type == "StaffName").Select(s => s.Value).FirstOrDefault(),
                 Lang = User.Claims.Where(w => w.Type == "Lang").Select(s => s.Value).FirstOrDefault(),

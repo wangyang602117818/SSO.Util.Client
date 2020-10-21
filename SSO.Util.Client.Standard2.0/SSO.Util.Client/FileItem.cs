@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace SSO.Util.Client
@@ -30,5 +31,23 @@ namespace SSO.Util.Client
         public bool Exception { get; set; }
         public DateTime? DeleteTime { get; set; }
         public DateTime? CreateTime { get; set; }
+    }
+    /// <summary>
+    /// 上传文件类
+    /// </summary>
+    public class UploadFileItem
+    {
+        /// <summary>
+        /// 文件名
+        /// </summary>
+        public string FileName { get; set; }
+        /// <summary>
+        /// ContentType
+        /// </summary>
+        public string ContentType { get; set; }
+        /// <summary>
+        /// 文件流
+        /// </summary>
+        public Stream FileStream { get; set; }
     }
 }

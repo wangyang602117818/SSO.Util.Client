@@ -164,6 +164,11 @@ namespace SSO.Util.Client
             if (roles.Intersect(dataRoles).Count() > 0) return true;
             return false;
         }
+        private bool CheckPermission(string permission, string authorization)
+        {
+
+            return true;
+        }
         /// <summary>
         /// 根据url上面的ticket获取token
         /// </summary>

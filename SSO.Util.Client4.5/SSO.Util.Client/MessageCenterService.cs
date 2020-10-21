@@ -25,6 +25,7 @@ namespace SSO.Util.Client
         /// 记录日志
         /// </summary>
         /// <param name="from"></param>
+        /// <param name="to"></param>
         /// <param name="controller"></param>
         /// <param name="action"></param>
         /// <param name="route"></param>
@@ -37,11 +38,12 @@ namespace SSO.Util.Client
         /// <param name="time"></param>
         /// <param name="exception"></param>
         /// <returns></returns>
-        public ServiceModel<string> InsertLog(string from, string controller, string action, string route, string querystring, string content, string userId, string userName, string userHost, string userAgent, long time = 0, bool exception = false)
+        public ServiceModel<string> InsertLog(string from, string to, string controller, string action, string route, string querystring, string content, string userId, string userName, string userHost, string userAgent, long time = 0, bool exception = false)
         {
             LogModel logModel = new LogModel()
             {
                 From = from,
+                To = to,
                 Controller = controller,
                 Action = action,
                 Route = route,
@@ -68,7 +70,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<string> InsertConvertTask(string machineName, string collectionName, string collectionId)
         {
-            var result = requestHelper.Post(baseUrl.TrimEnd('/') + "/filetask/insert", new { machineName,collectionName,collectionId }, null);
+            var result = requestHelper.Post(baseUrl.TrimEnd('/') + "/filetask/insert", new { machineName, collectionName, collectionId }, null);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
     }

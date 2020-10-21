@@ -37,20 +37,33 @@ namespace SSO.Util.Client
         /// <param name="fileName">文件名称</param>
         /// <param name="contentType">文件contentType</param>
         /// <param name="stream">文件流</param>
+        /// <param name="param">其他参数</param>
         /// <returns></returns>
-        public ServiceModel<FileResponse> Upload(string fileName, string contentType, Stream stream)
+        public ServiceModel<FileResponse> Upload(string fileName, string contentType, Stream stream, Dictionary<string, string> param = null)
+        {
+            List<UploadFileItem> files = new List<UploadFileItem>();
+            files.Add(new UploadFileItem() { FileName = fileName, ContentType = contentType, FileStream = stream });
+            var result = Uploads(files, param);
+            return new ServiceModel<FileResponse>()
+            {
+                code = result.code,
+                message = result.message,
+                result = result.result[0],
+                count = result.count
+            };
+        }
+        /// <summary>
+        /// 上传多个文件
+        /// </summary>
+        /// <param name="files"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public ServiceModel<List<FileResponse>> Uploads(IEnumerable<UploadFileItem> files, Dictionary<string, string> param = null)
         {
             Dictionary<string, string> headers = new Dictionary<string, string>();
             headers.Add("Authorization", Token);
-            string result = requestHelper.PostFile(RemoteUrl + "/upload/file", "files", fileName, contentType, stream, null, headers);
-            ServiceModel<List<FileResponse>> response = JsonSerializerHelper.Deserialize<ServiceModel<List<FileResponse>>>(result);
-            return new ServiceModel<FileResponse>()
-            {
-                code = response.code,
-                message = response.message,
-                result = response.result[0],
-                count = response.count
-            };
+            string result = requestHelper.PostFile(RemoteUrl + "/upload/file", files, param, headers);
+            return JsonSerializerHelper.Deserialize<ServiceModel<List<FileResponse>>>(result);
         }
         /// <summary>
         /// 下载文件
@@ -139,6 +152,18 @@ namespace SSO.Util.Client
             var url = RemoteUrl + "/data/GetFromList";
             string list = requestHelper.Get(url, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<string>>>(list);
+        }
+        /// <summary>
+        /// 获取ExtensionMap
+        /// </summary>
+        /// <returns></returns>
+        public ServiceModel<List<ExtensionMap>> GetExtensionMap()
+        {
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Authorization", Token);
+            var url = RemoteUrl + "/data/GetExtensionsMap";
+            string list = requestHelper.Get(url, headers);
+            return JsonSerializerHelper.Deserialize<ServiceModel<List<ExtensionMap>>>(list);
         }
     }
 }

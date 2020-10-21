@@ -72,8 +72,8 @@ namespace SSO.Util.Client
             if (!isLog) return;
             MessageCenterService messageService = new MessageCenterService(BaseUrl);
             HttpRequestBase request = filterContext.HttpContext.Request;
-            //日志来源
-            var from = AppSettings.GetApplicationUrl(request);
+            //日志调用api
+            var to = AppSettings.GetApplicationUrl(request).ReplaceHttpPrefix().TrimEnd('/').ToLower();
             //不使用路由中的字符串因为用户可能输入大小写,不利于统计
             var controller = reflectedActionDescriptor.ControllerDescriptor.ControllerName;
             var action = reflectedActionDescriptor.MethodInfo.Name;
@@ -107,7 +107,7 @@ namespace SSO.Util.Client
                     sm.Position = 0;
                 }
             }
-            string userId = "", userName = "";
+            string userId = "", userName = "", from = "";
             string authorization = JwtManager.GetAuthorization(request, CookieKey);
             if (!authorization.IsNullOrEmpty())
             {
@@ -115,12 +115,13 @@ namespace SSO.Util.Client
                 UserData userData = JwtManager.ParseUserData(claimsPrincipal);
                 userId = userData.UserId;
                 userName = userData.UserName;
+                from = userData.From.ReplaceHttpPrefix().TrimEnd('/').ToLower();
             }
             string userHost = request.UserHostAddress;
             string userAgent = request.UserAgent;
             var time = DateTime.UtcNow.UTCMillisecondTimeStamp() - (long)filterContext.HttpContext.Items["log_time_start"];
             bool exception = filterContext.Exception != null;
-            messageService.InsertLog(from.ReplaceHttpPrefix().TrimEnd('/').ToLower(), controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
+            messageService.InsertLog(from, to, controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
             base.OnActionExecuted(filterContext);
         }
         /// <summary>

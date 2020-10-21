@@ -8,6 +8,7 @@ namespace SSO.Util.Client
 {
     public class UserData
     {
+        public string From = null;
         public string UserId = null;
         public string UserName = null;
         public string Lang = null;

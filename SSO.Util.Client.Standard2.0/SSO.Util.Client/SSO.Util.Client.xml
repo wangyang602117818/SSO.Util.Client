@@ -33,6 +33,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.AppSettings.GetApplicationUrlTrimHttpPrefix(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            获取应用程序的根路径,并且替换前缀http和后缀/
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:SSO.Util.Client.AppSettings.GetAbsoluteUri(Microsoft.AspNetCore.Http.HttpRequest)">
             <summary>
             获取当前请求的完整路径
@@ -218,13 +225,22 @@
             <param name="remoteUrl"></param>
             <param name="token"></param>
         </member>
-        <member name="M:SSO.Util.Client.FileClientService.Upload(System.String,System.String,System.IO.Stream)">
+        <member name="M:SSO.Util.Client.FileClientService.Upload(System.String,System.String,System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             上传文件
             </summary>
             <param name="fileName">文件名称</param>
             <param name="contentType">文件contentType</param>
             <param name="stream">文件流</param>
+            <param name="param">其他参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.Uploads(System.Collections.Generic.IEnumerable{SSO.Util.Client.UploadFileItem},System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            上传多个文件
+            </summary>
+            <param name="files"></param>
+            <param name="param"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.FileClientService.DownloadFile(System.String,System.String,System.String)">
@@ -272,9 +288,35 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.FileClientService.GetExtensionMap">
+            <summary>
+            获取ExtensionMap
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:SSO.Util.Client.FileItem">
             <summary>
             文件类
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.UploadFileItem">
+            <summary>
+            上传文件类
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.UploadFileItem.FileName">
+            <summary>
+            文件名
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.UploadFileItem.ContentType">
+            <summary>
+            ContentType
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.UploadFileItem.FileStream">
+            <summary>
+            文件流
             </summary>
         </member>
         <member name="T:SSO.Util.Client.HashEncryptHelper">
@@ -315,15 +357,12 @@
             http请求类
             </summary>
         </member>
-        <member name="M:SSO.Util.Client.HttpRequestHelper.PostFile(System.String,System.String,System.String,System.String,System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:SSO.Util.Client.HttpRequestHelper.PostFile(System.String,System.Collections.Generic.IEnumerable{SSO.Util.Client.UploadFileItem},System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             发送文件
             </summary>
             <param name="url"></param>
-            <param name="paramName"></param>
-            <param name="fileName"></param>
-            <param name="contentType"></param>
-            <param name="fileStream"></param>
+            <param name="files"></param>
             <param name="paras"></param>
             <param name="headers"></param>
             <returns></returns>
@@ -552,6 +591,11 @@
             日志来源
             </summary>
         </member>
+        <member name="P:SSO.Util.Client.LogModel.To">
+            <summary>
+            日志去向
+            </summary>
+        </member>
         <member name="P:SSO.Util.Client.LogModel.Controller">
             <summary>
             日志访问的Controller
@@ -681,11 +725,12 @@
             </summary>
             <param name="baseUrl">日志项目的url</param>
         </member>
-        <member name="M:SSO.Util.Client.LogService.GetList(System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Int32,System.Int32)">
+        <member name="M:SSO.Util.Client.LogService.GetList(System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Int32,System.Int32)">
             <summary>
             获取日志对象列表
             </summary>
             <param name="from"></param>
+            <param name="to"></param>
             <param name="controller"></param>
             <param name="action"></param>
             <param name="startTime"></param>
@@ -718,18 +763,24 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.LogService.GetControllersByFrom(System.String)">
+        <member name="M:SSO.Util.Client.LogService.GetToList">
             <summary>
-            获取from中Controller列表
+            获取to列表
             </summary>
-            <param name="from"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetControllersByTo(System.String)">
+            <summary>
+            获取to中Controller列表
+            </summary>
+            <param name="to"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.LogService.GetActionsByController(System.String,System.String)">
             <summary>
             获取from中action列表
             </summary>
-            <param name="from"></param>
+            <param name="to"></param>
             <param name="controllerName"></param>
             <returns></returns>
         </member>
@@ -750,11 +801,12 @@
             </summary>
             <param name="baseUrl">消息中心项目的基本url</param>
         </member>
-        <member name="M:SSO.Util.Client.MessageCenterService.InsertLog(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64,System.Boolean)">
+        <member name="M:SSO.Util.Client.MessageCenterService.InsertLog(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64,System.Boolean)">
             <summary>
             记录日志
             </summary>
             <param name="from"></param>
+            <param name="to"></param>
             <param name="controller"></param>
             <param name="action"></param>
             <param name="route"></param>
@@ -798,6 +850,29 @@
             
             </summary>
             <param name="filterContext"></param>
+        </member>
+        <member name="T:SSO.Util.Client.PermissionDescriptionAttribute">
+            <summary>
+            权限描述
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.PermissionDescriptionAttribute.PermissionName">
+            <summary>
+            权限的名称
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.PermissionDescriptionAttribute.#ctor(System.String)">
+            <summary>
+            权限描述
+            </summary>
+            <param name="permissionName">权限名称</param>
+        </member>
+        <member name="M:SSO.Util.Client.PermissionDescriptionAttribute.GetPermissionDescription(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            获取程序集所有带有 PermissionDescriptionAttribute 的方法
+            </summary>
+            <param name="types"></param>
+            <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.RandomExtention">
             <summary>
@@ -1025,6 +1100,14 @@
             获取user详情
             </summary>
             <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOClientService.ReplacePermissions(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            替换权限项
+            </summary>
+            <param name="origin">项目标记</param>
+            <param name="names">权限列表</param>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.CompanyItem">

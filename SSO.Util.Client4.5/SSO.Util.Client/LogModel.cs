@@ -21,6 +21,10 @@ namespace SSO.Util.Client
         /// </summary>
         public string From { get; set; }
         /// <summary>
+        /// 日志去向
+        /// </summary>
+        public string To { get; set; }
+        /// <summary>
         /// 日志访问的Controller
         /// </summary>
         public string Controller { get; set; }
@@ -84,6 +88,7 @@ namespace SSO.Util.Client
         private int pageIndex = 1;
         private int pageSize = 10;
         public string From { get; set; }
+        public string To { get; set; }
         public string ControllerName { get; set; }
         public string ActionName { get; set; }
         public string UserId { get; set; }
@@ -98,6 +103,11 @@ namespace SSO.Util.Client
     public class FromCountModel
     {
         public string from { get; set; }
+        public int count { get; set; }
+    }
+    public class ToCountModel
+    {
+        public string to { get; set; }
         public int count { get; set; }
     }
     public class ControllerCountModel

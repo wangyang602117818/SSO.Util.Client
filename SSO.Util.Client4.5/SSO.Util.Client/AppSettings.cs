@@ -36,6 +36,15 @@ namespace SSO.Util.Client
             return request.Url.Scheme + "://" + request.Url.Host + ":" + request.Url.Port + request.ApplicationPath;
         }
         /// <summary>
+        /// 获取应用程序的根路径,并且替换前缀http和后缀/,然后转成小写
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static string GetApplicationUrlTrimHttpPrefix(HttpRequestBase request)
+        {
+            return GetApplicationUrl(request).ReplaceHttpPrefix().TrimEnd('/').ToLower();
+        }
+        /// <summary>
         /// 获取当前请求的完整路径
         /// </summary>
         /// <param name="request"></param>

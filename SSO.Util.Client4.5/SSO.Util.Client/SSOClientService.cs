@@ -39,7 +39,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<CompanyItem>> GetAllCompany()
         {
-            string companys = requestHelper.Get(RemoteUrl + "/sso/getallcompany", headers);
+            string companys = requestHelper.Get(RemoteUrl + "/company/getall", headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<CompanyItem>>>(companys);
         }
         /// <summary>
@@ -49,7 +49,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<DepartmentItem>> GetAllDepartment(string companyCode)
         {
-            string departments = requestHelper.Get(RemoteUrl + "/sso/getalldepartment/" + companyCode, headers);
+            string departments = requestHelper.Get(RemoteUrl + "/department/getDepartments?companyCode=" + companyCode, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<DepartmentItem>>>(departments);
         }
         /// <summary>
@@ -62,7 +62,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<UserItem>> GetUserList(string companyCode = "", string filter = "", int pageIndex = 1, int pageSize = 10)
         {
-            string users = requestHelper.Get(RemoteUrl + "/sso/getuserlist?companyCode=" + companyCode + "&filter=" + filter + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, headers);
+            string users = requestHelper.Get(RemoteUrl + "/user/getBasic?companyCode=" + companyCode + "&filter=" + filter + "&orderField=UserName&orderType=asc&pageIndex=" + pageIndex + "&pageSize=" + pageSize, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<UserItem>>>(users);
         }
         /// <summary>
@@ -74,7 +74,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<RoleItem>> GetRoleList(string filter = "", int pageIndex = 1, int pageSize = 10)
         {
-            string roles = requestHelper.Get(RemoteUrl + "/sso/getrolelist?filter=" + filter + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, headers);
+            string roles = requestHelper.Get(RemoteUrl + "/role/getlist?filter=" + filter + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<RoleItem>>>(roles);
         }
         /// <summary>
@@ -84,8 +84,19 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<UserDetail> GetUserDetail(string userId)
         {
-            string user = requestHelper.Get(RemoteUrl + "/sso/getuser/" + userId, headers);
+            string user = requestHelper.Get(RemoteUrl + "/user/getByUserId?userId=" + userId, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<UserDetail>>(user);
+        }
+        /// <summary>
+        /// 替换权限项
+        /// </summary>
+        /// <param name="origin">项目标记</param>
+        /// <param name="names">权限列表</param>
+        /// <returns></returns>
+        public ServiceModel<string> ReplacePermissions(string origin, IEnumerable<string> names)
+        {
+            string result = requestHelper.Post(RemoteUrl + "/permission/add", new { Origin = origin, Names = names }, headers);
+            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
     }
     /// <summary>
