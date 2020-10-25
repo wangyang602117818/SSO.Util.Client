@@ -73,7 +73,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomExtention.cs" />
     <Compile Include="ResponseModel.cs" />
-    <Compile Include="PermissionDescriptionAttribute.cs" />
     <Compile Include="SSOAuthorizeAttribute.cs" />
     <Compile Include="SSOClientService.cs" />
     <Compile Include="StreamExtention.cs" />

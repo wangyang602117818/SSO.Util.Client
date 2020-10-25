@@ -198,6 +198,11 @@
             配置文件缺失
             </summary>
         </member>
+        <member name="F:SSO.Util.Client.ErrorCode.record_has_been_used">
+            <summary>
+            记录已被使用
+            </summary>
+        </member>
         <member name="F:SSO.Util.Client.ErrorCode.server_exception">
             <summary>
             未知错误
@@ -851,29 +856,6 @@
             </summary>
             <param name="filterContext"></param>
         </member>
-        <member name="T:SSO.Util.Client.PermissionDescriptionAttribute">
-            <summary>
-            权限描述
-            </summary>
-        </member>
-        <member name="F:SSO.Util.Client.PermissionDescriptionAttribute.PermissionName">
-            <summary>
-            权限的名称
-            </summary>
-        </member>
-        <member name="M:SSO.Util.Client.PermissionDescriptionAttribute.#ctor(System.String)">
-            <summary>
-            权限描述
-            </summary>
-            <param name="permissionName">权限名称</param>
-        </member>
-        <member name="M:SSO.Util.Client.PermissionDescriptionAttribute.GetPermissionDescription(System.Collections.Generic.IEnumerable{System.Type})">
-            <summary>
-            获取程序集所有带有 PermissionDescriptionAttribute 的方法
-            </summary>
-            <param name="types"></param>
-            <returns></returns>
-        </member>
         <member name="T:SSO.Util.Client.RandomExtention">
             <summary>
             随机数扩展
@@ -996,15 +978,11 @@
             sso验证
             </summary>
         </member>
-        <member name="P:SSO.Util.Client.SSOAuthorizeAttribute.Roles">
-            <summary>
-            可以访问的role列表 (,隔开)
-            </summary>
-        </member>
-        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.#ctor(System.Boolean)">
+        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.#ctor(System.String,System.Boolean)">
             <summary>
             验证不通过是否跳转到sso登录页面
             </summary>
+            <param name="name">权限名称,到数据库查询是否有权限</param>
             <param name="unAuthorizedRedirect">验证不通过是否跳转到sso登录页面</param>
         </member>
         <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.OnAuthorization(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
@@ -1022,18 +1000,18 @@
             <param name="audience"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.GetRoles(System.String)">
-            <summary>
-            根据token获取roles列表
-            </summary>
-            <param name="authorization"></param>
-            <returns></returns>
-        </member>
         <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.VerifyConfig(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
             <summary>
             验证配置文件
             </summary>
             <param name="filterContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.GetPermissionDescription(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            获取程序集所有带有 SSOAuthorizeAttribute 的名称列表
+            </summary>
+            <param name="types"></param>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.SSOClientService">

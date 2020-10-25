@@ -27,16 +27,15 @@ namespace SSO.Util.Client
         public static string CookieKey = AppSettings.GetValue("ssoCookieKey");
         public static string CookieTime = AppSettings.GetValue("ssoCookieTime");
         public bool UnAuthorizedRedirect = true;
-        /// <summary>
-        /// 可以访问的role列表 (,隔开)
-        /// </summary>
-        public string Roles { get; set; }
+        public string Name = "";
         /// <summary>
         /// 验证不通过是否跳转到sso登录页面
         /// </summary>
+        /// <param name="name">权限名称,到数据库查询是否有权限</param>
         /// <param name="unAuthorizedRedirect">验证不通过是否跳转到sso登录页面</param>
-        public SSOAuthorizeAttribute(bool unAuthorizedRedirect = true)
+        public SSOAuthorizeAttribute(string name = "", bool unAuthorizedRedirect = true)
         {
+            Name = name;
             UnAuthorizedRedirect = unAuthorizedRedirect;
         }
         /// <summary>
@@ -49,25 +48,29 @@ namespace SSO.Util.Client
             IEnumerable<CustomAttributeData> methodAttributes = actionDescriptor.MethodInfo.CustomAttributes;
             IEnumerable<CustomAttributeData> controllerAttributes = actionDescriptor.ControllerTypeInfo.CustomAttributes;
             bool isAuthorization = true;
-            List<string> roles = new List<string>();
+            string permissionName = "";
             foreach (CustomAttributeData item in controllerAttributes)
             {
                 if (item.AttributeType.Name == "AllowAnonymousAttribute") isAuthorization = false;
-                if (item.AttributeType.Name == "SSOAuthorizeAttribute") isAuthorization = true;
-                foreach (var it in item.NamedArguments)
+                if (item.AttributeType.Name == "SSOAuthorizeAttribute")
                 {
-                    if (it.MemberName != "Roles") continue;
-                    roles.AddRange(it.TypedValue.Value.ToString().Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
+                    isAuthorization = true;
+                    if (item.ConstructorArguments.Count > 0)
+                    {
+                        permissionName = item.ConstructorArguments[0].Value.ToString();
+                    }
                 }
             }
             foreach (CustomAttributeData item in methodAttributes)
             {
                 if (item.AttributeType.Name == "AllowAnonymousAttribute") isAuthorization = false;
-                if (item.AttributeType.Name == "SSOAuthorizeAttribute") isAuthorization = true;
-                foreach (var it in item.NamedArguments)
+                if (item.AttributeType.Name == "SSOAuthorizeAttribute")
                 {
-                    if (it.MemberName != "Roles") continue;
-                    roles.AddRange(it.TypedValue.Value.ToString().Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
+                    isAuthorization = true;
+                    if (item.ConstructorArguments.Count > 0)
+                    {
+                        permissionName = item.ConstructorArguments[0].Value.ToString();
+                    }
                 }
             }
             if (!isAuthorization) return;
@@ -144,7 +147,7 @@ namespace SSO.Util.Client
             {
                 var principal = JwtManager.ParseAuthorization(authorization, SecretKey, filterContext.HttpContext);
                 filterContext.HttpContext.User = principal;
-                if (!CheckRole(roles, authorization)) filterContext.Result = new ResponseModel<string>(ErrorCode.authorize_fault, "");
+                if (!CheckPermission(permissionName, authorization)) filterContext.Result = new ResponseModel<string>(ErrorCode.error_permission, "");
             }
             catch (Exception ex) //token失效
             {
@@ -163,13 +166,19 @@ namespace SSO.Util.Client
             if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + returnUrl);
             return result;
         }
-        private bool CheckRole(IEnumerable<string> roles, string authorization)
+        private bool CheckPermission(string permission, string authorization)
         {
-            if (roles.Count() == 0) return true;
-            //数据库中的role
-            string[] dataRoles = GetRoles(authorization);
-            //如果有交集,可以访问
-            if (roles.Intersect(dataRoles).Count() > 0) return true;
+            if (permission.IsNullOrEmpty()) return true;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseUrl.TrimEnd('/') + "/permission/checkPermission?permissionName=" + permission);
+            request.Method = "get";
+            request.Headers.Add("Authorization", authorization);
+            using (WebResponse response = request.GetResponse())
+            {
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                string resp = reader.ReadToEnd();
+                var result = JsonSerializerHelper.Deserialize<ServiceModel<string>>(resp);
+                if (result.code == 0) return true;
+            }
             return false;
         }
         /// <summary>
@@ -190,25 +199,6 @@ namespace SSO.Util.Client
                 var result = JsonSerializerHelper.Deserialize<ServiceModel<string>>(resp);
                 if (result.code == 0) return result.result;
                 return "";
-            }
-        }
-        /// <summary>
-        /// 根据token获取roles列表
-        /// </summary>
-        /// <param name="authorization"></param>
-        /// <returns></returns>
-        public string[] GetRoles(string authorization)
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseUrl.TrimEnd('/') + "/user/getroles");
-            request.Method = "get";
-            request.Headers.Add("Authorization", authorization);
-            using (WebResponse response = request.GetResponse())
-            {
-                StreamReader reader = new StreamReader(response.GetResponseStream());
-                string resp = reader.ReadToEnd();
-                var result = JsonSerializerHelper.Deserialize<ServiceModel<string[]>>(resp);
-                if (result.code == 0) return result.result;
-                return new string[] { };
             }
         }
         /// <summary>
@@ -239,6 +229,29 @@ namespace SSO.Util.Client
                 return false;
             }
             return true;
+        }
+        /// <summary>
+        /// 获取程序集所有带有 SSOAuthorizeAttribute 的名称列表
+        /// </summary>
+        /// <param name="types"></param>
+        /// <returns></returns>
+        public static List<string> GetPermissionDescription(IEnumerable<Type> types)
+        {
+            List<string> actions = new List<string>();
+            foreach (var item in types)
+            {
+                var methods = item.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+                foreach (var method in methods)
+                {
+                    var attributes = method.GetCustomAttributes(typeof(SSOAuthorizeAttribute));
+                    foreach (Attribute att in attributes)
+                    {
+                        var name = ((SSOAuthorizeAttribute)att).Name;
+                        if (!actions.Contains(name)) actions.Add(name);
+                    }
+                }
+            }
+            return actions;
         }
     }
 }

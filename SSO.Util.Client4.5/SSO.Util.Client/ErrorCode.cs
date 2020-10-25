@@ -69,6 +69,10 @@ namespace SSO.Util.Client
         cookieTime_not_config = 603,
         messageBaseUrl_not_config = 604,
         /// <summary>
+        /// 记录已被使用
+        /// </summary>
+        record_has_been_used = 700,
+        /// <summary>
         /// 未知错误
         /// </summary>
         server_exception = -1000
