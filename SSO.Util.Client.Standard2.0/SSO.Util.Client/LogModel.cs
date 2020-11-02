@@ -45,6 +45,10 @@ namespace SSO.Util.Client
         /// </summary>
         public string Content { get; set; }
         /// <summary>
+        /// 响应内容
+        /// </summary>
+        public string Response { get; set; }
+        /// <summary>
         /// 日志关联人
         /// </summary>
         public string UserId { get; set; }

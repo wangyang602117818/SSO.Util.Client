@@ -30,7 +30,8 @@ namespace SSO.Util.Client
         /// <param name="action"></param>
         /// <param name="route"></param>
         /// <param name="querystring"></param>
-        /// <param name="content"></param>
+        /// <param name="requestContent"></param>
+        /// <param name="responseContent"></param>
         /// <param name="userId"></param>
         /// <param name="userName"></param>
         /// <param name="userHost"></param>
@@ -38,7 +39,7 @@ namespace SSO.Util.Client
         /// <param name="time"></param>
         /// <param name="exception"></param>
         /// <returns></returns>
-        public ServiceModel<string> InsertLog(string from, string to, string controller, string action, string route, string querystring, string content, string userId, string userName, string userHost, string userAgent, long time = 0, bool exception = false)
+        public ServiceModel<string> InsertLog(string from, string to, string controller, string action, string route, string querystring, string requestContent, string responseContent, string userId, string userName, string userHost, string userAgent, long time = 0, bool exception = false)
         {
             LogModel logModel = new LogModel()
             {
@@ -48,7 +49,8 @@ namespace SSO.Util.Client
                 Action = action,
                 Route = route,
                 QueryString = querystring,
-                Content = content,
+                Content = requestContent,
+                Response = responseContent,
                 UserId = userId,
                 UserName = userName,
                 UserHost = userHost,

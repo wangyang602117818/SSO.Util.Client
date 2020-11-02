@@ -27,16 +27,22 @@ namespace SSO.Util.Client
         /// <summary>
         /// 是否记录请求体
         /// </summary>
-        public bool RecordContent = true;
+        public bool RecordRequestContent = true;
+        /// <summary>
+        /// 是否记录响应体
+        /// </summary>
+        public bool RecordResponseContent = true;
         /// <summary>
         /// 日志记录
         /// </summary>
         /// <param name="recordQuerystring"></param>
-        /// <param name="recordContent"></param>
-        public LogRecordAttribute(bool recordQuerystring = true, bool recordContent = true)
+        /// <param name="recordRequestContent"></param>
+        /// <param name="recordResponseContent"></param>
+        public LogRecordAttribute(bool recordQuerystring = true, bool recordRequestContent = true, bool recordResponseContent = true)
         {
             RecordQuerystring = recordQuerystring;
-            RecordContent = recordContent;
+            RecordRequestContent = recordRequestContent;
+            RecordResponseContent = recordResponseContent;
         }
         /// <summary>
         /// 
@@ -88,8 +94,8 @@ namespace SSO.Util.Client
             route = route.TrimEnd('&');
             var querystring = "*";
             if (RecordQuerystring) querystring = request.Url.Query;
-            var content = "*";
-            if (RecordContent)
+            var requestContent = "*";
+            if (RecordRequestContent)
             {
                 var files = request.Files;
                 if (files.Count > 0)
@@ -97,15 +103,29 @@ namespace SSO.Util.Client
                     List<string> fileNames = new List<string>();
                     for (var i = 0; i < files.Count; i++)
                         fileNames.Add(files[i].FileName);
-                    content = string.Join(",", fileNames);
+                    requestContent = string.Join(",", fileNames);
                 }
                 else
                 {
                     Stream sm = request.InputStream;
                     sm.Position = 0;
-                    content = (new StreamReader(sm)).ReadToEnd().Replace("\n", "").Replace("\t", "").Replace("\r", "");
+                    requestContent = (new StreamReader(sm)).ReadToEnd().Replace("\n", "").Replace("\t", "").Replace("\r", "");
                     sm.Position = 0;
                 }
+            }
+            var responseContent = "*";
+            if (RecordResponseContent)
+            {
+                var result = filterContext.Result;
+                if (result is JsonResult) responseContent = JsonSerializerHelper.Serialize(((JsonResult)result).Data);
+                if (result is ViewResult) responseContent = "ViewResult";
+                if (result is ContentResult) responseContent = ((ContentResult)result).Content;
+                if (result is HttpStatusCodeResult) responseContent = ((HttpStatusCodeResult)result).StatusCode + "-" + ((HttpStatusCodeResult)result).StatusDescription;
+                if (result is FileResult) responseContent = ((FileResult)result).FileDownloadName;
+                if (result is JavaScriptResult) responseContent = ((JavaScriptResult)result).Script;
+                if (result is EmptyResult) responseContent = "";
+                if (result is RedirectResult) responseContent = "redirect:" + ((RedirectResult)result).Url;
+                if (result is RedirectToRouteResult) responseContent = "route:" + ((RedirectToRouteResult)result).RouteName;
             }
             string userId = "", userName = "", from = "";
             string authorization = JwtManager.GetAuthorization(request, CookieKey);
@@ -121,7 +141,7 @@ namespace SSO.Util.Client
             string userAgent = request.UserAgent;
             var time = DateTime.UtcNow.UTCMillisecondTimeStamp() - (long)filterContext.HttpContext.Items["log_time_start"];
             bool exception = filterContext.Exception != null;
-            messageService.InsertLog(from, to, controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
+            messageService.InsertLog(from, to, controller, action, route, querystring, requestContent, responseContent, userId, userName, userHost, userAgent, time, exception);
             base.OnActionExecuted(filterContext);
         }
         /// <summary>

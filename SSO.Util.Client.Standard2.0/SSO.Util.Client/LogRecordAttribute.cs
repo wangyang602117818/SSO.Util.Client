@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Internal;
@@ -31,16 +32,22 @@ namespace SSO.Util.Client
         /// <summary>
         /// 是否记录请求体
         /// </summary>
-        public bool RecordContent = true;
+        public bool RecordRequestContent = true;
+        /// <summary>
+        /// 是否记录响应体
+        /// </summary>
+        public bool RecordResponseContent = true;
         /// <summary>
         /// 日志记录
         /// </summary>
         /// <param name="recordQuerystring"></param>
-        /// <param name="recordContent"></param>
-        public LogRecordAttribute(bool recordQuerystring = true, bool recordContent = true)
+        /// <param name="recordRequestContent"></param>
+        /// <param name="recordResponseContent"></param>
+        public LogRecordAttribute(bool recordQuerystring = true, bool recordRequestContent = true, bool recordResponseContent = true)
         {
             RecordQuerystring = recordQuerystring;
-            RecordContent = recordContent;
+            RecordRequestContent = recordRequestContent;
+            RecordResponseContent = recordResponseContent;
         }
         /// <summary>
         /// 
@@ -106,8 +113,8 @@ namespace SSO.Util.Client
             route = route.TrimEnd('&');
             var querystring = "*";
             if (RecordQuerystring) querystring = request.QueryString.Value;
-            var content = "*";
-            if (RecordContent)
+            var requestContent = "*";
+            if (RecordRequestContent)
             {
                 var hasForm = request.HasFormContentType;
                 if (hasForm && request.Form.Files.Count > 0)
@@ -115,15 +122,29 @@ namespace SSO.Util.Client
                     List<string> fileNames = new List<string>();
                     for (var i = 0; i < request.Form.Files.Count; i++)
                         fileNames.Add(request.Form.Files[i].FileName);
-                    content = string.Join(",", fileNames);
+                    requestContent = string.Join(",", fileNames);
                 }
                 else
                 {
                     request.Body.Seek(0, SeekOrigin.Begin);
                     var reader = new StreamReader(request.Body);
-                    content = reader.ReadToEndAsync().Result.Replace("\n", "").Replace("\t", "").Replace("\r", "");
+                    requestContent = reader.ReadToEndAsync().Result.Replace("\n", "").Replace("\t", "").Replace("\r", "");
                     request.Body.Seek(0, SeekOrigin.Begin);
                 }
+            }
+            var responseContent = "*";
+            if (RecordResponseContent)
+            {
+                var result = context.Result;
+                if (result is JsonResult) responseContent = JsonSerializerHelper.Serialize(((JsonResult)result).Value);
+                if (result is ViewResult) responseContent = "ViewResult";
+                if (result is ContentResult) responseContent = ((ContentResult)result).Content;
+                if (result is StatusCodeResult) responseContent = ((StatusCodeResult)result).StatusCode + "-";
+                if (result is FileResult) responseContent = ((FileResult)result).FileDownloadName;
+                if (result is ObjectResult) responseContent = JsonSerializerHelper.Serialize(((ObjectResult)result).Value);
+                if (result is EmptyResult) responseContent = "";
+                if (result is RedirectResult) responseContent = "redirect:" + ((RedirectResult)result).Url;
+                if (result is RedirectToRouteResult) responseContent = "route:" + ((RedirectToRouteResult)result).RouteName;
             }
             string userId = "", userName = "", from = ""; ;
             string authorization = JwtManager.GetAuthorization(request, CookieKey);
@@ -139,7 +160,7 @@ namespace SSO.Util.Client
             string userAgent = request.Headers["User-Agent"];
             var time = DateTime.UtcNow.UTCMillisecondTimeStamp() - (long)context.HttpContext.Items["log_time_start"];
             bool exception = context.Exception != null;
-            messageService.InsertLog(from, to, controller, action, route, querystring, content, userId, userName, userHost, userAgent, time, exception);
+            messageService.InsertLog(from, to, controller, action, route, querystring, requestContent, responseContent, userId, userName, userHost, userAgent, time, exception);
         }
         /// <summary>
         /// 验证配置文件

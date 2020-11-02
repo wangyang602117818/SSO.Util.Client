@@ -626,6 +626,11 @@
             请求内容
             </summary>
         </member>
+        <member name="P:SSO.Util.Client.LogModel.Response">
+            <summary>
+            响应内容
+            </summary>
+        </member>
         <member name="P:SSO.Util.Client.LogModel.UserId">
             <summary>
             日志关联人
@@ -676,17 +681,23 @@
             是否记录url查询
             </summary>
         </member>
-        <member name="F:SSO.Util.Client.LogRecordAttribute.RecordContent">
+        <member name="F:SSO.Util.Client.LogRecordAttribute.RecordRequestContent">
             <summary>
             是否记录请求体
             </summary>
         </member>
-        <member name="M:SSO.Util.Client.LogRecordAttribute.#ctor(System.Boolean,System.Boolean)">
+        <member name="F:SSO.Util.Client.LogRecordAttribute.RecordResponseContent">
+            <summary>
+            是否记录响应体
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.LogRecordAttribute.#ctor(System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             日志记录
             </summary>
             <param name="recordQuerystring"></param>
-            <param name="recordContent"></param>
+            <param name="recordRequestContent"></param>
+            <param name="recordResponseContent"></param>
         </member>
         <member name="M:SSO.Util.Client.LogRecordAttribute.OnResourceExecuting(Microsoft.AspNetCore.Mvc.Filters.ResourceExecutingContext)">
             <summary>
@@ -806,7 +817,7 @@
             </summary>
             <param name="baseUrl">消息中心项目的基本url</param>
         </member>
-        <member name="M:SSO.Util.Client.MessageCenterService.InsertLog(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64,System.Boolean)">
+        <member name="M:SSO.Util.Client.MessageCenterService.InsertLog(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64,System.Boolean)">
             <summary>
             记录日志
             </summary>
@@ -816,7 +827,8 @@
             <param name="action"></param>
             <param name="route"></param>
             <param name="querystring"></param>
-            <param name="content"></param>
+            <param name="requestContent"></param>
+            <param name="responseContent"></param>
             <param name="userId"></param>
             <param name="userName"></param>
             <param name="userHost"></param>
