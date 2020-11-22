@@ -3,6 +3,7 @@ using log4net.Config;
 using log4net.Repository;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -20,7 +21,12 @@ namespace SSO.Util.Client
         private static readonly ILog infoLog = LogManager.GetLogger(repositoryName, "FileLogAppender");
         static Log4Net()
         {
-            var assembly = Assembly.LoadFrom(AppDomain.CurrentDomain.BaseDirectory + "SSO.Util.Client.dll");
+            string path = AppDomain.CurrentDomain.BaseDirectory + "bin\\SSO.Util.Client.dll";
+            if (!File.Exists(path))
+            {
+                path = AppDomain.CurrentDomain.BaseDirectory + "SSO.Util.Client.dll";
+            }
+            var assembly = Assembly.LoadFrom(path);
             var stream = assembly.GetManifestResourceStream("SSO.Util.Client.log4net.config");
             XmlConfigurator.Configure(repository, stream);
         }

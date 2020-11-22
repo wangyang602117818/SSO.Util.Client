@@ -48,8 +48,17 @@ services.AddControllers(options =>
 3. 编译错误处理: 如果出现了 Could not load file or assembly 的错误,请更新相应的程序集到最新版本
 ### 第二步: SSO验证
 - `[SSOAuthorize]`  : 需要登录才能访问
-- `[SSOAuthorize(Roles = "admin")]` : 需要相应的role才能访问
+- `[SSOAuthorize("GetFileDetail")]` : 到数据库查询是否有 GetFileDetail 权限
 - `[AllowAnonymous]` :可以匿名访问
+- 把所有标记了 `SSOAuthorize("name")` 的 name部分插入数据库,用来在界面配置权限
+```
+   var assembly = Assembly.GetExecutingAssembly();
+   var controllers = assembly.GetTypes().Where(w => w.FullName.Contains("FileService.Api.Controllers"));
+   var res = SSOAuthorizeAttribute.GetPermissionDescription(controllers);
+   SSOClientService sSOClientService = new SSOClientService(ssoBaseUrl, JwtManager.GetAuthorization(Request));
+   var category = AppSettings.GetApplicationUrlTrimHttpPrefix(Request);
+   var result = sSOClientService.ReplacePermissions(category, res);
+```
 - 在action中访问用户id
    ```
    var userId = User.Identity.Name;

@@ -215,5 +215,20 @@ namespace SSO.Util.Client
         {
             return new Regex("https?://|www.", RegexOptions.IgnoreCase).Replace(str, "");
         }
+        /// <summary>
+        /// 把驼峰形式的参数转换成_形式
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string PascalToUnderline(this string name)
+        {
+            string str = "";
+            for (int j = 0; j < name.Length; j++)  //strItem是原始字符串
+            {
+                char c = name[j];
+                str += (c >= 'A' && c <= 'Z') ? ("_" + c.ToString().ToLower()) : c.ToString();
+            }
+            return str.TrimStart('_');
+        }
     }
 }
