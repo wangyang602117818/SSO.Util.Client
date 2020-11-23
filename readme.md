@@ -46,7 +46,7 @@ services.AddControllers(options =>
 1. nuget上搜索 SSO.Util.Client 关键词安装
 2. 在配置文件中配置好节点
 3. 编译错误处理: 如果出现了 Could not load file or assembly 的错误,请更新相应的程序集到最新版本
-### 功能一: SSO验证
+### 功能一: SSO验证和权限验证
 - `[SSOAuthorize]`  : 需要登录才能访问
 - `[SSOAuthorize("GetFileDetail")]` : 到数据库查询是否有 GetFileDetail 权限
 - `[AllowAnonymous]` :可以匿名访问
@@ -83,8 +83,8 @@ services.AddControllers(options =>
    [NoneLogRecord]: //不记录日志
    ```
 ### 功能三: 验证和返回值
-1. 注册全局错误处理器 `MyHandleErrorAttribute`
-2. 注册全局model验证过滤器 `ValidateModelStateAttribute`
+- 注册全局错误处理器 `MyHandleErrorAttribute`
+- 注册全局model验证过滤器 `ValidateModelStateAttribute`
 - `ErrorCode` : 返回值枚举
 - `ResponseModel` :返回值对象(ContentResult的子类,类型为 application/json)
 - 案例:
