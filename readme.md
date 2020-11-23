@@ -71,7 +71,8 @@ services.AddControllers(options =>
    ```
    var userData = SSOAuthorizeAttribute.ParseUserData(authorization)
    ```
-### 功能二: 日志记录
+### 功能二: 日志记录和异常
+- 注册全局错误处理器 `MyHandleErrorAttribute`
 - 把日志记录在当前项目的 App_Data\ 文件夹中(使用的是log4net)
    ```
    Log4Net.InfoLog("xx");  //详情日志
@@ -82,8 +83,7 @@ services.AddControllers(options =>
    [LogRecord]:  //记录日志
    [NoneLogRecord]: //不记录日志
    ```
-### 功能三: 验证和返回值
-- 注册全局错误处理器 `MyHandleErrorAttribute`
+### 功能三: model验证和返回值标准化
 - 注册全局model验证过滤器 `ValidateModelStateAttribute`
 - `ErrorCode` : 返回值枚举
 - `ResponseModel` :返回值对象(ContentResult的子类,类型为 application/json)
