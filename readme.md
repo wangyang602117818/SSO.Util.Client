@@ -71,7 +71,7 @@ services.AddControllers(options =>
    ```
    var userData = SSOAuthorizeAttribute.ParseUserData(authorization)
    ```
-### 功能二: 日志记录和异常
+### 功能二: 日志记录和异常记录
 - 注册全局错误处理器 `MyHandleErrorAttribute`
 - 把日志记录在当前项目的 App_Data\ 文件夹中(使用的是log4net)
    ```
@@ -184,6 +184,7 @@ services.AddControllers(options =>
         {
             sessionFactory = new Configuration().Configure();
         }
+        public ModelBase() : base(sessionFactory) { }
         public List<T> GetPageList<T>(ref int count, object t, object replacement) where T : class
         {
             return QueryList<T>("get-page-list", t, replacement, ref count);
