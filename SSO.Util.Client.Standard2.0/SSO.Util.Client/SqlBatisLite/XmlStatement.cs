@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -24,12 +25,16 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <returns></returns>
         public string GetXElementSql(XElement xElement, object paras, ref SqlParameter[] sqlParameters, object replacement = null)
         {
+            Dictionary<string, object> parasDict = GetParameterDict(paras);
+            return GetXElementSql(xElement, parasDict, ref sqlParameters, replacement);
+        }
+        public string GetXElementSql(XElement xElement, Dictionary<string, object> paras, ref SqlParameter[] sqlParameters, object replacement = null)
+        {
             string sql = "";
-            PropertyInfo[] propertyInfos = paras?.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance) ?? new PropertyInfo[] { };
             foreach (XNode node in xElement.Nodes())
             {
                 if (node.NodeType == XmlNodeType.Text) sql += ((XText)node).Value.Replace("\n", " ");
-                if (node.NodeType == XmlNodeType.CDATA) sql += ((XText)node).Value.Replace("\n", " ");
+                if (node.NodeType == XmlNodeType.CDATA) sql += ((XText)node).Value.Replace("\n", "");
                 if (node.NodeType == XmlNodeType.Element)
                 {
                     var xNode = (XElement)node;
@@ -38,21 +43,21 @@ namespace SSO.Util.Client.SqlBatisLite
                     var prepend = xNode.Attribute("prepend")?.Value;
                     var conjunction = xNode.Attribute("conjunction")?.Value;
                     var xName = xNode.Name;
-                    if (xName == "isNotEmpty" && ElementNotEmpty(propertyName, paras, propertyInfos))
+                    if (xName == "isNotEmpty" && ElementNotEmpty(propertyName, paras))
                     {
                         sql += prepend + statement;
                     }
-                    if (xName == "isNotNull" && ElementNotNull(propertyName, paras, propertyInfos))
+                    if (xName == "isNotNull" && ElementNotNull(propertyName, paras))
                     {
                         sql += prepend + statement;
                     }
                     if (xNode.Name == "iterate")
                     {
-                        foreach (var prop in propertyInfos)
+                        foreach (var item in paras)
                         {
-                            if (prop.Name == propertyName)
+                            if (item.Key == propertyName)
                             {
-                                var value = prop.GetValue(paras);
+                                var value = item.Value;
                                 List<string> insql = new List<string>();
                                 var values = value as IEnumerable<int>;
                                 if (values != null)
@@ -72,51 +77,43 @@ namespace SSO.Util.Client.SqlBatisLite
                     }
                 }
             }
-            sqlParameters = GetSqlParameters(paras, propertyInfos);
+            sqlParameters = GetSqlParameters(paras);
             return ReplaceStatements(sql, replacement);
         }
-        /// <summary>
-        /// 通过对象获取SqlParameter[]
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public SqlParameter[] GetSqlParameters(object obj)
+        public SqlParameter[] GetSqlParameters(object paras)
         {
-            PropertyInfo[] propertyInfos = obj?.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance) ?? new PropertyInfo[] { };
-            return GetSqlParameters(obj, propertyInfos);
+            Dictionary<string, object> parasDict = GetParameterDict(paras);
+            return GetSqlParameters(parasDict);
         }
-        private SqlParameter[] GetSqlParameters(object obj, PropertyInfo[] propertyInfos)
+        private SqlParameter[] GetSqlParameters(Dictionary<string, object> paras)
         {
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
-            foreach (var prop in propertyInfos)
+            foreach (var item in paras)
             {
-                var name = prop.Name;
-                var value = prop.GetValue(obj);
-                if (value != null)
+                var name = item.Key;
+                var value = item.Value;
+                if (value is IEnumerable<int>)
                 {
-                    if (value is IEnumerable<int>)
+                    IEnumerable<int> values = value as IEnumerable<int>;
+                    for (var i = 0; i < values.Count(); i++)
                     {
-                        IEnumerable<int> values = value as IEnumerable<int>;
-                        for (var i = 0; i < values.Count(); i++)
-                        {
-                            SqlParameter sqlParameter = new SqlParameter("@" + name + i, values.ToArray()[i]);
-                            sqlParameters.Add(sqlParameter);
-                        }
-                    }
-                    else if (value is IEnumerable<string>)
-                    {
-                        IEnumerable<string> values = value as IEnumerable<string>;
-                        for (var i = 0; i < values.Count(); i++)
-                        {
-                            SqlParameter sqlParameter = new SqlParameter("@" + name + i, values.ToArray()[i]);
-                            sqlParameters.Add(sqlParameter);
-                        }
-                    }
-                    else
-                    {
-                        SqlParameter sqlParameter = new SqlParameter("@" + name, value);
+                        SqlParameter sqlParameter = new SqlParameter("@" + name + i, values.ToArray()[i]);
                         sqlParameters.Add(sqlParameter);
                     }
+                }
+                else if (value is IEnumerable<string>)
+                {
+                    IEnumerable<string> values = value as IEnumerable<string>;
+                    for (var i = 0; i < values.Count(); i++)
+                    {
+                        SqlParameter sqlParameter = new SqlParameter("@" + name + i, values.ToArray()[i]);
+                        sqlParameters.Add(sqlParameter);
+                    }
+                }
+                else
+                {
+                    SqlParameter sqlParameter = new SqlParameter("@" + name, value ?? DBNull.Value);
+                    sqlParameters.Add(sqlParameter);
                 }
             }
             return sqlParameters.ToArray();
@@ -142,15 +139,15 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="propertyName"></param>
         /// <param name="propertyInfos"></param>
         /// <returns></returns>
-        private bool ElementNotEmpty(string propertyName, object obj, PropertyInfo[] propertyInfos)
+        private bool ElementNotEmpty(string propertyName, Dictionary<string, object> paras)
         {
-            foreach (var prop in propertyInfos)
+            foreach (var item in paras)
             {
-                if (prop.Name == propertyName)
+                if (item.Key == propertyName)
                 {
-                    var value = prop.GetValue(obj);
+                    var value = item.Value;
                     if (value == null) return false;
-                    switch (prop.PropertyType.Name.ToLower())
+                    switch (item.Value.GetType().Name.ToLower())
                     {
                         case "string":
                             if ((string)value == "") return false;
@@ -167,18 +164,37 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="propertyName"></param>
         /// <param name="obj"></param>
         /// <returns></returns>
-        private bool ElementNotNull(string propertyName, object obj, PropertyInfo[] propertyInfos)
+        private bool ElementNotNull(string propertyName, Dictionary<string, object> paras)
         {
-            foreach (var prop in propertyInfos)
+            foreach (var item in paras)
             {
-                if (prop.Name == propertyName)
+                if (item.Key == propertyName)
                 {
-                    var value = prop.GetValue(obj);
-                    if (value == null) return false;
+                    if (item.Value == null) return false;
                     return true;
                 }
             }
             return false;
+        }
+        private Dictionary<string, object> GetParameterDict(object obj)
+        {
+            Dictionary<string, object> parasDict = new Dictionary<string, object>();
+            if (obj is JObject)
+            {
+                foreach (var item in (JObject)obj)
+                {
+                    parasDict.Add(item.Key, ((JValue)item.Value).Value);
+                }
+            }
+            else
+            {
+                PropertyInfo[] propertyInfos = obj?.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance) ?? new PropertyInfo[] { };
+                foreach (var pi in propertyInfos)
+                {
+                    parasDict.Add(pi.Name, pi.GetValue(obj));
+                }
+            }
+            return parasDict;
         }
     }
 }

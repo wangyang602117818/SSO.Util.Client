@@ -37,28 +37,31 @@ namespace SSO.Util.Client.SqlBatisLite
         /// 插入操作
         /// </summary>
         /// <param name="paras"></param>
+        /// <param name="replacement"></param>
         /// <returns></returns>
-        public int Insert(object paras)
+        public int Insert(object paras, object replacement = null)
         {
-            return session.Insert("insert", paras);
+            return session.Insert("insert", paras, replacement);
         }
         /// <summary>
         /// 更新操作
         /// </summary>
         /// <param name="paras"></param>
+        /// <param name="replacement"></param>
         /// <returns></returns>
-        public int Update(object paras)
+        public int Update(object paras, object replacement = null)
         {
-            return session.Update("update", paras);
+            return session.Update("update", paras, replacement);
         }
         /// <summary>
         /// 删除操作
         /// </summary>
         /// <param name="paras"></param>
+        /// <param name="replacement"></param>
         /// <returns></returns>
-        public int Delete(object paras)
+        public int Delete(object paras, object replacement = null)
         {
-            return session.Delete("delete", paras);
+            return session.Delete("delete", paras, replacement);
         }
         /// <summary>
         /// 查询单个
@@ -68,7 +71,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public T QueryObject<T>(string xName, object paras, object replacement) where T : class
+        public T QueryObject<T>(string xName, object paras, object replacement = null)
         {
             return session.QueryObject<T>(xName, paras, replacement);
         }
@@ -81,7 +84,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="replacement"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public List<T> QueryList<T>(string xName, object paras, object replacement, ref int count) where T : class
+        public IEnumerable<T> QueryList<T>(string xName, object paras, object replacement, ref int count)
         {
             return session.QueryList<T>(xName, paras, ref count, replacement);
         }
@@ -91,9 +94,9 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="xName">xml节点的全名称（name.node）</param>
         /// <param name="paras">要插入的对象</param>
         /// <returns></returns>
-        public int ExecuteNonQuery(string xName, object paras)
+        public int ExecuteNonQuery(string xName, object paras, object replacement = null)
         {
-            return session.ExecuteNonQuery(xName, paras);
+            return session.ExecuteNonQuery(xName, paras, replacement);
         }
         /// <summary>
         /// 执行xName中的sql，返回单行单列shuju
@@ -101,9 +104,9 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="xName"></param>
         /// <param name="paras"></param>
         /// <returns></returns>
-        public object ExecuteScalar(string xName, object paras)
+        public object ExecuteScalar(string xName, object paras, object replacement = null)
         {
-            return session.ExecuteScalar(xName, paras);
+            return session.ExecuteScalar(xName, paras, replacement);
         }
         /// <summary>
         /// 执行xName中的sql，返回结果

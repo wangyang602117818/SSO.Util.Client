@@ -37,9 +37,9 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="xName"></param>
         /// <param name="paras"></param>
         /// <returns></returns>
-        public int Insert(string xName, object paras)
+        public int Insert(string xName, object paras, object replacement = null)
         {
-            return ExecuteNonQuery(xName, paras);
+            return ExecuteNonQuery(xName, paras, replacement);
         }
         /// <summary>
         /// 
@@ -47,9 +47,9 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="xName"></param>
         /// <param name="paras"></param>
         /// <returns></returns>
-        public int Update(string xName, object paras)
+        public int Update(string xName, object paras, object replacement = null)
         {
-            return ExecuteNonQuery(xName, paras);
+            return ExecuteNonQuery(xName, paras, replacement);
         }
         /// <summary>
         /// 
@@ -57,9 +57,9 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="xName"></param>
         /// <param name="paras"></param>
         /// <returns></returns>
-        public int Delete(string xName, object paras)
+        public int Delete(string xName, object paras, object replacement = null)
         {
-            return ExecuteNonQuery(xName, paras);
+            return ExecuteNonQuery(xName, paras, replacement);
         }
         /// <summary>
         /// 
@@ -69,11 +69,11 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public T QueryObject<T>(string xName, object paras, object replacement = null) where T : class
+        public T QueryObject<T>(string xName, object paras, object replacement = null)
         {
             int count = 0;
             var result = Execute(xName, paras, ref count, replacement);
-            if (result == null) return null;
+            if (result == null) return default(T);
             return JsonSerializerHelper.Deserialize<List<T>>(result)[0];
         }
         /// <summary>
@@ -85,7 +85,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="count"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public List<T> QueryList<T>(string xName, object paras, ref int count, object replacement = null) where T : class
+        public IEnumerable<T> QueryList<T>(string xName, object paras, ref int count, object replacement = null)
         {
             var result = Execute(xName, paras, ref count, replacement);
             if (result == null) return new List<T>();
@@ -107,11 +107,11 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="xName">xml节点的全名称（name.node）</param>
         /// <param name="paras">要插入的对象</param>
         /// <returns></returns>
-        public int ExecuteNonQuery(string xName, object paras)
+        public int ExecuteNonQuery(string xName, object paras, object replacement = null)
         {
             XElement xElement = mappings[mappingName + "." + xName];
             SqlParameter[] sqlParameters = null;
-            string sql = xmlStatement.GetXElementSql(xElement, paras, ref sqlParameters, null);
+            string sql = xmlStatement.GetXElementSql(xElement, paras, ref sqlParameters, replacement);
             return base.ExecuteNonQuery(sql, sqlParameters.ToArray());
         }
         /// <summary>
@@ -120,11 +120,11 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="xName"></param>
         /// <param name="paras"></param>
         /// <returns></returns>
-        public object ExecuteScalar(string xName, object paras)
+        public object ExecuteScalar(string xName, object paras, object replacement = null)
         {
             XElement xElement = mappings[mappingName + "." + xName];
             SqlParameter[] sqlParameters = null;
-            string sql = xmlStatement.GetXElementSql(xElement, paras, ref sqlParameters, null);
+            string sql = xmlStatement.GetXElementSql(xElement, paras, ref sqlParameters, replacement);
             return base.ExecuteScalar(sql, sqlParameters.ToArray());
         }
         /// <summary>

@@ -19,7 +19,6 @@ namespace SSO.Util.Client.SqlBatisLite
         /// </summary>
         public string ConfigName = "sbl.config.xml";
         private string basePath = Directory.GetCurrentDirectory() + "\\";
-        private static SessionFactory sessionFactory = null;
         /// <summary>
         /// 使用默认配置文件名称 sbl.config.xml
         /// </summary>
@@ -67,8 +66,7 @@ namespace SSO.Util.Client.SqlBatisLite
                     mappings = ParseMappings(assembly, nameSpace);
                 }
             }
-            if (sessionFactory == null)
-                sessionFactory = new SessionFactory(connstring, mappings);
+            SessionFactory sessionFactory = new SessionFactory(connstring, mappings);
             if (createsqls != null) sessionFactory.GetSession(null).ExecuteSql(createsqls, null);
             return sessionFactory;
         }
