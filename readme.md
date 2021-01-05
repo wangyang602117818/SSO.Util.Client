@@ -1,5 +1,4 @@
-﻿<!-- TOC -->autoauto- [SSO.Client 使用文档](#ssoclient-使用文档)auto    - [过滤器](#过滤器)auto        - [.netframework](#netframework)auto        - [.netcore](#netcore)auto        - [排除过滤器](#排除过滤器)auto        - [限流过滤器](#限流过滤器)auto    - [配置文件](#配置文件)auto        - [.netframework](#netframework-1)auto        - [.netcore](#netcore-1)auto        - [安装 和 配置](#安装-和-配置)auto        - [功能一: SSO验证和权限验证](#功能一-sso验证和权限验证)auto        - [功能二: 日志记录和异常记录](#功能二-日志记录和异常记录)auto        - [功能三: model验证和返回值标准化](#功能三-model验证和返回值标准化)auto        - [功能四: ORM操作sqlserver数据库](#功能四-orm操作sqlserver数据库)auto        - [其他工具方法](#其他工具方法)autoauto<!-- /TOC -->
-# SSO.Client 使用文档
+﻿# SSO.Client 使用文档
 该工具集成在 .NetFramework 或者 .netcore 的项目中.
 ## 过滤器
 ### .netframework

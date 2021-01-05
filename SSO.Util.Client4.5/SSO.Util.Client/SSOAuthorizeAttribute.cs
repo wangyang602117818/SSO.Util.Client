@@ -204,7 +204,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public bool VerifyConfig(AuthorizationContext filterContext)
         {
-            if (BaseUrl.IsNullOrEmpty())
+            if (BaseUrl.IsNullOrEmpty() && UnAuthorizedRedirect)
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.baseUrl_not_config, "");
                 return false;
