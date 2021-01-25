@@ -93,6 +93,12 @@ services.AddControllers(options =>
       return new ResponseModel<string>(ErrorCode.success, json);  //返回序列化好的json字符串
       return new ResponseModel<Object>(ErrorCode.success, obj); //返回可以序列化的对象
    ```
+- `ServiceModel` :解析返回值对象
+- 案例: 
+  ```
+  var result = requestHelper.Post(baseUrl, model, null); //接口返回值
+  return JsonSerializerHelper.Deserialize<ServiceModel<List<LogModel>>>(result);  //解析返回值
+  ```
 ### 功能四: ORM操作sqlserver数据库
 1. 在项目的根目录下建立 sbl.config.xml 配置文件,设置成 Copy always
    ```
