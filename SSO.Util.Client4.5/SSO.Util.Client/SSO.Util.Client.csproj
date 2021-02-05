@@ -85,6 +85,7 @@
     <Compile Include="StreamExtention.cs" />
     <Compile Include="StringExtention.cs" />
     <Compile Include="SymmetricEncryptHelper.cs" />
+    <Compile Include="TcpListenerHelper.cs" />
     <Compile Include="ThrottlingAttribute.cs" />
     <Compile Include="UserData.cs" />
     <Compile Include="ValidateModelStateAttribute.cs" />
