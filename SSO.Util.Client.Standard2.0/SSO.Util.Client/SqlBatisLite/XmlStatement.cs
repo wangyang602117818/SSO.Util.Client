@@ -43,12 +43,17 @@ namespace SSO.Util.Client.SqlBatisLite
                     var statement = xNode.Value.Replace("\n", " ");
                     var prepend = xNode.Attribute("prepend")?.Value;
                     var conjunction = xNode.Attribute("conjunction")?.Value;
+                    var eleValue = xNode.Attribute("value")?.Value;
                     var xName = xNode.Name;
                     if (xName == "isNotEmpty" && ElementNotEmpty(propertyName, paras))
                     {
                         sql += prepend + statement;
                     }
                     if (xName == "isNotNull" && ElementNotNull(propertyName, paras))
+                    {
+                        sql += prepend + statement;
+                    }
+                    if (xNode.Name == "isEquals" && ElementEquals(propertyName, eleValue, paras))
                     {
                         sql += prepend + statement;
                     }
@@ -76,6 +81,7 @@ namespace SSO.Util.Client.SqlBatisLite
                             }
                         }
                     }
+
                 }
             }
             sqlParameters = GetSqlParameters(paras);
@@ -173,6 +179,32 @@ namespace SSO.Util.Client.SqlBatisLite
                 {
                     if (item.Value == null) return false;
                     return true;
+                }
+            }
+            return false;
+        }
+        /// <summary>
+        /// 判断对象中某个属性是否可用是否等于 eleValue
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="eleValue"></param>
+        /// <param name="paras"></param>
+        /// <returns></returns>
+        private bool ElementEquals(string propertyName, string eleValue, Dictionary<string, object> paras)
+        {
+            foreach (var item in paras)
+            {
+                if (item.Key == propertyName)
+                {
+                    var value = item.Value;
+                    if (value == null) return false;
+                    switch (item.Value.GetType().Name.ToLower())
+                    {
+                        case "string":
+                            if ((string)value == eleValue) return true;
+                            break;
+                    }
+                    return false;
                 }
             }
             return false;

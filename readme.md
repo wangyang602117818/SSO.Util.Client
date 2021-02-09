@@ -230,7 +230,7 @@ services.AddControllers(options =>
    `isNotEmpty` 节点:  (`property`: 当指定的属性不为null并且不为""时 , 添加该节点, `prepend`: 添加节点时语句前面添加该字符)  
    `isNotNull` 节点:  (`property`: 当指定的属性不为null时,添加该节点 ,  `prepend`: 添加节点时语句前面添加该字符 )  
    `iterate` 迭代节点: (`property`: 迭代的属性, `conjunction`: 迭代的语句用该符号连接), 每一次迭代都会把语句中 {{index}} 替换成元素下标
-   
+   `isEquals` 节点: (`property`: 要对比的属性名称, `value`: 要对比的属性的值, `prepend`: 添加节点时语句前面添加该字符)
    
    
 ### 其他工具方法  
