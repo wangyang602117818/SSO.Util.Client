@@ -21,6 +21,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// </summary>
         /// <param name="xElement"></param>
         /// <param name="paras"></param>
+        /// <param name="sqlParameters"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
         public string GetXElementSql(XElement xElement, object paras, ref SqlParameter[] sqlParameters, object replacement = null)
@@ -137,7 +138,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// 判断对象中某个属性是否可用(不为空 并且 不为null)
         /// </summary>
         /// <param name="propertyName"></param>
-        /// <param name="propertyInfos"></param>
+        /// <param name="paras"></param>
         /// <returns></returns>
         private bool ElementNotEmpty(string propertyName, Dictionary<string, object> paras)
         {
@@ -162,7 +163,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// 判断对象中某个属性是否可用(不为NULL)
         /// </summary>
         /// <param name="propertyName"></param>
-        /// <param name="obj"></param>
+        /// <param name="paras"></param>
         /// <returns></returns>
         private bool ElementNotNull(string propertyName, Dictionary<string, object> paras)
         {

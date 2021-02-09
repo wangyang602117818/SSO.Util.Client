@@ -106,6 +106,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// </summary>
         /// <param name="xName">xml节点的全名称（name.node）</param>
         /// <param name="paras">要插入的对象</param>
+        /// <param name="replacement"></param>
         /// <returns></returns>
         public int ExecuteNonQuery(string xName, object paras, object replacement = null)
         {
@@ -119,6 +120,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// </summary>
         /// <param name="xName"></param>
         /// <param name="paras"></param>
+        /// <param name="replacement"></param>
         /// <returns></returns>
         public object ExecuteScalar(string xName, object paras, object replacement = null)
         {
@@ -165,6 +167,29 @@ namespace SSO.Util.Client.SqlBatisLite
                 sqlParameters.Add(sqlPara);
             }
             return base.ExecuteTransaction(sqls, sqlParameters);
+        }
+        /// <summary>
+        /// 获取sql
+        /// </summary>
+        /// <param name="xName"></param>
+        /// <param name="paras"></param>
+        /// <param name="replacement"></param>
+        /// <returns></returns>
+        public string GetSql(string xName, object paras, object replacement = null)
+        {
+            XElement xElement = mappings[mappingName + "." + xName];
+            SqlParameter[] sqlParameters = null;
+            string sql = xmlStatement.GetXElementSql(xElement, paras, ref sqlParameters, replacement);
+            return sql;
+        }
+        /// <summary>
+        /// 获取SqlParameter[]参数
+        /// </summary>
+        /// <param name="paras"></param>
+        /// <returns></returns>
+        public SqlParameter[] GetParameters(object paras)
+        {
+            return xmlStatement.GetSqlParameters(paras);
         }
     }
 }

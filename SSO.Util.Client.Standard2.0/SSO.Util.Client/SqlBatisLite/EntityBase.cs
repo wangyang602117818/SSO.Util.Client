@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -140,6 +141,26 @@ namespace SSO.Util.Client.SqlBatisLite
         public int ExecuteSql(string sql, object paras)
         {
             return session.ExecuteSql(sql, paras);
+        }
+        /// <summary>
+        /// 获取sql
+        /// </summary>
+        /// <param name="xName"></param>
+        /// <param name="paras"></param>
+        /// <param name="replacement"></param>
+        /// <returns></returns>
+        public string GetSql(string xName, object paras, object replacement = null)
+        {
+            return session.GetSql(xName, paras, replacement);
+        }
+        /// <summary>
+        /// 获取SqlParameter[]参数
+        /// </summary>
+        /// <param name="paras"></param>
+        /// <returns></returns>
+        public SqlParameter[] GetParameters(object paras)
+        {
+            return session.GetParameters(paras);
         }
     }
 }

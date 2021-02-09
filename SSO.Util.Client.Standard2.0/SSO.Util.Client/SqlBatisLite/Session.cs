@@ -166,5 +166,28 @@ namespace SSO.Util.Client.SqlBatisLite
             }
             return base.ExecuteTransaction(sqls, sqlParameters);
         }
+        /// <summary>
+        /// 获取sql
+        /// </summary>
+        /// <param name="xName"></param>
+        /// <param name="paras"></param>
+        /// <param name="replacement"></param>
+        /// <returns></returns>
+        public string GetSql(string xName, object paras, object replacement = null)
+        {
+            XElement xElement = mappings[mappingName + "." + xName];
+            SqlParameter[] sqlParameters = null;
+            string sql = xmlStatement.GetXElementSql(xElement, paras, ref sqlParameters, replacement);
+            return sql;
+        }
+        /// <summary>
+        /// 获取SqlParameter[]参数
+        /// </summary>
+        /// <param name="paras"></param>
+        /// <returns></returns>
+        public SqlParameter[] GetParameters(object paras)
+        {
+            return xmlStatement.GetSqlParameters(paras);
+        }
     }
 }
