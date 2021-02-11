@@ -67,7 +67,7 @@ namespace SSO.Util.Client.SqlBatisLite
                 }
             }
             SessionFactory sessionFactory = new SessionFactory(connstring, mappings);
-            if (createsqls != null) sessionFactory.GetSession(null).ExecuteSql(createsqls, null);
+            if (createsqls != null) sessionFactory.GetSession(null).ExecuteNonQuery(createsqls, null);
             return sessionFactory;
         }
         /// <summary>

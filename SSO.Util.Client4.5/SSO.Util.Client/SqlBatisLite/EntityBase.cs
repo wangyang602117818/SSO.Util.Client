@@ -35,7 +35,7 @@ namespace SSO.Util.Client.SqlBatisLite
             session = sessionFactory.GetSession(cName);
         }
         /// <summary>
-        /// 插入操作
+        /// 插入操作,返回受影响的行数
         /// </summary>
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
@@ -45,7 +45,17 @@ namespace SSO.Util.Client.SqlBatisLite
             return session.Insert("insert", paras, replacement);
         }
         /// <summary>
-        /// 更新操作
+        /// 插入操作,返回主键id
+        /// </summary>
+        /// <param name="paras"></param>
+        /// <param name="replacement"></param>
+        /// <returns></returns>
+        public int InsertIdentity(object paras, object replacement = null)
+        {
+            return session.InsertIdentity("insert", paras, replacement);
+        }
+        /// <summary>
+        /// 更新操作,返回受影响的行数
         /// </summary>
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
@@ -55,7 +65,7 @@ namespace SSO.Util.Client.SqlBatisLite
             return session.Update("update", paras, replacement);
         }
         /// <summary>
-        /// 删除操作
+        /// 删除操作,返回受影响的行数
         /// </summary>
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
@@ -100,7 +110,7 @@ namespace SSO.Util.Client.SqlBatisLite
             return session.ExecuteNonQuery(xName, paras, replacement);
         }
         /// <summary>
-        /// 执行xName中的sql，返回单行单列shuju
+        /// 执行xName中的sql，返回单行单列
         /// </summary>
         /// <param name="xName"></param>
         /// <param name="paras"></param>
@@ -138,9 +148,9 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="sql"></param>
         /// <param name="paras"></param>
         /// <returns></returns>
-        public int ExecuteSql(string sql, object paras)
+        public int ExecuteNonQuery(string sql, object paras)
         {
-            return session.ExecuteSql(sql, paras);
+            return session.ExecuteNonQuery(sql, paras);
         }
         /// <summary>
         /// 获取sql

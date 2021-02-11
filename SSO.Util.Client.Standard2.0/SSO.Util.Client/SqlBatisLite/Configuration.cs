@@ -18,7 +18,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// 默认配置文件名称
         /// </summary>
         public string ConfigName = "sbl.config.xml";
-        private string basePath = Directory.GetCurrentDirectory() + "\\";
+        private string basePath = AppDomain.CurrentDomain.BaseDirectory;
         /// <summary>
         /// 使用默认配置文件名称 sbl.config.xml
         /// </summary>
@@ -47,7 +47,7 @@ namespace SSO.Util.Client.SqlBatisLite
             {
                 if (element.Name == "connectionstring")
                 {
-                    connstring = element.Value.Replace("\n", "").Trim();
+                    connstring = element.Value.Replace("\n", " ").Trim();
                 }
                 if (element.Name == "create-tables")
                 {
@@ -67,7 +67,7 @@ namespace SSO.Util.Client.SqlBatisLite
                 }
             }
             SessionFactory sessionFactory = new SessionFactory(connstring, mappings);
-            if (createsqls != null) sessionFactory.GetSession(null).ExecuteSql(createsqls, null);
+            if (createsqls != null) sessionFactory.GetSession(null).ExecuteNonQuery(createsqls, null);
             return sessionFactory;
         }
         /// <summary>

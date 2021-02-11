@@ -32,37 +32,53 @@ namespace SSO.Util.Client.SqlBatisLite
             this.mappingName = mappingName;
         }
         /// <summary>
-        /// 
+        /// 插入操作,返回受影响的行数
         /// </summary>
         /// <param name="xName"></param>
         /// <param name="paras"></param>
+        /// <param name="replacement"></param>
         /// <returns></returns>
         public int Insert(string xName, object paras, object replacement = null)
         {
             return ExecuteNonQuery(xName, paras, replacement);
         }
         /// <summary>
-        /// 
+        /// 插入操作,返回主键id
         /// </summary>
         /// <param name="xName"></param>
         /// <param name="paras"></param>
+        /// <param name="replacement"></param>
+        /// <returns></returns>
+        public int InsertIdentity(string xName, object paras, object replacement = null)
+        {
+            string sql = GetSql(xName, paras, replacement);
+            sql += " select SCOPE_IDENTITY()";
+            return Convert.ToInt32(ExecuteScalar(sql, paras));
+        }
+        /// <summary>
+        /// 更新操作,返回受影响的行数
+        /// </summary>
+        /// <param name="xName"></param>
+        /// <param name="paras"></param>
+        /// <param name="replacement"></param>
         /// <returns></returns>
         public int Update(string xName, object paras, object replacement = null)
         {
             return ExecuteNonQuery(xName, paras, replacement);
         }
         /// <summary>
-        /// 
+        /// 删除操作,返回受影响的行数
         /// </summary>
         /// <param name="xName"></param>
         /// <param name="paras"></param>
+        /// <param name="replacement"></param>
         /// <returns></returns>
         public int Delete(string xName, object paras, object replacement = null)
         {
             return ExecuteNonQuery(xName, paras, replacement);
         }
         /// <summary>
-        /// 
+        /// 查看单个数据
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="xName"></param>
@@ -77,7 +93,7 @@ namespace SSO.Util.Client.SqlBatisLite
             return JsonSerializerHelper.Deserialize<List<T>>(result)[0];
         }
         /// <summary>
-        /// 
+        /// 查询数据列表
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="xName"></param>
@@ -92,12 +108,12 @@ namespace SSO.Util.Client.SqlBatisLite
             return JsonSerializerHelper.Deserialize<List<T>>(result);
         }
         /// <summary>
-        /// 执行sql语句，包含@的参数
+        /// 执行sql语句,返回受影响的行数，包含@的参数
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="paras"></param>
         /// <returns></returns>
-        public int ExecuteSql(string sql, object paras)
+        public int ExecuteNonQuery(string sql, object paras)
         {
             return base.ExecuteNonQuery(sql, xmlStatement.GetSqlParameters(paras));
         }
@@ -128,6 +144,17 @@ namespace SSO.Util.Client.SqlBatisLite
             SqlParameter[] sqlParameters = null;
             string sql = xmlStatement.GetXElementSql(xElement, paras, ref sqlParameters, replacement);
             return base.ExecuteScalar(sql, sqlParameters.ToArray());
+        }
+        /// <summary>
+        /// 执行sql语句,返回单行单列
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="paras"></param>
+        /// <returns></returns>
+        public object ExecuteScalar(string sql, object paras)
+        {
+            SqlParameter[] parameters = GetParameters(paras);
+            return base.ExecuteScalar(sql, parameters);
         }
         /// <summary>
         /// 执行xName中的sql，返回结果
