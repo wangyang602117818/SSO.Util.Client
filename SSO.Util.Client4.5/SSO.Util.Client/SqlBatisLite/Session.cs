@@ -175,7 +175,7 @@ namespace SSO.Util.Client.SqlBatisLite
             return JsonSerializerHelper.Serialize(dt);
         }
         /// <summary>
-        /// 事务执行
+        /// 执行事务操作,返回最后一个语句受影响的行数,每个语句之间没有互相使用的数据
         /// </summary>
         /// <param name="xNames"></param>
         /// <param name="paras"></param>

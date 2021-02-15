@@ -13,9 +13,9 @@ namespace SSO.Util.Client.SqlBatisLite
     /// </summary>
     public class AdoNetUtil
     {
-       /// <summary>
-       /// 连接字符串
-       /// </summary>
+        /// <summary>
+        /// 连接字符串
+        /// </summary>
         protected string connstring = null;
         /// <summary>
         /// 
@@ -99,7 +99,7 @@ namespace SSO.Util.Client.SqlBatisLite
             return cmd.ExecuteReader(CommandBehavior.CloseConnection);
         }
         /// <summary>
-        /// 执行事务操作
+        /// 执行事务操作,返回最后一个语句受影响的行数,每个语句之间没有互相使用的数据
         /// </summary>
         /// <param name="sqls"></param>
         /// <param name="parameters"></param>
