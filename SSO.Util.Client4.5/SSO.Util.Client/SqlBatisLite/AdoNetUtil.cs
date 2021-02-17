@@ -16,7 +16,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <summary>
         /// 连接字符串
         /// </summary>
-        protected string connstring = null;
+        public string connstring = null;
         /// <summary>
         /// 
         /// </summary>

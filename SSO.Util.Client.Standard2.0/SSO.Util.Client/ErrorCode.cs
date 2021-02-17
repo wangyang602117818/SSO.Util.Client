@@ -66,6 +66,7 @@
         /// 记录已被使用
         /// </summary>
         record_has_been_used = 700,
+        task_is_running = 701,
         /// <summary>
         /// 未知错误
         /// </summary>

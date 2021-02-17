@@ -203,6 +203,9 @@ namespace SSO.Util.Client.SqlBatisLite
                         case "string":
                             if ((string)value == eleValue) return true;
                             break;
+                        case "boolean":
+                            if (value.ToString().ToLower() == eleValue.ToLower()) return true;
+                            break;
                     }
                     return false;
                 }

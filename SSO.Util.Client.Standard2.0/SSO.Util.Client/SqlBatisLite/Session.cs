@@ -113,7 +113,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="sql"></param>
         /// <param name="paras"></param>
         /// <returns></returns>
-        public int ExecuteNonQuery(string sql, object paras)
+        public int ExecuteSql(string sql, object paras)
         {
             return base.ExecuteNonQuery(sql, xmlStatement.GetSqlParameters(paras));
         }
