@@ -52,12 +52,9 @@ namespace SSO.Util.Client.SqlBatisLite
                 if (element.Name == "create-tables")
                 {
                     string assembly = element.Attribute("assembly").Value;
-                    string resource = element.Attribute("resource").Value;
-                    string assemblyPath = basePath + assembly + ".dll";
-                    if (!File.Exists(assemblyPath)) assemblyPath = basePath + assembly + ".exe";
-                    Stream stream = Assembly.LoadFrom(assemblyPath).GetManifestResourceStream(assembly + "." + resource);
-                    if (stream == null) throw new FileNotFoundException(assembly + "." + resource);
-                    createsqls = XDocument.Load(stream).Root.Value;
+                    string resource = element.Attribute("resource")?.Value;
+                    string nameSpace = element.Attribute("namespace")?.Value;
+                    createsqls = ParseCreateSqls(assembly, nameSpace, resource);
                 }
                 if (element.Name == "mappings")
                 {
@@ -67,7 +64,7 @@ namespace SSO.Util.Client.SqlBatisLite
                 }
             }
             SessionFactory sessionFactory = new SessionFactory(connstring, mappings);
-            if (createsqls != null) sessionFactory.GetSession(null).ExecuteSql(createsqls, null);
+            if (!createsqls.IsNullOrEmpty()) sessionFactory.GetSession(null).ExecuteSql(createsqls, null);
             return sessionFactory;
         }
         /// <summary>
@@ -82,20 +79,52 @@ namespace SSO.Util.Client.SqlBatisLite
             if (!File.Exists(assemblyPath)) assemblyPath = basePath + assembly + ".exe";
             Assembly assemblyInfo = Assembly.LoadFrom(assemblyPath);
             Dictionary<string, XElement> mappings = new Dictionary<string, XElement>();
+            string prefix = assembly + "." + nameSpace;
             foreach (string name in assemblyInfo.GetManifestResourceNames())
             {
-                int startIndex = name.IndexOf(nameSpace);
-                if (startIndex < 0) continue;
-                int endIndex = name.IndexOf(".sbl.xml");
-                if (endIndex < 0) continue;
+                if (!name.StartsWith(prefix)) continue;
+                var filename = name.Replace(prefix, "").TrimStart('.');
+                if (!filename.EndsWith(".sbl.xml")) continue;
                 Stream stream = assemblyInfo.GetManifestResourceStream(name);
                 foreach (XElement ele in XDocument.Load(stream).Root.Elements())
                 {
-                    string mappingName = name.Substring(startIndex + nameSpace.Length + 1).Replace(".sbl.xml", "");
+                    string mappingName = filename.Replace(".sbl.xml", "");
                     mappings.Add(mappingName + "." + ele.Name.LocalName, ele);
                 }
             }
             return mappings;
+        }
+        /// <summary>
+        /// 解析创建table的sql语句
+        /// </summary>
+        /// <param name="assembly">一定有值,表示程序集的位置</param>
+        /// <param name="nameSpace">可能是"",如果不为空,则表示从文件夹的多个文件取</param>
+        /// <param name="resource">可能是"",如果不为空,则表示取单个文件解析</param>
+        /// <returns></returns>
+        public string ParseCreateSqls(string assembly, string nameSpace, string resource)
+        {
+            string assemblyPath = basePath + assembly + ".dll";
+            if (!File.Exists(assemblyPath)) assemblyPath = basePath + assembly + ".exe";
+            Assembly assemblyInfo = Assembly.LoadFrom(assemblyPath);
+            string prefix = assembly;
+            if (!nameSpace.IsNullOrEmpty()) prefix += "." + nameSpace;
+            if (!resource.IsNullOrEmpty()) prefix += "." + resource;
+            Dictionary<string, Stream> creates = new Dictionary<string, Stream>();
+            foreach (string name in assemblyInfo.GetManifestResourceNames())
+            {
+                if (!name.StartsWith(prefix)) continue;
+                var filename = name.Replace(prefix, "").TrimStart('.');
+                Stream stream = assemblyInfo.GetManifestResourceStream(name);
+                if (stream == null) throw new FileNotFoundException(assembly + "." + resource);
+                creates.Add(filename, stream);
+            }
+            string createsqls = "";
+            var new_creates = creates.OrderBy(o => o.Key);
+            foreach (var item in new_creates)
+            {
+                createsqls += XDocument.Load(item.Value).Root.Value;
+            }
+            return createsqls;
         }
     }
 }

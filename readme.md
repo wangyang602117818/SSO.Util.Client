@@ -100,7 +100,9 @@ services.AddControllers(options =>
   return JsonSerializerHelper.Deserialize<ServiceModel<List<LogModel>>>(result);  //解析返回值
   ```
 ### 功能四: ORM操作sqlserver数据库
-1. 在项目的根目录下建立 sbl.config.xml 配置文件,设置成 Copy always
+1. 在项目的根目录下建立 sbl.config.xml 配置文件,设置成 Copy always   
+   `create-tables` : 项目初始化要创建的表,只会在项目启动时候执行一次  
+   其中 create-table 节点的 resource 和 namespace 只需要设置一个即可, 设置了 resource 说明需要找单个文件,设置了 namespace 到相应的命名空间下去找,并且按照文件名称升序之后组合里面的sql
    ```
    <?xml version="1.0" encoding="utf-8" ?>
    <configuration>
@@ -108,7 +110,7 @@ services.AddControllers(options =>
          Server=.;Database=T01;User ID=name;Password=123
       </connectionstring>
       <!--创建table-->
-      <create-tables resource="create.sbl.xml" assembly="SSO.Data"/>
+      <create-tables resource="create.sbl.xml" assembly="SSO.Data" namespace="Create"/>
       <mappings assembly="SSO.Data" namespace="Mappings"/>
    </configuration>
    ```

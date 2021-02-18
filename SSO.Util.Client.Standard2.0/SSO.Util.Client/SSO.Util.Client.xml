@@ -846,6 +846,16 @@
             <param name="collectionId"></param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.MessageCenterService.InsertTaskScheduling(System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            添加调度任务
+            </summary>
+            <param name="machineName"></param>
+            <param name="schedulingId"></param>
+            <param name="triggerId"></param>
+            <param name="schedulingState"></param>
+            <returns></returns>
+        </member>
         <member name="T:SSO.Util.Client.MyHandleErrorAttribute">
             <summary>
             错误处理
@@ -1072,6 +1082,15 @@
             <param name="nameSpace"></param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.Configuration.ParseCreateSqls(System.String,System.String,System.String)">
+            <summary>
+            解析创建table的sql语句
+            </summary>
+            <param name="assembly">一定有值,表示程序集的位置</param>
+            <param name="nameSpace">可能是"",如果不为空,则表示从文件夹的多个文件取</param>
+            <param name="resource">可能是"",如果不为空,则表示取单个文件解析</param>
+            <returns></returns>
+        </member>
         <member name="T:SSO.Util.Client.SqlBatisLite.EntityBase">
             <summary>
             数据表基类
@@ -1095,7 +1114,15 @@
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.Insert(System.Object,System.Object)">
             <summary>
-            插入操作
+            插入操作,返回受影响的行数
+            </summary>
+            <param name="paras"></param>
+            <param name="replacement"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.InsertIdentity(System.Object,System.Object)">
+            <summary>
+            插入操作,返回主键id
             </summary>
             <param name="paras"></param>
             <param name="replacement"></param>
@@ -1103,7 +1130,7 @@
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.Update(System.Object,System.Object)">
             <summary>
-            更新操作
+            更新操作,返回受影响的行数
             </summary>
             <param name="paras"></param>
             <param name="replacement"></param>
@@ -1111,7 +1138,7 @@
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.Delete(System.Object,System.Object)">
             <summary>
-            删除操作
+            删除操作,返回受影响的行数
             </summary>
             <param name="paras"></param>
             <param name="replacement"></param>
@@ -1148,7 +1175,7 @@
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.ExecuteScalar(System.String,System.Object,System.Object)">
             <summary>
-            执行xName中的sql，返回单行单列shuju
+            执行xName中的sql，返回单行单列
             </summary>
             <param name="xName"></param>
             <param name="paras"></param>
@@ -1181,6 +1208,22 @@
             <param name="paras"></param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.GetSql(System.String,System.Object,System.Object)">
+            <summary>
+            获取sql
+            </summary>
+            <param name="xName"></param>
+            <param name="paras"></param>
+            <param name="replacement"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.GetParameters(System.Object)">
+            <summary>
+            获取SqlParameter[]参数
+            </summary>
+            <param name="paras"></param>
+            <returns></returns>
+        </member>
         <member name="T:SSO.Util.Client.SqlBatisLite.Session">
             <summary>
             一个数据库操作对象
@@ -1201,31 +1244,43 @@
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.Session.Insert(System.String,System.Object,System.Object)">
             <summary>
-            
+            插入操作,返回受影响的行数
             </summary>
             <param name="xName"></param>
             <param name="paras"></param>
+            <param name="replacement"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.Session.InsertIdentity(System.String,System.Object,System.Object)">
+            <summary>
+            插入操作,返回主键id
+            </summary>
+            <param name="xName"></param>
+            <param name="paras"></param>
+            <param name="replacement"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.Session.Update(System.String,System.Object,System.Object)">
             <summary>
-            
+            更新操作,返回受影响的行数
             </summary>
             <param name="xName"></param>
             <param name="paras"></param>
+            <param name="replacement"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.Session.Delete(System.String,System.Object,System.Object)">
             <summary>
-            
+            删除操作,返回受影响的行数
             </summary>
             <param name="xName"></param>
             <param name="paras"></param>
+            <param name="replacement"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.Session.QueryObject``1(System.String,System.Object,System.Object)">
             <summary>
-            
+            查看单个数据
             </summary>
             <typeparam name="T"></typeparam>
             <param name="xName"></param>
@@ -1235,7 +1290,7 @@
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.Session.QueryList``1(System.String,System.Object,System.Int32@,System.Object)">
             <summary>
-            
+            查询数据列表
             </summary>
             <typeparam name="T"></typeparam>
             <param name="xName"></param>
@@ -1246,7 +1301,7 @@
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.Session.ExecuteSql(System.String,System.Object)">
             <summary>
-            执行sql语句，包含@的参数
+            执行sql语句,返回受影响的行数，包含@的参数
             </summary>
             <param name="sql"></param>
             <param name="paras"></param>
@@ -1258,6 +1313,7 @@
             </summary>
             <param name="xName">xml节点的全名称（name.node）</param>
             <param name="paras">要插入的对象</param>
+            <param name="replacement"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.Session.ExecuteScalar(System.String,System.Object,System.Object)">
@@ -1265,6 +1321,15 @@
             返回单行单列
             </summary>
             <param name="xName"></param>
+            <param name="paras"></param>
+            <param name="replacement"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.Session.ExecuteScalar(System.String,System.Object)">
+            <summary>
+            执行sql语句,返回单行单列
+            </summary>
+            <param name="sql"></param>
             <param name="paras"></param>
             <returns></returns>
         </member>
@@ -1287,6 +1352,22 @@
             <param name="replacements"></param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.Session.GetSql(System.String,System.Object,System.Object)">
+            <summary>
+            获取sql
+            </summary>
+            <param name="xName"></param>
+            <param name="paras"></param>
+            <param name="replacement"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.Session.GetParameters(System.Object)">
+            <summary>
+            获取SqlParameter[]参数
+            </summary>
+            <param name="paras"></param>
+            <returns></returns>
+        </member>
         <member name="T:SSO.Util.Client.SqlBatisLite.SessionFactory">
             <summary>
             获取Session的工厂
@@ -1303,6 +1384,7 @@
             </summary>
             <param name="xElement"></param>
             <param name="paras"></param>
+            <param name="sqlParameters"></param>
             <param name="replacement"></param>
             <returns></returns>
         </member>
@@ -1311,7 +1393,7 @@
             判断对象中某个属性是否可用(不为空 并且 不为null)
             </summary>
             <param name="propertyName"></param>
-            <param name="propertyInfos"></param>
+            <param name="paras"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementNotNull(System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
@@ -1319,7 +1401,16 @@
             判断对象中某个属性是否可用(不为NULL)
             </summary>
             <param name="propertyName"></param>
-            <param name="obj"></param>
+            <param name="paras"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementEquals(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            判断对象中某个属性是否可用是否等于 eleValue
+            </summary>
+            <param name="propertyName"></param>
+            <param name="eleValue"></param>
+            <param name="paras"></param>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.SqlBatisLite.XmlStatementAttribute">
@@ -1729,6 +1820,30 @@
             <summary>
             生成256位的AES加密密钥
             </summary>
+        </member>
+        <member name="T:SSO.Util.Client.TcpListenerHelper">
+            <summary>
+            tcp监听辅助类
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.TcpListenerHelper.#ctor(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="port">要监听的端口</param>
+            <param name="buffer">缓存的字节大小</param>
+        </member>
+        <member name="M:SSO.Util.Client.TcpListenerHelper.Run(System.Action{System.String})">
+            <summary>
+            运行监视
+            </summary>
+            <param name="action">监视回调</param>
+        </member>
+        <member name="M:SSO.Util.Client.TcpListenerHelper.GetLocalIp">
+            <summary>
+            获取计算机的ip
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.ThrottlingAttribute">
             <summary>
