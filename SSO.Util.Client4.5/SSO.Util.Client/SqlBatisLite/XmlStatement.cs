@@ -42,6 +42,7 @@ namespace SSO.Util.Client.SqlBatisLite
                     var propertyName = xNode.Attribute("property")?.Value;
                     var statement = xNode.Value.Replace("\n", " ");
                     var prepend = xNode.Attribute("prepend")?.Value;
+                    if (!prepend.IsNullOrEmpty()) prepend = " " + prepend + " ";
                     var conjunction = xNode.Attribute("conjunction")?.Value;
                     var eleValue = xNode.Attribute("value")?.Value;
                     var xName = xNode.Name;
@@ -54,6 +55,10 @@ namespace SSO.Util.Client.SqlBatisLite
                         sql += prepend + statement;
                     }
                     if (xNode.Name == "isEquals" && ElementEquals(propertyName, eleValue, paras))
+                    {
+                        sql += prepend + statement;
+                    }
+                    if (xNode.Name == "isNotEquals" && ElementNotEquals(propertyName, eleValue, paras))
                     {
                         sql += prepend + statement;
                     }
@@ -154,12 +159,7 @@ namespace SSO.Util.Client.SqlBatisLite
                 {
                     var value = item.Value;
                     if (value == null) return false;
-                    switch (item.Value.GetType().Name.ToLower())
-                    {
-                        case "string":
-                            if ((string)value == "") return false;
-                            break;
-                    }
+                    if (value.ToString() == "") return false;
                     return true;
                 }
             }
@@ -198,17 +198,29 @@ namespace SSO.Util.Client.SqlBatisLite
                 {
                     var value = item.Value;
                     if (value == null) return false;
-                    switch (item.Value.GetType().Name.ToLower())
-                    {
-                        case "string":
-                            if ((string)value == eleValue) return true;
-                            break;
-                        case "boolean":
-                            if (value.ToString().ToLower() == eleValue.ToLower()) return true;
-                            break;
-
-                    }
+                    if (value.ToString().ToLower() == eleValue.ToLower()) return true;
                     return false;
+                }
+            }
+            return false;
+        }
+        /// <summary>
+        /// 判断对象中某个属性是否可用是否不等于 eleValue
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="eleValue"></param>
+        /// <param name="paras"></param>
+        /// <returns></returns>
+        private bool ElementNotEquals(string propertyName, string eleValue, Dictionary<string, object> paras)
+        {
+            foreach (var item in paras)
+            {
+                if (item.Key == propertyName)
+                {
+                    var value = item.Value;
+                    if (value == null) return false;
+                    if (value.ToString().ToLower() == eleValue.ToLower()) return false;
+                    return true;
                 }
             }
             return false;

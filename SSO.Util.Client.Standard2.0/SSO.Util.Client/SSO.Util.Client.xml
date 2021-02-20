@@ -1373,6 +1373,18 @@
             获取Session的工厂
             </summary>
         </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.SessionFactory.GetSession(System.String)">
+            <summary>
+            获取一个可操作数据库的Session
+            </summary>
+            <param name="mappingName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.SessionFactory.CreateTables">
+            <summary>
+            通过解析出的 createsqls 运行创建表
+            </summary>
+        </member>
         <member name="T:SSO.Util.Client.SqlBatisLite.XmlStatement">
             <summary>
             xml工具类
@@ -1407,6 +1419,15 @@
         <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementEquals(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
             <summary>
             判断对象中某个属性是否可用是否等于 eleValue
+            </summary>
+            <param name="propertyName"></param>
+            <param name="eleValue"></param>
+            <param name="paras"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementNotEquals(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            判断对象中某个属性是否可用是否不等于 eleValue
             </summary>
             <param name="propertyName"></param>
             <param name="eleValue"></param>
