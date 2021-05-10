@@ -53,6 +53,7 @@
     <Compile Include="Base64SecureURL.cs" />
     <Compile Include="DateTimeExtention.cs" />
     <Compile Include="DownloadFileItem.cs" />
+    <Compile Include="ElasticLite\ElasticConnection.cs" />
     <Compile Include="ErrorCode.cs" />
     <Compile Include="ExtensionMap.cs" />
     <Compile Include="FileClientService.cs" />

@@ -194,7 +194,7 @@ services.AddControllers(options =>
             sessionFactory.CreateTables();  //用配置好的sql语句创建table
         }
         public ModelBase() : base(sessionFactory) { }
-        public List<T> GetPageList<T>(ref int count, object t, object replacement) where T : class
+        public IEnumerable<T> GetPageList<T>(ref int count, object t, object replacement) where T : class
         {
             return QueryList<T>("get-page-list", t, replacement, ref count);
         }

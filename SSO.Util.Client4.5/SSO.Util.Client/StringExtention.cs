@@ -230,5 +230,42 @@ namespace SSO.Util.Client
             }
             return str.TrimStart('_');
         }
+        /// <summary>
+        /// 判断object中的类型是否的值类型
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static bool ObjectIsValueType(this object obj)
+        {
+            //全部数值类型
+            if (obj is sbyte) return true;
+            if (obj is byte) return true;
+            if (obj is short) return true;
+            if (obj is ushort) return true;
+            if (obj is int) return true;
+            if (obj is uint) return true;
+            if (obj is long) return true;
+            if (obj is ulong) return true;
+            //浮点类型
+            if (obj is float) return true;
+            if (obj is double) return true;
+            if (obj is decimal) return true;
+            //bool类型
+            if (obj is bool) return true;
+            //字符串类型
+            if (obj is char) return true;
+            if (obj is string) return true;
+          
+            return false;
+        }
+        /// <summary>
+        /// 判断是否为数字
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsNumeric(this string value)
+        {
+            return Regex.IsMatch(value, @"^[+-]?\d*[.]?\d*$");
+        }
     }
 }

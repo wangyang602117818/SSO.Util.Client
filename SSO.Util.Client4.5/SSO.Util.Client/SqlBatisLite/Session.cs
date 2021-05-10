@@ -15,10 +15,10 @@ namespace SSO.Util.Client.SqlBatisLite
     public class Session : AdoNetUtil
     {
         /// <summary>
-        /// 
+        /// 所有的sql映射
         /// </summary>
-        protected Dictionary<string, XElement> mappings = new Dictionary<string, XElement>();
-        protected XmlStatement xmlStatement = new XmlStatement();
+        public Dictionary<string, XElement> mappings = new Dictionary<string, XElement>();
+        public XmlStatement xmlStatement = null;
         public string mappingName;
         /// <summary>
         /// 
@@ -30,6 +30,7 @@ namespace SSO.Util.Client.SqlBatisLite
         {
             this.mappings = mappings;
             this.mappingName = mappingName;
+            this.xmlStatement = new XmlStatement(mappingName, mappings);
         }
         /// <summary>
         /// 插入操作,返回受影响的行数
@@ -87,8 +88,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <returns></returns>
         public T QueryObject<T>(string xName, object paras, object replacement = null)
         {
-            int count = 0;
-            var result = Execute(xName, paras, ref count, replacement);
+            var result = Execute(xName, paras, replacement);
             if (result == null) return default(T);
             return JsonSerializerHelper.Deserialize<List<T>>(result)[0];
         }
@@ -98,12 +98,11 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <typeparam name="T"></typeparam>
         /// <param name="xName"></param>
         /// <param name="paras"></param>
-        /// <param name="count"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public IEnumerable<T> QueryList<T>(string xName, object paras, ref int count, object replacement = null)
+        public IEnumerable<T> QueryList<T>(string xName, object paras, object replacement = null)
         {
-            var result = Execute(xName, paras, ref count, replacement);
+            var result = Execute(xName, paras, replacement);
             if (result == null) return new List<T>();
             return JsonSerializerHelper.Deserialize<List<T>>(result);
         }
@@ -127,9 +126,8 @@ namespace SSO.Util.Client.SqlBatisLite
         public int ExecuteNonQuery(string xName, object paras, object replacement = null)
         {
             XElement xElement = mappings[mappingName + "." + xName];
-            SqlParameter[] sqlParameters = null;
-            string sql = xmlStatement.GetXElementSql(xElement, paras, ref sqlParameters, replacement);
-            return base.ExecuteNonQuery(sql, sqlParameters.ToArray());
+            string sql = xmlStatement.GetXElementSql(xElement, paras, replacement);
+            return base.ExecuteNonQuery(sql, xmlStatement.GetSqlParameters(paras).ToArray());
         }
         /// <summary>
         /// 返回单行单列
@@ -141,9 +139,8 @@ namespace SSO.Util.Client.SqlBatisLite
         public object ExecuteScalar(string xName, object paras, object replacement = null)
         {
             XElement xElement = mappings[mappingName + "." + xName];
-            SqlParameter[] sqlParameters = null;
-            string sql = xmlStatement.GetXElementSql(xElement, paras, ref sqlParameters, replacement);
-            return base.ExecuteScalar(sql, sqlParameters.ToArray());
+            string sql = xmlStatement.GetXElementSql(xElement, paras, replacement);
+            return base.ExecuteScalar(sql, xmlStatement.GetSqlParameters(paras).ToArray());
         }
         /// <summary>
         /// 执行sql语句,返回单行单列
@@ -161,17 +158,14 @@ namespace SSO.Util.Client.SqlBatisLite
         /// </summary>
         /// <param name="xName">xml节点的全名称（name.node）</param>
         /// <param name="paras">要查询的参数</param>
-        /// <param name="count">查询的总数</param>
         /// <param name="replacement">要替换的参数</param>
         /// <returns></returns>
-        public string Execute(string xName, object paras, ref int count, object replacement = null)
+        public string Execute(string xName, object paras, object replacement = null)
         {
             XElement xElement = mappings[mappingName + "." + xName];
-            SqlParameter[] sqlParameters = null;
-            string sql = xmlStatement.GetXElementSql(xElement, paras, ref sqlParameters, replacement);
-            DataTable dt = ExecuteDataTable(sql, sqlParameters);
+            string sql = xmlStatement.GetXElementSql(xElement, paras, replacement);
+            DataTable dt = ExecuteDataTable(sql, xmlStatement.GetSqlParameters(paras));
             if (dt.Rows.Count == 0) return null;
-            count = dt.Columns.Contains("total") ? (int)dt.Rows[0]["total"] : dt.Rows.Count;
             return JsonSerializerHelper.Serialize(dt);
         }
         /// <summary>
@@ -188,10 +182,9 @@ namespace SSO.Util.Client.SqlBatisLite
             for (var i = 0; i < xNames.Count(); i++)
             {
                 XElement xElement = mappings[mappingName + "." + xNames.ElementAt(i)];
-                SqlParameter[] sqlPara = null;
-                string sql = xmlStatement.GetXElementSql(xElement, paras.ElementAt(i), ref sqlPara, replacements?.ElementAt(i));
+                string sql = xmlStatement.GetXElementSql(xElement, paras.ElementAt(i), replacements?.ElementAt(i));
                 sqls.Add(sql);
-                sqlParameters.Add(sqlPara);
+                sqlParameters.Add(xmlStatement.GetSqlParameters(paras.ElementAt(i)));
             }
             return base.ExecuteTransaction(sqls, sqlParameters);
         }
@@ -205,8 +198,7 @@ namespace SSO.Util.Client.SqlBatisLite
         public string GetSql(string xName, object paras, object replacement = null)
         {
             XElement xElement = mappings[mappingName + "." + xName];
-            SqlParameter[] sqlParameters = null;
-            string sql = xmlStatement.GetXElementSql(xElement, paras, ref sqlParameters, replacement);
+            string sql = xmlStatement.GetXElementSql(xElement, paras, replacement);
             return sql;
         }
         /// <summary>

@@ -16,13 +16,13 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <summary>
         /// 
         /// </summary>
-        protected XmlStatement xmlStatement = new XmlStatement();
+        protected XmlStatement xmlStatement = null;
         /// <summary>
         /// 一个session实例
         /// </summary>
         protected Session session = null;
         /// <summary>
-        /// sessionFactory 是单实例对象，一个项目只有一个
+        /// sessionFactory 是单实例对象，一个数据库只有一个
         /// </summary>
         /// <param name="sessionFactory"></param>
         public EntityBase(SessionFactory sessionFactory)
@@ -33,6 +33,7 @@ namespace SSO.Util.Client.SqlBatisLite
                 if (attributeData.AttributeType.Name == "XmlStatementAttribute") cName = (string)attributeData.ConstructorArguments[0].Value;
             }
             session = sessionFactory.GetSession(cName);
+            xmlStatement = new XmlStatement(cName, session.mappings);
         }
         /// <summary>
         /// 插入操作,返回受影响的行数
@@ -95,9 +96,9 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="replacement"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public IEnumerable<T> QueryList<T>(string xName, object paras, object replacement, ref int count)
+        public IEnumerable<T> QueryList<T>(string xName, object paras, object replacement = null)
         {
-            return session.QueryList<T>(xName, paras, ref count, replacement);
+            return session.QueryList<T>(xName, paras, replacement);
         }
         /// <summary>
         /// 执行xName中的sql，返回受影响的行数
@@ -127,12 +128,12 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="count">查询的总数</param>
         /// <param name="replacement">要替换的参数</param>
         /// <returns></returns>
-        public string Execute(string xName, object paras, ref int count, object replacement = null)
+        public string Execute(string xName, object paras, object replacement = null)
         {
-            return session.Execute(xName, paras, ref count, replacement);
+            return session.Execute(xName, paras, replacement);
         }
         /// <summary>
-        /// 事务执行
+        /// 执行事务操作,返回最后一个语句受影响的行数,每个语句之间没有互相使用的数据
         /// </summary>
         /// <param name="xNames"></param>
         /// <param name="paras"></param>

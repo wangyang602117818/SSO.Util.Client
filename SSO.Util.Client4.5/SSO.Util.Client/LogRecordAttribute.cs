@@ -51,7 +51,7 @@ namespace SSO.Util.Client
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (!VerifyConfig(filterContext)) return;
-            filterContext.HttpContext.Items.Add("log_time_start", DateTime.UtcNow.UTCMillisecondTimeStamp());
+            filterContext.HttpContext.Items.Add("log_time_start", DateTime.UtcNow.MillisecondTimeStamp());
             base.OnActionExecuting(filterContext);
         }
         /// <summary>
@@ -139,7 +139,7 @@ namespace SSO.Util.Client
             }
             string userHost = request.UserHostAddress;
             string userAgent = request.UserAgent;
-            var time = DateTime.UtcNow.UTCMillisecondTimeStamp() - (long)filterContext.HttpContext.Items["log_time_start"];
+            var time = DateTime.UtcNow.MillisecondTimeStamp() - (long)filterContext.HttpContext.Items["log_time_start"];
             bool exception = filterContext.Exception != null;
             messageService.InsertLog(from, to, controller, action, route, querystring, requestContent, responseContent, userId, userName, userHost, userAgent, time, exception);
             base.OnActionExecuted(filterContext);

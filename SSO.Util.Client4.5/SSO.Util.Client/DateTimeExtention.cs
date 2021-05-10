@@ -16,7 +16,7 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="dateTime"></param>
         /// <returns></returns>
-        public static long UTCTimeStamp(this DateTime dateTime)
+        public static long TimeStamp(this DateTime dateTime)
         {
             return ((dateTime.Ticks - 621355968000000000) / 10000000);
         }
@@ -25,7 +25,7 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="dateTime"></param>
         /// <returns></returns>
-        public static long UTCMillisecondTimeStamp(this DateTime dateTime)
+        public static long MillisecondTimeStamp(this DateTime dateTime)
         {
             return (dateTime.Ticks - 621355968000000000) / 10000;
         }

@@ -71,7 +71,7 @@ namespace SSO.Util.Client
         public void OnActionExecuting(ActionExecutingContext context)
         {
             if (!VerifyConfig(context)) return;
-            context.HttpContext.Items.Add("log_time_start", DateTime.UtcNow.UTCMillisecondTimeStamp());
+            context.HttpContext.Items.Add("log_time_start", DateTime.UtcNow.MillisecondTimeStamp());
         }
         /// <summary>
         /// 
@@ -158,7 +158,7 @@ namespace SSO.Util.Client
             }
             string userHost = request.HttpContext.Connection.RemoteIpAddress.ToString();
             string userAgent = request.Headers["User-Agent"];
-            var time = DateTime.UtcNow.UTCMillisecondTimeStamp() - (long)context.HttpContext.Items["log_time_start"];
+            var time = DateTime.UtcNow.MillisecondTimeStamp() - (long)context.HttpContext.Items["log_time_start"];
             bool exception = context.Exception != null;
             messageService.InsertLog(from, to, controller, action, route, querystring, requestContent, responseContent, userId, userName, userHost, userAgent, time, exception);
         }

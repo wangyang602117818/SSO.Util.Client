@@ -112,14 +112,14 @@
             时间扩展类
             </summary>
         </member>
-        <member name="M:SSO.Util.Client.DateTimeExtention.UTCTimeStamp(System.DateTime)">
+        <member name="M:SSO.Util.Client.DateTimeExtention.TimeStamp(System.DateTime)">
             <summary>
             获取DateTime时间的时间戳
             </summary>
             <param name="dateTime"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.DateTimeExtention.UTCMillisecondTimeStamp(System.DateTime)">
+        <member name="M:SSO.Util.Client.DateTimeExtention.MillisecondTimeStamp(System.DateTime)">
             <summary>
             获取DateTime时间的毫秒时间戳
             </summary>
@@ -157,6 +157,65 @@
             <summary>
             文件流
             </summary>
+        </member>
+        <member name="T:SSO.Util.Client.ElasticLite.ElasticConnection">
+            <summary>
+            操作 ElasticSearch 工具封装
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.ElasticLite.ElasticConnection.#ctor(System.String,System.Int32)">
+            <summary>
+            单个 ElasticSearch 服务器实例化
+            </summary>
+            <param name="url">ElasticSearch服务器地址</param>
+            <param name="timeout">超时时间</param>
+        </member>
+        <member name="M:SSO.Util.Client.ElasticLite.ElasticConnection.#ctor(System.Collections.Generic.IEnumerable{System.String},System.Int32)">
+            <summary>
+            集群 ElasticSearch 服务器实例化
+            </summary>
+            <param name="urls">ElasticSearch服务器地址列表</param>
+            <param name="timeout">超时时间</param>
+        </member>
+        <member name="M:SSO.Util.Client.ElasticLite.ElasticConnection.Delete(System.String,System.String)">
+            <summary>
+            删除数据
+            </summary>
+            <param name="command">person/doc/1</param>
+            <param name="jsonData">删除条件</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.ElasticLite.ElasticConnection.Get(System.String,System.String)">
+            <summary>
+            查询数据
+            </summary>
+            <param name="command">person/doc/1</param>
+            <param name="jsonData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.ElasticLite.ElasticConnection.Head(System.String,System.String)">
+            <summary>
+            判断index是否存在
+            </summary>
+            <param name="command">indexName</param>
+            <param name="jsonData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.ElasticLite.ElasticConnection.Post(System.String,System.String)">
+            <summary>
+            索引数据
+            </summary>
+            <param name="command">person/doc/1</param>
+            <param name="jsonData">数据对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.ElasticLite.ElasticConnection.Put(System.String,System.String)">
+            <summary>
+            创建 index, 并且设置mapping:
+            </summary>
+            <param name="command">indexName</param>
+            <param name="jsonData">mapping</param>
+            <returns></returns>
         </member>
         <member name="F:SSO.Util.Client.ErrorCode.success">
             <summary>
@@ -1108,7 +1167,7 @@
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.#ctor(SSO.Util.Client.SqlBatisLite.SessionFactory)">
             <summary>
-            sessionFactory 是单实例对象，一个项目只有一个
+            sessionFactory 是单实例对象，一个数据库只有一个
             </summary>
             <param name="sessionFactory"></param>
         </member>
@@ -1154,7 +1213,7 @@
             <param name="replacement"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.QueryList``1(System.String,System.Object,System.Object,System.Int32@)">
+        <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.QueryList``1(System.String,System.Object,System.Object)">
             <summary>
             查询列表
             </summary>
@@ -1181,7 +1240,7 @@
             <param name="paras"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.Execute(System.String,System.Object,System.Int32@,System.Object)">
+        <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.Execute(System.String,System.Object,System.Object)">
             <summary>
             执行xName中的sql，返回结果
             </summary>
@@ -1193,7 +1252,7 @@
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.ExecuteTransaction(System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{System.Object})">
             <summary>
-            事务执行
+            执行事务操作,返回最后一个语句受影响的行数,每个语句之间没有互相使用的数据
             </summary>
             <param name="xNames"></param>
             <param name="paras"></param>
@@ -1231,7 +1290,7 @@
         </member>
         <member name="F:SSO.Util.Client.SqlBatisLite.Session.mappings">
             <summary>
-            
+            所有的sql映射
             </summary>
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.Session.#ctor(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Xml.Linq.XElement})">
@@ -1288,14 +1347,13 @@
             <param name="replacement"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.SqlBatisLite.Session.QueryList``1(System.String,System.Object,System.Int32@,System.Object)">
+        <member name="M:SSO.Util.Client.SqlBatisLite.Session.QueryList``1(System.String,System.Object,System.Object)">
             <summary>
             查询数据列表
             </summary>
             <typeparam name="T"></typeparam>
             <param name="xName"></param>
             <param name="paras"></param>
-            <param name="count"></param>
             <param name="replacement"></param>
             <returns></returns>
         </member>
@@ -1333,19 +1391,18 @@
             <param name="paras"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.SqlBatisLite.Session.Execute(System.String,System.Object,System.Int32@,System.Object)">
+        <member name="M:SSO.Util.Client.SqlBatisLite.Session.Execute(System.String,System.Object,System.Object)">
             <summary>
             执行xName中的sql，返回结果
             </summary>
             <param name="xName">xml节点的全名称（name.node）</param>
             <param name="paras">要查询的参数</param>
-            <param name="count">查询的总数</param>
             <param name="replacement">要替换的参数</param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.Session.ExecuteTransaction(System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{System.Object})">
             <summary>
-            事务执行
+            执行事务操作,返回最后一个语句受影响的行数,每个语句之间没有互相使用的数据
             </summary>
             <param name="xNames"></param>
             <param name="paras"></param>
@@ -1390,14 +1447,20 @@
             xml工具类
             </summary>
         </member>
-        <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.GetXElementSql(System.Xml.Linq.XElement,System.Object,System.Data.SqlClient.SqlParameter[]@,System.Object)">
+        <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.GetXElementSql(System.Xml.Linq.XElement,System.Object,System.Object)">
             <summary>
             获取XElement中的sql语句
             </summary>
-            <param name="xElement"></param>
+            <param name="xElement">节点的名称</param>
+            <param name="obj">要传入的sql参数,对象类型</param>
+            <param name="replacement">要替换的参数,对象类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.GetSqlParameters(System.Object)">
+            <summary>
+            通过object对象获取查询sql参数的 SqlParameter 数组
+            </summary>
             <param name="paras"></param>
-            <param name="sqlParameters"></param>
-            <param name="replacement"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementNotEmpty(System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
@@ -1408,9 +1471,25 @@
             <param name="paras"></param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementIsEmpty(System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            判断对象中某个属性是否不可用(为空或者null)
+            </summary>
+            <param name="propertyName"></param>
+            <param name="paras"></param>
+            <returns></returns>
+        </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementNotNull(System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
             <summary>
             判断对象中某个属性是否可用(不为NULL)
+            </summary>
+            <param name="propertyName"></param>
+            <param name="paras"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementIsNull(System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            判断对象中某个属性是否为Null
             </summary>
             <param name="propertyName"></param>
             <param name="paras"></param>
@@ -1428,6 +1507,42 @@
         <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementNotEquals(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
             <summary>
             判断对象中某个属性是否可用是否不等于 eleValue
+            </summary>
+            <param name="propertyName"></param>
+            <param name="eleValue"></param>
+            <param name="paras"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementGreaterThan(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            判断对象中某个属性值是否大于eleValue
+            </summary>
+            <param name="propertyName"></param>
+            <param name="eleValue"></param>
+            <param name="paras"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementGreaterEqual(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            判断对象中某个属性值是否大于等于eleValue
+            </summary>
+            <param name="propertyName"></param>
+            <param name="eleValue"></param>
+            <param name="paras"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementLessThan(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            判断对象中某个属性值是否小于eleValue
+            </summary>
+            <param name="propertyName"></param>
+            <param name="eleValue"></param>
+            <param name="paras"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.XmlStatement.ElementLessEqual(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            判断对象中某个属性值是否小于等于eleValue
             </summary>
             <param name="propertyName"></param>
             <param name="eleValue"></param>
@@ -1750,6 +1865,20 @@
             把驼峰形式的参数转换成_形式
             </summary>
             <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.ObjectIsValueType(System.Object)">
+            <summary>
+            判断object中的类型是否的值类型
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.IsNumeric(System.String)">
+            <summary>
+            判断是否为数字
+            </summary>
+            <param name="value"></param>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.SymmetricEncryptHelper">
