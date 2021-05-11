@@ -255,7 +255,9 @@ namespace SSO.Util.Client
             //字符串类型
             if (obj is char) return true;
             if (obj is string) return true;
-          
+            //时间类型
+            if (obj is DateTime) return true;
+            if (obj is DateTimeOffset) return true;
             return false;
         }
         /// <summary>

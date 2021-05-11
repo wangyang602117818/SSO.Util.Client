@@ -99,22 +99,38 @@ services.AddControllers(options =>
   var result = requestHelper.Post(baseUrl, model, null); //接口返回值
   return JsonSerializerHelper.Deserialize<ServiceModel<List<LogModel>>>(result);  //解析返回值
   ```
-### 功能四: ORM操作sqlserver数据库
-1. 在项目的根目录下建立 sbl.config.xml 配置文件,设置成 Copy always   
-   `create-tables` : 项目初始化要创建的表,只会在项目启动时候执行一次  
-   其中 create-table 节点的 resource 和 namespace 只需要设置一个即可, 设置了 resource 说明需要找单个文件,设置了 namespace 到相应的命名空间下去找,并且按照文件名称升序之后组合里面的sql
-   ```
+### 功能四: SqlBatisLite 操作 SQL Server 数据库(ORM)
+- 配置文件:  
+1. sbl.config.xml : 全局配置文件,SqlBatisLite启动时会自动从项目根目录读取该文件  
+   文件 Build Action : None  
+   文件 Copy To Output Directory : Copy always 或者 Copy if newer  
+   案例:
+    ```
    <?xml version="1.0" encoding="utf-8" ?>
-   <configuration>
-      <connectionstring>
-         Server=.;Database=T01;User ID=name;Password=123
-      </connectionstring>
-      <!--创建table-->
-      <create-tables resource="create.sbl.xml" assembly="SSO.Data" namespace="Create"/>
-      <mappings assembly="SSO.Data" namespace="Mappings"/>
-   </configuration>
-   ```
-2. 在项目的合适的位置添加 create.sbl.xml,设置成 Embedded Resource (可以忽略)
+      <configuration>
+         <connectionstring>
+            Server=.;Database=T01;User ID=name;Password=123
+         </connectionstring>
+         <!--创建table-->
+         <create-tables resource="create.sbl.xml" assembly="SSO.Data" namespace="Create"/>
+         <mappings assembly="SSO.Data" namespace="Mappings"/>
+      </configuration>
+    ```
+   `connectionstring` 节点: 数据库连接字符串  
+
+   `create-tables` 节点: 项目初始化数据表使用,只会在项目启动时候执行一次  
+   - `resource` 属性: 文件名,忽略该属性则使用 assembly和namespace组成的文件夹路径里所有的文件,然后根据文件名升序组合文件里面的sql语句
+   - `assembly` 属性: 所在的程序集名称   
+   - `namespace`属性: 所在的文件夹名称  
+  
+   `mappings` 节点: sql映射文件
+   - `assembly` 属性: 所在的程序集名称   
+   - `namespace`属性: 所在的文件夹名称  
+   
+2. create.sbl.xml : 初始化table的所有sql语句  
+   文件 Build Action : Embedded Resource  
+   文件 Copy To Output Directory : Do not copy  
+   案例:
    ```
    <?xml version="1.0" encoding="utf-8" ?>
    <sql>
@@ -132,55 +148,22 @@ services.AddControllers(options =>
       )
    </sql>
    ```
-3. 在项目合适的位置添加 mappings 映射文件(company.sbl.xml),设置成 Embedded Resource
+   单个文件(resource+assembly+namespace) : 取出文件中的sql,在项目启动的时候运行一次
+   多个文件(assembly+namespace) : 按照文件名升序,然后取出每个文件中sql拼接在一起,在项目启动的时候运行一次
+3. *.sql.xml : sql映射文件  
+   文件 Build Action : Embedded Resource  
+   文件 Copy To Output Directory : Do not copy  
+   文件名和对应的类对象关联,默认关联规则如下  
+   对象名 Company -> company.sql.xml  
+   对象名 CompanyNews -> company_news.sql.xml  
+   也可以在类上加特性标签 [XmlStatement("company")] 来改变默认规则  
+   案例: 
    ```
    <?xml version="1.0" encoding="utf-8" ?>
    <sql>
-      <insert>
-         INSERT INTO Company (
-         Code,
-         Name,
-         [Order],
-         CreateTime
-         <isNotEmpty property="Description" prepend=",">
-            Description
-         </isNotEmpty>
-         ) VALUES (
-         @Code,
-         @Name,
-         @Order,
-         @CreateTime
-         <isNotEmpty property="Description" prepend=",">
-            @Description
-         </isNotEmpty>
-         )
-      </insert>
-      <update>
-         UPDATE Company SET
-         Code = @Code,
-         Name=@Name,
-         UpdateTime=@UpdateTime,
-         [Order]=@Order
-         <isNotEmpty property="Description" prepend=",">
-            Description=@Description
-         </isNotEmpty>
-         WHERE Id = @Id
-      </update>
-      <delete>
-         delete from Company where Id in (<iterate conjunction="," property="Ids">@Ids{{index}}</iterate>)
-      </delete>
       <get-by-id>
          select * from Company where Id = @Id
       </get-by-id>
-      <get-page-list>
-         select * from(
-         select *,row_number() over(order by Id desc) uid,(select count(1) from [Company]) total from [Company]
-         <isNotEmpty property="Name" prepend="where">
-            Name like '%'+@Name+'%'
-         </isNotEmpty>
-         ) as tbl
-         where uid between (@PageIndex-1)*@PageSize+1 and @PageIndex*@PageSize
-      </get-page-list>
    </sql>
    ```
 4. 新建数据表访问基类和数据访问类
