@@ -150,7 +150,7 @@ services.AddControllers(options =>
    ```
    单个文件(resource+assembly+namespace) : 取出文件中的sql,在项目启动的时候运行一次
    多个文件(assembly+namespace) : 按照文件名升序,然后取出每个文件中sql拼接在一起,在项目启动的时候运行一次
-3. *.sql.xml : sql映射文件
+3. *.sql.xml : sql映射文件  
    文件 Build Action : Embedded Resource  
    文件 Copy To Output Directory : Do not copy  
 
@@ -169,7 +169,7 @@ services.AddControllers(options =>
    ```
    其中 sql节点是根节点,可以是任意值 , get-by-id 节点将要在程序中引用
 - 定义类  
-1. 基类(ModelBase): 由使用者定义,必须继承自 EntityBase 类,一个数据库对应一个基类
+1. 基类(ModelBase): 由使用者定义,必须继承自 EntityBase 类,一个数据库对应一个基类  
   案例: 
    ```
       public abstract class ModelBase : EntityBase
@@ -188,7 +188,7 @@ services.AddControllers(options =>
       }
       ```
    其中 SessionFactory 是单例模式，在调用 Configure()方法时，默认读取 sbl.config.xml 配置文件,如果有不同的数据库,则在 Configure() 指定不同的全局配置文件
-2. 数据访问类: 必须继承自基类(ModelBase)
+2. 数据访问类: 必须继承自基类(ModelBase)  
    案例:
    ```
    [XmlStatement("company")]
