@@ -89,9 +89,9 @@ services.AddControllers(options =>
 - `ResponseModel` :返回值对象(ContentResult的子类,类型为 application/json)
 - 案例:
    ```
-      return new ResponseModel<string>(ErrorCode.success, "");  //返回字符串
-      return new ResponseModel<string>(ErrorCode.success, json);  //返回序列化好的json字符串
-      return new ResponseModel<Object>(ErrorCode.success, obj); //返回可以序列化的对象
+   return new ResponseModel<string>(ErrorCode.success, "");  //返回字符串
+   return new ResponseModel<string>(ErrorCode.success, json);  //返回序列化好的json字符串
+   return new ResponseModel<Object>(ErrorCode.success, obj); //返回可以序列化的对象
    ```
 - `ServiceModel` :解析返回值对象
 - 案例: 
@@ -116,14 +116,14 @@ services.AddControllers(options =>
          <mappings assembly="SSO.Data" namespace="Mappings"/>
       </configuration>
     ```
-   `connectionstring` 节点: 数据库连接字符串  
+   `connectionstring` 节点: 数据库连接字符串配置节点  
 
    `create-tables` 节点: 项目初始化数据表使用,只会在项目启动时候执行一次  
    - `resource` 属性: 文件名,忽略该属性则使用 assembly和namespace组成的文件夹路径里所有的文件,然后根据文件名升序组合文件里面的sql语句
    - `assembly` 属性: 所在的程序集名称   
    - `namespace`属性: 所在的文件夹名称  
   
-   `mappings` 节点: sql映射文件
+   `mappings` 节点: sql映射文件配置节点
    - `assembly` 属性: 所在的程序集名称   
    - `namespace`属性: 所在的文件夹名称  
    
@@ -150,13 +150,14 @@ services.AddControllers(options =>
    ```
    单个文件(resource+assembly+namespace) : 取出文件中的sql,在项目启动的时候运行一次
    多个文件(assembly+namespace) : 按照文件名升序,然后取出每个文件中sql拼接在一起,在项目启动的时候运行一次
-3. *.sql.xml : sql映射文件  
+3. *.sql.xml : sql映射文件
    文件 Build Action : Embedded Resource  
    文件 Copy To Output Directory : Do not copy  
-   文件名和对应的类对象关联,默认关联规则如下  
+
+   文件名和对应的类关联,默认关联规则如下  
    对象名 Company -> company.sql.xml  
    对象名 CompanyNews -> company_news.sql.xml  
-   也可以在类上加特性标签 [XmlStatement("company")] 来改变默认规则  
+   也可以在类上加特性标签 [XmlStatement("company")] [XmlStatement("company_news")]来改变默认规则  
    案例: 
    ```
    <?xml version="1.0" encoding="utf-8" ?>
@@ -166,28 +167,31 @@ services.AddControllers(options =>
       </get-by-id>
    </sql>
    ```
-4. 新建数据表访问基类和数据访问类
+   其中 sql节点是根节点,可以是任意值 , get-by-id 节点将要在程序中引用
+- 定义类  
+1. 基类(ModelBase): 由使用者定义,必须继承自 EntityBase 类,一个数据库对应一个基类
+  案例: 
    ```
-   public abstract class ModelBase : EntityBase
-   {
-        static SessionFactory sessionFactory = null;
-        static ModelBase()
-        {
-            sessionFactory = new Configuration().Configure();  //默认加载sbl.config.xml
-            sessionFactory.CreateTables();  //用配置好的sql语句创建table
-        }
-        public ModelBase() : base(sessionFactory) { }
-        public IEnumerable<T> GetPageList<T>(ref int count, object t, object replacement) where T : class
-        {
-            return QueryList<T>("get-page-list", t, replacement, ref count);
-        }
-   }
+      public abstract class ModelBase : EntityBase
+      {
+         static SessionFactory sessionFactory = null;
+         static ModelBase()
+         {
+               sessionFactory = new Configuration().Configure();  //默认加载sbl.config.xml
+               sessionFactory.CreateTables();  //用配置好的sql语句创建table
+         }
+         public ModelBase() : base(sessionFactory) { }
+         public IEnumerable<T> GetPageList<T>(ref int count, object t, object replacement) where T : class
+         {
+               return QueryList<T>("get-page-list", t, replacement, ref count);
+         }
+      }
+      ```
+   其中 SessionFactory 是单例模式，在调用 Configure()方法时，默认读取 sbl.config.xml 配置文件,如果有不同的数据库,则在 Configure() 指定不同的全局配置文件
+2. 数据访问类: 必须继承自基类(ModelBase)
+   案例:
    ```
-   sessionFactory是单例模式，在调用Configure()方法时，默认读取 sbl.config.xml 配置文件:
-   1. 找到链接字符串 connectionstring
-   2. 找到指定的 create.sbl.xml，运行里面的sql语句创建数据表
-   3. 找到所有 mappings 映射文件,缓存起来
-   ```
+   [XmlStatement("company")]
    public class Company : ModelBase
    {
       public Company() { }
@@ -205,19 +209,70 @@ services.AddControllers(options =>
       }
    }
    ```
-   Company类和company.sbl.xml配置文件对应,PermissionRoleMapping类则对应permission_role_mapping.sbl.xml配置文件  
+   默认 Company 类和 company.sbl.xml 对应,如果要改变对应关系,需要修改 [XmlStatement("company")] 属性  
    Company类具有以下能力:
-   1. 数据插入: new Company().Insert(obj)   //自动查找company.sbl.xml中的insert节点
-   2. 数据修改: new Company().Update(obj)   //自动查找company.sbl.xml中的update节点
-   3. 数据珊瑚: new Company().Delete(new { Ids = ids })  //自动查找company.sbl.xml中的delete节点
-   4. 根据id查找: new Company().GetById(id) //自动查找company.sbl.xml中的get-by-id节点
-   5. 分页查找: new Company().GetPageList(id) //自动查找company.sbl.xml中的get-page-list节点
-5. 动态sql  
-   `isNotEmpty` 节点:  (`property`: 当指定的属性不为null并且不为""时 , 添加该节点, `prepend`: 添加节点时语句前面添加该字符)  
-   `isNotNull` 节点:  (`property`: 当指定的属性不为null时,添加该节点 ,  `prepend`: 添加节点时语句前面添加该字符 )  
-   `iterate` 迭代节点: (`property`: 迭代的属性, `conjunction`: 迭代的语句用该符号连接), 每一次迭代都会把语句中 {{index}} 替换成元素下标  
-   `isEquals` 节点: (`property`: 要对比的属性名称, `value`: 要对比的属性的值, `prepend`: 添加节点时语句前面添加该字符)  
-   `isNotEquals` 节点: (`property`: 要对比的属性名称, `value`: 要对比的属性的值, `prepend`: 添加节点时语句前面添加该字符) 
+   1. 数据插入: new Company().Insert(obj)   //自动查找 company.sbl.xml 中的insert节点
+   2. 数据修改: new Company().Update(obj)   //自动查找 company.sbl.xml 中的update节点
+   3. 数据删除: new Company().Delete(new { Ids = ids })  //自动查找company.sbl.xml 中的delete节点
+   4. 根据id查找: new Company().GetById(id) //自动查找 company.sbl.xml 中的get-by-id节点
+
+- 动态sql   
+   `isNotEmpty` 指定的属性不为null并且不为""
+   - property : 要对比的属性
+   - prepend : 前置语句
+
+   `IsEmpty` 指定的属性为null或者为""
+   - property : 要对比的属性
+   - prepend : 前置语句 
+
+   `isNotNull` 指定的属性不为null
+   - property : 要对比的属性
+   - prepend : 前置语句 
+
+   `IsNull` 指定的属性为null
+   - property : 要对比的属性
+   - prepend : 前置语句 
+
+   `isEquals` 指定的属性值等于value:
+   - property : 要对比的属性
+   - prepend : 前置语句 
+   - value : 要对比的值
+   
+   `isNotEquals` 指定的属性值不等于value
+   - property : 要对比的属性
+   - prepend : 前置语句 
+   - value : 要对比的值
+
+   `IsGreaterThan` 指定的属性值大于value
+   - property : 要对比的属性
+   - prepend : 前置语句 
+   - value : 要对比的值
+
+   `IsGreaterEqual` 指定的属性值大于等于value
+   - property : 要对比的属性
+   - prepend : 前置语句 
+   - value : 要对比的值
+
+   `IsLessThan` 指定的属性值小于value: 
+   - property : 要对比的属性
+   - prepend : 前置语句 
+   - value : 要对比的值
+
+   `IsLessEqual` 指定的属性值小于等于value: 
+   - property : 要对比的属性
+   - prepend : 前置语句 
+   - value : 要对比的值
+
+   `iterate` 迭代属性
+   - property : 要迭代的属性
+   - prepend : 前置语句 
+   - conjunction : 用该语句连接每次的迭代结果
+   - open : 每次迭代开始语句
+   - close : 每次迭代结束语句
+
+   `include` 包含节点
+   - id : 要包含的节点名称,绝对路径 id="company.sql-common" 或者 id="sql-common"
+  
    
    
 ### 其他工具方法  
