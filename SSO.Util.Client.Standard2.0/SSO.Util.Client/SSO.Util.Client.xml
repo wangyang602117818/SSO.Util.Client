@@ -782,11 +782,19 @@
             </summary>
             <param name="context"></param>
         </member>
-        <member name="M:SSO.Util.Client.LogRecordAttribute.VerifyConfig(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+        <member name="M:SSO.Util.Client.LogRecordAttribute.VerifyConfig(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,System.Boolean)">
             <summary>
             验证配置文件
             </summary>
             <param name="filterContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogRecordAttribute.CheckLogRecord(System.Collections.Generic.IEnumerable{System.Reflection.CustomAttributeData},System.Collections.Generic.IEnumerable{System.Reflection.CustomAttributeData})">
+            <summary>
+            判断是否记录日志
+            </summary>
+            <param name="methodAttributes"></param>
+            <param name="controllerAttributes"></param>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.LogService">
@@ -1222,6 +1230,16 @@
             <param name="paras"></param>
             <param name="replacement"></param>
             <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.QueryScalar``1(System.String,System.Object,System.Object)">
+            <summary>
+            查询单行单列数据,需要用一个值类型去解析
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="xName"></param>
+            <param name="paras"></param>
+            <param name="replacement"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.EntityBase.ExecuteNonQuery(System.String,System.Object,System.Object)">

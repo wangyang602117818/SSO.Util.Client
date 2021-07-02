@@ -101,6 +101,18 @@ namespace SSO.Util.Client.SqlBatisLite
             return session.QueryList<T>(xName, paras, replacement);
         }
         /// <summary>
+        /// 查询单行单列数据,需要用一个值类型去解析
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xName"></param>
+        /// <param name="paras"></param>
+        /// <param name="replacement"></param>
+        /// <returns></returns>
+        public T QueryScalar<T>(string xName, object paras, object replacement = null)
+        {
+            return (T)ExecuteScalar(xName, paras, replacement);
+        }
+        /// <summary>
         /// 执行xName中的sql，返回受影响的行数
         /// </summary>
         /// <param name="xName">xml节点的全名称（name.node）</param>

@@ -76,7 +76,7 @@ namespace SSO.Util.Client.SqlBatisLite
             return session.Delete("delete", paras, replacement);
         }
         /// <summary>
-        /// 查询单个
+        /// 查询单行数据,需要用一个对象去解析
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="xName"></param>
@@ -88,7 +88,7 @@ namespace SSO.Util.Client.SqlBatisLite
             return session.QueryObject<T>(xName, paras, replacement);
         }
         /// <summary>
-        /// 查询列表
+        /// 查询多行数据,需要用一个对象去解析
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="xName"></param>
@@ -99,6 +99,18 @@ namespace SSO.Util.Client.SqlBatisLite
         public IEnumerable<T> QueryList<T>(string xName, object paras, object replacement = null)
         {
             return session.QueryList<T>(xName, paras, replacement);
+        }
+        /// <summary>
+        /// 查询单行单列数据,需要用一个值类型去解析
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xName"></param>
+        /// <param name="paras"></param>
+        /// <param name="replacement"></param>
+        /// <returns></returns>
+        public T QueryScalar<T>(string xName, object paras, object replacement = null)
+        {
+            return (T)ExecuteScalar(xName, paras, replacement);
         }
         /// <summary>
         /// 执行xName中的sql，返回受影响的行数

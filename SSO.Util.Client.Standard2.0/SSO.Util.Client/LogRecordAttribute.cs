@@ -70,7 +70,11 @@ namespace SSO.Util.Client
         /// <param name="context"></param>
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!VerifyConfig(context)) return;
+            var actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
+            IEnumerable<CustomAttributeData> methodAttributes = actionDescriptor.MethodInfo.CustomAttributes;
+            IEnumerable<CustomAttributeData> controllerAttributes = actionDescriptor.ControllerTypeInfo.CustomAttributes;
+            bool logRecord = CheckLogRecord(methodAttributes, controllerAttributes);
+            if (!VerifyConfig(context, logRecord)) return;
             context.HttpContext.Items.Add("log_time_start", DateTime.UtcNow.MillisecondTimeStamp());
         }
         /// <summary>
@@ -82,19 +86,7 @@ namespace SSO.Util.Client
             var actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
             IEnumerable<CustomAttributeData> methodAttributes = actionDescriptor.MethodInfo.CustomAttributes;
             IEnumerable<CustomAttributeData> controllerAttributes = actionDescriptor.ControllerTypeInfo.CustomAttributes;
-            //是否记录日志标记
-            bool isLog = true;
-            foreach (CustomAttributeData item in controllerAttributes)
-            {
-                if (item.AttributeType.Name == "NoneLogRecordAttribute") isLog = false;
-                if (item.AttributeType.Name == "LogRecordAttribute") isLog = true;
-            }
-            foreach (CustomAttributeData c in methodAttributes)
-            {
-                if (c.AttributeType.Name == "NoneLogRecordAttribute") isLog = false;
-                if (c.AttributeType.Name == "LogRecordAttribute") isLog = true;
-            }
-            if (!isLog) return;
+            if (!CheckLogRecord(methodAttributes, controllerAttributes)) return;
             MessageCenterService messageService = new MessageCenterService(BaseUrl);
             HttpRequest request = context.HttpContext.Request;
             //日志调用api
@@ -167,24 +159,46 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="filterContext"></param>
         /// <returns></returns>
-        public bool VerifyConfig(ActionExecutingContext filterContext)
+        public bool VerifyConfig(ActionExecutingContext filterContext, bool logRecord)
         {
-            if (BaseUrl.IsNullOrEmpty())
+            if (BaseUrl.IsNullOrEmpty() && logRecord)
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.messageBaseUrl_not_config, "");
                 return false;
             }
-            if (SecretKey.IsNullOrEmpty())
+            if (SecretKey.IsNullOrEmpty() && logRecord)
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.secretKey_not_config, "");
                 return false;
             }
-            if (CookieKey.IsNullOrEmpty())
+            if (CookieKey.IsNullOrEmpty() && logRecord)
             {
                 filterContext.Result = new ResponseModel<string>(ErrorCode.cookieKey_not_config, "");
                 return false;
             }
             return true;
+        }
+        /// <summary>
+        /// 判断是否记录日志
+        /// </summary>
+        /// <param name="methodAttributes"></param>
+        /// <param name="controllerAttributes"></param>
+        /// <returns></returns>
+        private bool CheckLogRecord(IEnumerable<CustomAttributeData> methodAttributes, IEnumerable<CustomAttributeData> controllerAttributes)
+        {
+            //是否记录日志标记
+            bool isLog = true;
+            foreach (CustomAttributeData c in controllerAttributes)
+            {
+                if (c.AttributeType.Name == "NoneLogRecordAttribute") isLog = false;
+                if (c.AttributeType.Name == "LogRecordAttribute") isLog = true;
+            }
+            foreach (CustomAttributeData c in methodAttributes)
+            {
+                if (c.AttributeType.Name == "NoneLogRecordAttribute") isLog = false;
+                if (c.AttributeType.Name == "LogRecordAttribute") isLog = true;
+            }
+            return isLog;
         }
     }
 }
