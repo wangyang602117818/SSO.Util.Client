@@ -209,12 +209,12 @@ services.AddControllers(options =>
       }
    }
    ```
-   默认 Company 类和 company.sbl.xml 对应,如果要改变对应关系,需要修改 [XmlStatement("company")] 属性  
+   默认 Company 类和 company.xml 对应,如果要改变对应关系,需要修改 [XmlStatement("company")] 属性  
    Company类具有以下能力:
-   1. 数据插入: new Company().Insert(obj)   //自动查找 company.sbl.xml 中的insert节点
-   2. 数据修改: new Company().Update(obj)   //自动查找 company.sbl.xml 中的update节点
-   3. 数据删除: new Company().Delete(new { Ids = ids })  //自动查找company.sbl.xml 中的delete节点
-   4. 根据id查找: new Company().GetById(id) //自动查找 company.sbl.xml 中的get-by-id节点
+   1. 数据插入: new Company().Insert(obj)   //自动查找 company.xml 中的insert节点
+   2. 数据修改: new Company().Update(obj)   //自动查找 company.xml 中的update节点
+   3. 数据删除: new Company().Delete(new { Ids = ids })  //自动查找company.xml 中的delete节点
+   4. 根据id查找: new Company().GetById(id) //自动查找 company.xml 中的get-by-id节点
 
 - 动态sql   
    `isNotEmpty` 指定的属性不为null并且不为""
