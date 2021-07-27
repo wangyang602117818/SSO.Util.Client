@@ -83,11 +83,11 @@ namespace SSO.Util.Client.SqlBatisLite
             {
                 if (!name.StartsWith(prefix)) continue;
                 var filename = name.Replace(prefix, "").TrimStart('.');
-                if (!filename.EndsWith(".sbl.xml")) continue;
+                if (!filename.EndsWith(".xml")) continue;
                 Stream stream = assemblyInfo.GetManifestResourceStream(name);
                 foreach (XElement ele in XDocument.Load(stream).Root.Elements())
                 {
-                    string mappingName = filename.Replace(".sbl.xml", "");
+                    string mappingName = filename.Replace(".xml", "");
                     mappings.Add(mappingName + "." + ele.Name.LocalName, ele);
                 }
             }

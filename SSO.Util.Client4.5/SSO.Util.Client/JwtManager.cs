@@ -164,7 +164,7 @@ namespace SSO.Util.Client
         /// <param name="authorization"></param>
         /// <param name="secretKey"></param>
         /// <returns></returns>
-        public static UserData ParseUserData(string authorization, string secretKey)
+        public static UserData ParseUserData(string authorization, string secretKey = null)
         {
             var principal = ParseAuthorization(authorization, secretKey);
             return ParseUserData(principal);
@@ -175,8 +175,9 @@ namespace SSO.Util.Client
         /// <param name="authorization"></param>
         /// <param name="secretKey"></param>
         /// <returns></returns>
-        public static ClaimsPrincipal ParseAuthorization(string authorization, string secretKey)
+        public static ClaimsPrincipal ParseAuthorization(string authorization, string secretKey = null)
         {
+            if (secretKey == null) secretKey = SSOAuthorizeAttribute.SecretKey;
             var tokenHandler = new JwtSecurityTokenHandler();
             var symmetricKey = Convert.FromBase64String(secretKey);
             string ip = HttpContext.Current.Request.UserHostAddress;

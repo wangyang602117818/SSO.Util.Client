@@ -593,7 +593,7 @@
             <param name="User"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.JwtManager.ParseUserData(System.String,System.String,Microsoft.AspNetCore.Http.HttpContext)">
+        <member name="M:SSO.Util.Client.JwtManager.ParseUserData(System.String,Microsoft.AspNetCore.Http.HttpContext,System.String)">
             <summary>
             根据cookie和key解析用户信息
             </summary>
@@ -602,7 +602,7 @@
             <param name="httpContext"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.JwtManager.ParseAuthorization(System.String,System.String,Microsoft.AspNetCore.Http.HttpContext)">
+        <member name="M:SSO.Util.Client.JwtManager.ParseAuthorization(System.String,Microsoft.AspNetCore.Http.HttpContext,System.String)">
             <summary>
             根据cookie和key解析用户信息
             </summary>

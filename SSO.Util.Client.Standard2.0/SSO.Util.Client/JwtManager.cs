@@ -137,7 +137,7 @@ namespace SSO.Util.Client
         /// <param name="request"></param>
         /// <param name="cookieKey"></param>
         /// <returns></returns>
-        public static string GetAuthorization(HttpRequest request, string cookieKey = "")
+        public static string GetAuthorization(HttpRequest request, string cookieKey = null)
         {
             if (cookieKey == null) cookieKey = SSOAuthorizeAttribute.CookieKey;
             string authorization = request.Cookies[cookieKey] == null ? "" : request.Cookies[cookieKey];
@@ -167,9 +167,9 @@ namespace SSO.Util.Client
         /// <param name="secretKey"></param>
         /// <param name="httpContext"></param>
         /// <returns></returns>
-        public static UserData ParseUserData(string authorization, string secretKey, HttpContext httpContext)
+        public static UserData ParseUserData(string authorization, HttpContext httpContext, string secretKey = null)
         {
-            var principal = ParseAuthorization(authorization, secretKey, httpContext);
+            var principal = ParseAuthorization(authorization, httpContext, secretKey);
             return ParseUserData(principal);
         }
         /// <summary>
@@ -179,8 +179,9 @@ namespace SSO.Util.Client
         /// <param name="secretKey"></param>
         /// <param name="httpContext"></param>
         /// <returns></returns>
-        public static ClaimsPrincipal ParseAuthorization(string authorization, string secretKey, HttpContext httpContext)
+        public static ClaimsPrincipal ParseAuthorization(string authorization, HttpContext httpContext, string secretKey = null)
         {
+            if (secretKey == null) secretKey = SSOAuthorizeAttribute.SecretKey;
             var tokenHandler = new JwtSecurityTokenHandler();
             var symmetricKey = Convert.FromBase64String(secretKey);
             var ip = httpContext.Connection.RemoteIpAddress.ToString();

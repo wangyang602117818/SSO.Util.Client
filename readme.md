@@ -127,7 +127,7 @@ services.AddControllers(options =>
    - `assembly` 属性: 所在的程序集名称   
    - `namespace`属性: 所在的文件夹名称  
    
-2. create.sbl.xml : 初始化table的所有sql语句  
+2. create.xml : 初始化table的所有sql语句  
    文件 Build Action : Embedded Resource  
    文件 Copy To Output Directory : Do not copy  
    案例:
@@ -150,13 +150,13 @@ services.AddControllers(options =>
    ```
    单个文件(resource+assembly+namespace) : 取出文件中的sql,在项目启动的时候运行一次
    多个文件(assembly+namespace) : 按照文件名升序,然后取出每个文件中sql拼接在一起,在项目启动的时候运行一次
-3. *.sql.xml : sql映射文件  
+3. *.xml : sql映射文件  
    文件 Build Action : Embedded Resource  
    文件 Copy To Output Directory : Do not copy  
 
    文件名和对应的类关联,默认关联规则如下  
-   对象名 Company -> company.sql.xml  
-   对象名 CompanyNews -> company_news.sql.xml  
+   对象名 Company -> company.xml  
+   对象名 CompanyNews -> company_news.xml  
    也可以在类上加特性标签 [XmlStatement("company")] [XmlStatement("company_news")]来改变默认规则  
    案例: 
    ```
