@@ -166,10 +166,11 @@ namespace SSO.Util.Client
         /// <param name="authorization"></param>
         /// <param name="secretKey"></param>
         /// <param name="httpContext"></param>
+        /// <param name="validateAudience">是否需要验证ip地址</param>
         /// <returns></returns>
-        public static UserData ParseUserData(string authorization, HttpContext httpContext, string secretKey = null)
+        public static UserData ParseUserData(string authorization, HttpContext httpContext, string secretKey = null, bool validateAudience = false)
         {
-            var principal = ParseAuthorization(authorization, httpContext, secretKey);
+            var principal = ParseAuthorization(authorization, httpContext, secretKey, validateAudience);
             return ParseUserData(principal);
         }
         /// <summary>
@@ -178,8 +179,9 @@ namespace SSO.Util.Client
         /// <param name="authorization"></param>
         /// <param name="secretKey"></param>
         /// <param name="httpContext"></param>
+        /// <param name="validateAudience">是否需要验证ip地址</param>
         /// <returns></returns>
-        public static ClaimsPrincipal ParseAuthorization(string authorization, HttpContext httpContext, string secretKey = null)
+        public static ClaimsPrincipal ParseAuthorization(string authorization, HttpContext httpContext, string secretKey = null, bool validateAudience = false)
         {
             if (secretKey == null) secretKey = SSOAuthorizeAttribute.SecretKey;
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -192,7 +194,7 @@ namespace SSO.Util.Client
                 ValidateLifetime = false,
                 ValidateIssuer = false,
                 ValidAudience = ip,
-                ValidateAudience = true,
+                ValidateAudience = validateAudience,
                 IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
             };
             SecurityToken securityToken;
