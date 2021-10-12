@@ -112,7 +112,7 @@ services.AddControllers(options =>
             Server=.;Database=T01;User ID=name;Password=123
          </connectionstring>
          <!--创建table-->
-         <create-tables resource="create.sbl.xml" assembly="SSO.Data" namespace="Create"/>
+         <create-tables resource="create.xml" assembly="SSO.Data" namespace="Create"/>
          <mappings assembly="SSO.Data" namespace="Mappings"/>
       </configuration>
     ```

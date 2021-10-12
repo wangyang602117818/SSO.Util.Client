@@ -27,6 +27,7 @@ namespace SSO.Util.Client
         {
             string boundary = "----" + Guid.NewGuid().ToString().Replace("-", "").Substring(0, 30);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.ServerCertificateValidationCallback = ((message, cert, chain, error) => { return true; });
             request.Method = "post";
             request.ContentType = "multipart/form-data; boundary=" + boundary;
             if (headers != null)
@@ -84,6 +85,7 @@ namespace SSO.Util.Client
         public string Post(string url, object obj, Dictionary<string, string> headers)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.ServerCertificateValidationCallback = ((message, cert, chain, error) => { return true; });
             request.Method = "post";
             request.ContentType = "application/json";
             if (headers != null)
@@ -115,6 +117,7 @@ namespace SSO.Util.Client
         public string Get(string url, Dictionary<string, string> headers)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.ServerCertificateValidationCallback = ((message, cert, chain, error) => { return true; });
             request.Method = "get";
             if (headers != null)
             {
@@ -140,6 +143,7 @@ namespace SSO.Util.Client
         public DownloadFileItem GetFile(string url, Dictionary<string, string> headers)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.ServerCertificateValidationCallback = ((message, cert, chain, error) => { return true; });
             request.Method = "get";
             if (headers != null)
             {
