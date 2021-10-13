@@ -165,5 +165,57 @@ namespace SSO.Util.Client
             string list = requestHelper.Get(url, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<ExtensionMap>>>(list);
         }
+        /// <summary>
+        /// 移除文件
+        /// </summary>
+        /// <param name="fileId"></param>
+        /// <returns></returns>
+        public ServiceModel<string> RemoveFile(string fileId)
+        {
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Authorization", Token);
+            var url = RemoteUrl + "/data/Remove/" + fileId;
+            string result = requestHelper.Get(url, headers);
+            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
+        }
+        /// <summary>
+        /// 批量移除文件
+        /// </summary>
+        /// <param name="fileIds"></param>
+        /// <returns></returns>
+        public ServiceModel<string> RemoveFiles(IEnumerable<string> fileIds)
+        {
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Authorization", Token);
+            var url = RemoteUrl + "/data/Removes";
+            string result = requestHelper.Post(url, new { Ids = fileIds }, headers);
+            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
+        }
+        /// <summary>
+        /// 恢复文件
+        /// </summary>
+        /// <param name="fileId"></param>
+        /// <returns></returns>
+        public ServiceModel<string> RestoreFile(string fileId)
+        {
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Authorization", Token);
+            var url = RemoteUrl + "/data/Restore/" + fileId;
+            string result = requestHelper.Get(url, headers);
+            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
+        }
+        /// <summary>
+        /// 批量恢复文件
+        /// </summary>
+        /// <param name="fileIds"></param>
+        /// <returns></returns>
+        public ServiceModel<string> RestoreFiles(IEnumerable<string> fileIds)
+        {
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Authorization", Token);
+            var url = RemoteUrl + "/data/Restores";
+            string result = requestHelper.Post(url, new { Ids = fileIds }, headers);
+            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
+        }
     }
 }

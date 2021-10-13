@@ -365,6 +365,34 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.FileClientService.RemoveFile(System.String)">
+            <summary>
+            移除文件
+            </summary>
+            <param name="fileId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.RemoveFiles(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            批量移除文件
+            </summary>
+            <param name="fileIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.RestoreFile(System.String)">
+            <summary>
+            恢复文件
+            </summary>
+            <param name="fileId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.RestoreFiles(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            批量恢复文件
+            </summary>
+            <param name="fileIds"></param>
+            <returns></returns>
+        </member>
         <member name="T:SSO.Util.Client.FileItem">
             <summary>
             文件类
