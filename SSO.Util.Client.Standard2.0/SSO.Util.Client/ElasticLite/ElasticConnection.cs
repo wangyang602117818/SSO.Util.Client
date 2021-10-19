@@ -135,6 +135,7 @@ namespace SSO.Util.Client.ElasticLite
         private HttpWebRequest CreateRequest(string method, string uri)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.ServerCertificateValidationCallback = ((message, cert, chain, error) => { return true; });
             request.Accept = "application/json";
             request.ContentType = "application/json";
             request.Timeout = Timeout;

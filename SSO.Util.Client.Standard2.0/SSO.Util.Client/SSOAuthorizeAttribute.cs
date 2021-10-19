@@ -169,16 +169,13 @@ namespace SSO.Util.Client
         private bool CheckPermission(string permission, string authorization)
         {
             if (permission.IsNullOrEmpty()) return true;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseUrl.TrimEnd('/') + "/permission/checkPermission?permissionName=" + permission);
-            request.Method = "get";
-            request.Headers.Add("Authorization", authorization);
-            using (WebResponse response = request.GetResponse())
-            {
-                StreamReader reader = new StreamReader(response.GetResponseStream());
-                string resp = reader.ReadToEnd();
-                var result = JsonSerializerHelper.Deserialize<ServiceModel<string>>(resp);
-                if (result.code == 0) return true;
-            }
+            var url = BaseUrl.TrimEnd('/') + "/permission/checkPermission?permissionName=" + permission;
+            HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Authorization", authorization);
+            string resp = httpRequestHelper.Get(url, headers);
+            var result = JsonSerializerHelper.Deserialize<ServiceModel<string>>(resp);
+            if (result.code == 0) return true;
             return false;
         }
         /// <summary>
@@ -190,16 +187,12 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public string GetTokenByTicket(string from, string ticket, string audience)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseUrl.TrimEnd('/') + "/sso/gettoken?from=" + from + "&ticket=" + ticket + "&ip=" + audience);
-            request.Method = "get";
-            using (WebResponse response = request.GetResponse())
-            {
-                StreamReader reader = new StreamReader(response.GetResponseStream());
-                string resp = reader.ReadToEnd();
-                var result = JsonSerializerHelper.Deserialize<ServiceModel<string>>(resp);
-                if (result.code == 0) return result.result;
-                return "";
-            }
+            var url = BaseUrl.TrimEnd('/') + "/sso/gettoken?from=" + from + "&ticket=" + ticket + "&ip=" + audience;
+            HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+            string resp = httpRequestHelper.Get(url, null);
+            var result = JsonSerializerHelper.Deserialize<ServiceModel<string>>(resp);
+            if (result.code == 0) return result.result;
+            return "";
         }
         /// <summary>
         /// 验证配置文件
