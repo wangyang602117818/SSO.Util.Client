@@ -382,6 +382,7 @@ namespace SSO.Util.Client.SqlBatisLite
         public Dictionary<string, object> GetParameterDict(object obj, string parentName = "", int index = -1)
         {
             Dictionary<string, object> parasDict = new Dictionary<string, object>();
+            if (obj == null) return parasDict;
             if (obj is JToken)
             {
                 parasDict = ParseJObjectParameter(obj, parentName, index);
