@@ -92,7 +92,6 @@
     <Compile Include="ValidateModelStateAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="log4net.config" />
     <None Include="SSO.Util.Client.nuspec" />
   </ItemGroup>
   <ItemGroup>

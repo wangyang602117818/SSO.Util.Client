@@ -19,16 +19,38 @@ namespace SSO.Util.Client
         static string repositoryName = "NETCoreRepository";
         static ILoggerRepository repository = LogManager.CreateRepository(repositoryName);
         private static readonly ILog infoLog = LogManager.GetLogger(repositoryName, "FileLogAppender");
+        static string config = "<configuration>" +
+           "<configSections>" +
+               "<section name=\"log4net\" type=\"log4net.Config.Log4NetConfigurationSectionHandler,log4net\"/>" +
+           "</configSections>" +
+           "<log4net>" +
+               "<logger name=\"FileLogAppender\">" +
+                   "<level value=\"ALL\"/>" +
+               "<appender-ref ref=\"FileLogAppender\"/>" +
+               "</logger>" +
+               "<appender name=\"FileLogAppender\" type=\"log4net.Appender.RollingFileAppender\">" +
+                   "<staticLogFileName value=\"false\"/>" +
+                   "<file value=\"App_Data/Log/\"/>" +
+                   "<rollingStyle value=\"Composite\"/>" +
+                   "<datePattern value=\"yyyy-MM-dd/yyyy-MM-dd HH&quot;.txt&quot;\"/>" +
+                   "<maxSizeRollBackups value=\"-1\"/>" +
+                   "<maximumFileSize value=\"100kb\"/>" +
+                   "<layout type=\"log4net.Layout.PatternLayout\">" +
+                       "<conversionPattern value=\"%d [%p]：%m%n\" />" +
+                   "</layout>" +
+               "</appender>" +
+           "</log4net>" +
+           "</configuration>";
         static Log4Net()
         {
-            string path = AppDomain.CurrentDomain.BaseDirectory + "bin\\SSO.Util.Client.dll";
-            if (!File.Exists(path))
-            {
-                path = AppDomain.CurrentDomain.BaseDirectory + "SSO.Util.Client.dll";
-            }
-            var assembly = Assembly.LoadFrom(path);
-            var stream = assembly.GetManifestResourceStream("SSO.Util.Client.log4net.config");
-            XmlConfigurator.Configure(repository, stream);
+            //string path = AppDomain.CurrentDomain.BaseDirectory + "bin\\SSO.Util.Client.dll";
+            //if (!File.Exists(path))
+            //{
+            //    path = AppDomain.CurrentDomain.BaseDirectory + "SSO.Util.Client.dll";
+            //}
+            //var assembly = Assembly.LoadFrom(path);
+            //var stream = assembly.GetManifestResourceStream("SSO.Util.Client.log4net.config");
+            XmlConfigurator.Configure(repository, config.ToStream());
         }
         /// <summary>
         /// 错误日志 
