@@ -360,6 +360,13 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.FileClientService.GetFileInfos(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            获取文件详情列表
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
         <member name="M:SSO.Util.Client.FileClientService.GetFromList">
             <summary>
             获取from列表
