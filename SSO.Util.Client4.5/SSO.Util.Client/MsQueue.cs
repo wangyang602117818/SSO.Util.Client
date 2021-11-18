@@ -32,15 +32,8 @@ namespace SSO.Util.Client
         /// <param name="transactional">是否是事务队列</param>
         public void CreateQueue(bool transactional = false)
         {
-            try
-            {
-                if (!MessageQueue.Exists(path)) MessageQueue.Create(path, transactional).SetPermissions("Everyone", MessageQueueAccessRights.FullControl);
-                if (!string.IsNullOrEmpty(managerpath) && !MessageQueue.Exists(managerpath)) MessageQueue.Create(managerpath, transactional).SetPermissions("Everyone", MessageQueueAccessRights.FullControl);
-            }
-            catch (Exception ex)
-            {
-                Log4Net.ErrorLog(ex);
-            }
+            if (!MessageQueue.Exists(path)) MessageQueue.Create(path, transactional).SetPermissions("Everyone", MessageQueueAccessRights.FullControl);
+            if (!string.IsNullOrEmpty(managerpath) && !MessageQueue.Exists(managerpath)) MessageQueue.Create(managerpath, transactional).SetPermissions("Everyone", MessageQueueAccessRights.FullControl);
         }
         /// <summary>
         /// 发送普通消息

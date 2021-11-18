@@ -142,6 +142,19 @@ namespace SSO.Util.Client
             return JsonSerializerHelper.Deserialize<ServiceModel<List<FileItem>>>(list);
         }
         /// <summary>
+        /// 获取文件详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ServiceModel<FileItem> GetFileInfo(string id)
+        {
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Authorization", Token);
+            var url = RemoteUrl + "/data/GetFileInfo/" + id;
+            string item = requestHelper.Get(url, headers);
+            return JsonSerializerHelper.Deserialize<ServiceModel<FileItem>>(item);
+        }
+        /// <summary>
         /// 获取from列表
         /// </summary>
         /// <returns></returns>

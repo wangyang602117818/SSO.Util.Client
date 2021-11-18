@@ -353,6 +353,13 @@
             <param name="delete"></param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.FileClientService.GetFileInfo(System.String)">
+            <summary>
+            获取文件详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:SSO.Util.Client.FileClientService.GetFromList">
             <summary>
             获取from列表

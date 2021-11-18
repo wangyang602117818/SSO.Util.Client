@@ -236,7 +236,7 @@ namespace SSO.Util.Client
                     foreach (Attribute att in attributes)
                     {
                         var name = ((SSOAuthorizeAttribute)att).Name;
-                        if (!actions.Contains(name)) actions.Add(name);
+                        if (!actions.Contains(name) && !string.IsNullOrEmpty(name)) actions.Add(name);
                     }
                 }
             }
