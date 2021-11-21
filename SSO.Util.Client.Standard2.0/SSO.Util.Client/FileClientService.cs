@@ -48,7 +48,7 @@ namespace SSO.Util.Client
             {
                 code = result.code,
                 message = result.message,
-                result = result.result[0],
+                result = result.result?[0],
                 count = result.count
             };
         }
