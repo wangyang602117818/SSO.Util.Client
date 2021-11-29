@@ -74,6 +74,12 @@ namespace SSO.Util.Client.ElasticLite
             var result = ExecuteRequest("HEAD", command, jsonData);
             return result == "404" ? false : true;
         }
+        public bool CheckServerAvailable()
+        {
+            var result = ExecuteRequest("Get", "", "");
+            if (result == "-1000") return false;
+            return true;
+        }
         /// <summary>
         /// 索引数据
         /// </summary>
@@ -118,13 +124,14 @@ namespace SSO.Util.Client.ElasticLite
                     {
                         using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                         {
+                            ex = null;
                             return reader.ReadToEnd();
                         }
                     }
                 }
                 catch (WebException webException)
                 {
-                    if (webException.Response != null && ((HttpWebResponse)webException.Response).StatusCode == HttpStatusCode.NotFound) return "404";
+                    ex = webException;
                     //从队列获取的连接不可用
                     string unuseConnect = connections.Dequeue();
                     //把不可用的连接放入队尾
@@ -133,11 +140,20 @@ namespace SSO.Util.Client.ElasticLite
                     Log4Net.ErrorLog(webException);
                 }
             }
-            throw ex;
+            if (ex != null)
+            {
+                //服务不可用
+                if (ex.Response == null) return "-1000";
+                //index不存在
+                if (((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.NotFound) return "404";
+                throw ex;
+            }
+            return ex.Message;
         }
         private HttpWebRequest CreateRequest(string method, string uri)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.ServerCertificateValidationCallback = ((message, cert, chain, error) => { return true; });
             request.Accept = "application/json";
             request.ContentType = "application/json";
             request.Timeout = Timeout;
@@ -146,6 +162,5 @@ namespace SSO.Util.Client.ElasticLite
             if (Credentials != null) request.Credentials = Credentials;
             return request;
         }
-
     }
 }
