@@ -208,6 +208,12 @@
             <param name="jsonData"></param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.ElasticLite.ElasticConnection.CheckServerAvailable">
+            <summary>
+            判断服务器是否可用
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:SSO.Util.Client.ElasticLite.ElasticConnection.Post(System.String,System.String)">
             <summary>
             索引数据
@@ -273,139 +279,6 @@
             <summary>
             未知错误
             </summary>
-        </member>
-        <member name="T:SSO.Util.Client.FileClientService">
-            <summary>
-            文件服务类
-            </summary>
-        </member>
-        <member name="P:SSO.Util.Client.FileClientService.RemoteUrl">
-            <summary>
-            文件服务器的url
-            </summary>
-        </member>
-        <member name="P:SSO.Util.Client.FileClientService.Token">
-            <summary>
-            jwt token
-            </summary>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.#ctor(System.String,System.String)">
-            <summary>
-            文件服务器的url
-            </summary>
-            <param name="remoteUrl"></param>
-            <param name="token"></param>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.Upload(System.String,System.String,System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            上传文件
-            </summary>
-            <param name="fileName">文件名称</param>
-            <param name="contentType">文件contentType</param>
-            <param name="stream">文件流</param>
-            <param name="param">其他参数</param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.Uploads(System.Collections.Generic.IEnumerable{SSO.Util.Client.UploadFileItem},System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            上传多个文件
-            </summary>
-            <param name="files"></param>
-            <param name="param"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.DownloadFile(System.String,System.String,System.String)">
-            <summary>
-            下载文件
-            </summary>
-            <param name="id">文件id</param>
-            <param name="filename">文件名称</param>
-            <param name="flag">文件flag,图片才需要</param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.DownloadFileIcon(System.String,System.String)">
-            <summary>
-            下载文件图标
-            </summary>
-            <param name="id">文件id</param>
-            <param name="filename">文件名称</param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.FileState(System.String)">
-            <summary>
-            获取文件转换进度
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.GetFileList(System.Int32,System.Int32,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Collections.Generic.Dictionary{System.String,System.String},System.Boolean)">
-            <summary>
-            获取文件列表
-            </summary>
-            <param name="pageIndex"></param>
-            <param name="pageSize"></param>
-            <param name="from"></param>
-            <param name="filter"></param>
-            <param name="fileType"></param>
-            <param name="startTime"></param>
-            <param name="endTime"></param>
-            <param name="sorts"></param>
-            <param name="delete"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.GetFileInfo(System.String)">
-            <summary>
-            获取文件详情
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.GetFileInfos(System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            获取文件详情列表
-            </summary>
-            <param name="ids"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.GetFromList">
-            <summary>
-            获取from列表
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.GetExtensionMap">
-            <summary>
-            获取ExtensionMap
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.RemoveFile(System.String)">
-            <summary>
-            移除文件
-            </summary>
-            <param name="fileId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.RemoveFiles(System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            批量移除文件
-            </summary>
-            <param name="fileIds"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.RestoreFile(System.String)">
-            <summary>
-            恢复文件
-            </summary>
-            <param name="fileId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.FileClientService.RestoreFiles(System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            批量恢复文件
-            </summary>
-            <param name="fileIds"></param>
-            <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.FileItem">
             <summary>
@@ -848,132 +721,6 @@
             <param name="controllerAttributes"></param>
             <returns></returns>
         </member>
-        <member name="T:SSO.Util.Client.LogService">
-            <summary>
-            日志服务类
-            </summary>
-        </member>
-        <member name="M:SSO.Util.Client.LogService.#ctor(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="baseUrl">日志项目的url</param>
-        </member>
-        <member name="M:SSO.Util.Client.LogService.GetList(System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Int32,System.Int32)">
-            <summary>
-            获取日志对象列表
-            </summary>
-            <param name="from"></param>
-            <param name="to"></param>
-            <param name="controller"></param>
-            <param name="action"></param>
-            <param name="startTime"></param>
-            <param name="endTime"></param>
-            <param name="userId"></param>
-            <param name="userName"></param>
-            <param name="sorts"></param>
-            <param name="exception"></param>
-            <param name="pageIndex"></param>
-            <param name="pageSize"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.LogService.GetById(System.String)">
-            <summary>
-            通过id获取日志详情
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.LogService.GetOpRecordByDay(System.Int32)">
-            <summary>
-            获取最新的日志,按天统计
-            </summary>
-            <param name="last">最近多少天</param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.LogService.GetFromList">
-            <summary>
-            获取from列表
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.LogService.GetToList">
-            <summary>
-            获取to列表
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.LogService.GetControllersByTo(System.String)">
-            <summary>
-            获取to中Controller列表
-            </summary>
-            <param name="to"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.LogService.GetActionsByController(System.String,System.String)">
-            <summary>
-            获取from中action列表
-            </summary>
-            <param name="to"></param>
-            <param name="controllerName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.LogService.GetOperations">
-            <summary>
-            统计昨天,上月,全部日志
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:SSO.Util.Client.MessageCenterService">
-            <summary>
-            队列信息中心服务
-            </summary>
-        </member>
-        <member name="M:SSO.Util.Client.MessageCenterService.#ctor(System.String)">
-            <summary>
-            消息中心
-            </summary>
-            <param name="baseUrl">消息中心项目的基本url</param>
-        </member>
-        <member name="M:SSO.Util.Client.MessageCenterService.InsertLog(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64,System.Boolean)">
-            <summary>
-            记录日志
-            </summary>
-            <param name="from"></param>
-            <param name="to"></param>
-            <param name="controller"></param>
-            <param name="action"></param>
-            <param name="route"></param>
-            <param name="querystring"></param>
-            <param name="requestContent"></param>
-            <param name="responseContent"></param>
-            <param name="userId"></param>
-            <param name="userName"></param>
-            <param name="userHost"></param>
-            <param name="userAgent"></param>
-            <param name="time"></param>
-            <param name="exception"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.MessageCenterService.InsertConvertTask(System.String,System.String,System.String)">
-            <summary>
-            添加转换任务
-            </summary>
-            <param name="machineName">发往那个机器</param>
-            <param name="collectionName"></param>
-            <param name="collectionId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.MessageCenterService.InsertTaskScheduling(System.String,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            添加调度任务
-            </summary>
-            <param name="machineName"></param>
-            <param name="schedulingId"></param>
-            <param name="triggerId"></param>
-            <param name="schedulingState"></param>
-            <returns></returns>
-        </member>
         <member name="T:SSO.Util.Client.MyHandleErrorAttribute">
             <summary>
             错误处理
@@ -1111,6 +858,401 @@
         <member name="P:SSO.Util.Client.FileResponse.Message">
             <summary>
             错误信息
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.FileClientService">
+            <summary>
+            文件服务类
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.FileClientService.RemoteUrl">
+            <summary>
+            文件服务器的url
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.FileClientService.Token">
+            <summary>
+            jwt token
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.#ctor(System.String,System.String)">
+            <summary>
+            文件服务器的url
+            </summary>
+            <param name="remoteUrl"></param>
+            <param name="token"></param>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.Upload(System.String,System.String,System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            上传文件
+            </summary>
+            <param name="fileName">文件名称</param>
+            <param name="contentType">文件contentType</param>
+            <param name="stream">文件流</param>
+            <param name="param">其他参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.Uploads(System.Collections.Generic.IEnumerable{SSO.Util.Client.UploadFileItem},System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            上传多个文件
+            </summary>
+            <param name="files"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.DownloadFile(System.String,System.String,System.String)">
+            <summary>
+            下载文件
+            </summary>
+            <param name="id">文件id</param>
+            <param name="filename">文件名称</param>
+            <param name="flag">文件flag,图片才需要</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.DownloadFileIcon(System.String,System.String)">
+            <summary>
+            下载文件图标
+            </summary>
+            <param name="id">文件id</param>
+            <param name="filename">文件名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.FileState(System.String)">
+            <summary>
+            获取文件转换进度
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.GetFileList(System.Int32,System.Int32,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Collections.Generic.Dictionary{System.String,System.String},System.Boolean)">
+            <summary>
+            获取文件列表
+            </summary>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <param name="from"></param>
+            <param name="filter"></param>
+            <param name="fileType"></param>
+            <param name="startTime"></param>
+            <param name="endTime"></param>
+            <param name="sorts"></param>
+            <param name="delete"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.GetFileInfo(System.String)">
+            <summary>
+            获取文件详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.GetFileInfos(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            获取文件详情列表
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.GetFromList">
+            <summary>
+            获取from列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.GetExtensionMap">
+            <summary>
+            获取ExtensionMap
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.RemoveFile(System.String)">
+            <summary>
+            移除文件
+            </summary>
+            <param name="fileId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.RemoveFiles(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            批量移除文件
+            </summary>
+            <param name="fileIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.RestoreFile(System.String)">
+            <summary>
+            恢复文件
+            </summary>
+            <param name="fileId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.RestoreFiles(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            批量恢复文件
+            </summary>
+            <param name="fileIds"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.LogService">
+            <summary>
+            日志服务类
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="baseUrl">日志项目的url</param>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetList(System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Int32,System.Int32)">
+            <summary>
+            获取日志对象列表
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="controller"></param>
+            <param name="action"></param>
+            <param name="startTime"></param>
+            <param name="endTime"></param>
+            <param name="userId"></param>
+            <param name="userName"></param>
+            <param name="sorts"></param>
+            <param name="exception"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetById(System.String)">
+            <summary>
+            通过id获取日志详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetOpRecordByDay(System.Int32)">
+            <summary>
+            获取最新的日志,按天统计
+            </summary>
+            <param name="last">最近多少天</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetFromList">
+            <summary>
+            获取from列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetToList">
+            <summary>
+            获取to列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetControllersByTo(System.String)">
+            <summary>
+            获取to中Controller列表
+            </summary>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetActionsByController(System.String,System.String)">
+            <summary>
+            获取from中action列表
+            </summary>
+            <param name="to"></param>
+            <param name="controllerName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.LogService.GetOperations">
+            <summary>
+            统计昨天,上月,全部日志
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.MessageCenterService">
+            <summary>
+            队列信息中心服务
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.MessageCenterService.#ctor(System.String)">
+            <summary>
+            消息中心
+            </summary>
+            <param name="baseUrl">消息中心项目的基本url</param>
+        </member>
+        <member name="M:SSO.Util.Client.MessageCenterService.InsertLog(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64,System.Boolean)">
+            <summary>
+            记录日志
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="controller"></param>
+            <param name="action"></param>
+            <param name="route"></param>
+            <param name="querystring"></param>
+            <param name="requestContent"></param>
+            <param name="responseContent"></param>
+            <param name="userId"></param>
+            <param name="userName"></param>
+            <param name="userHost"></param>
+            <param name="userAgent"></param>
+            <param name="time"></param>
+            <param name="exception"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.MessageCenterService.InsertConvertTask(System.String,System.String,System.String)">
+            <summary>
+            添加转换任务
+            </summary>
+            <param name="machineName">发往那个机器</param>
+            <param name="collectionName"></param>
+            <param name="collectionId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.MessageCenterService.InsertTaskScheduling(System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            添加调度任务
+            </summary>
+            <param name="machineName"></param>
+            <param name="schedulingId"></param>
+            <param name="triggerId"></param>
+            <param name="schedulingState"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.SearchService">
+            <summary>
+            搜索服务类
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.SearchService.#ctor(System.String)">
+            <summary>
+            构造
+            </summary>
+            <param name="baseUrl">日志项目的url</param>
+        </member>
+        <member name="M:SSO.Util.Client.SearchService.Suggest(System.String)">
+            <summary>
+            根据前缀建议
+            </summary>
+            <param name="word"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SearchService.Search(System.String,System.Int32,System.Int32)">
+            <summary>
+            搜索
+            </summary>
+            <param name="word"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.SearchDataModel">
+            <summary>
+            search返回类
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.SuggestModel">
+            <summary>
+            suggest返回类
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.SSOClientService">
+            <summary>
+            sso服务类
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.SSOClientService.RemoteUrl">
+            <summary>
+            sso服务的url
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.SSOClientService.Token">
+            <summary>
+            jwt token
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.SSOClientService.headers">
+            <summary>
+            请求header
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.SSOClientService.#ctor(System.String,System.String)">
+            <summary>
+            sso服务的url
+            </summary>
+            <param name="remoteUrl"></param>
+            <param name="token"></param>
+        </member>
+        <member name="M:SSO.Util.Client.SSOClientService.GetAllCompany">
+            <summary>
+            获取所有company
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOClientService.GetAllDepartment(System.String)">
+            <summary>
+            获取指定department列表
+            </summary>
+            <param name="companyCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOClientService.GetUserList(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            获取user列表
+            </summary>
+            <param name="filter"></param>
+            <param name="companyCode"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOClientService.GetRoleList(System.String,System.Int32,System.Int32)">
+            <summary>
+            获取角色列表
+            </summary>
+            <param name="filter"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOClientService.GetUserDetail(System.String)">
+            <summary>
+            获取user详情
+            </summary>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SSOClientService.ReplacePermissions(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            替换权限项
+            </summary>
+            <param name="origin">项目标记</param>
+            <param name="names">权限列表</param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.CompanyItem">
+            <summary>
+            Company类
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.DepartmentItem">
+            <summary>
+            department类
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.UserItem">
+            <summary>
+            User列表类
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.UserDetail">
+            <summary>
+            用户详情类
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.RoleItem">
+            <summary>
+            角色列表项
             </summary>
         </member>
         <member name="T:SSO.Util.Client.SqlBatisLite.AdoNetUtil">
@@ -1674,105 +1816,6 @@
             </summary>
             <param name="types"></param>
             <returns></returns>
-        </member>
-        <member name="T:SSO.Util.Client.SSOClientService">
-            <summary>
-            sso服务类
-            </summary>
-        </member>
-        <member name="P:SSO.Util.Client.SSOClientService.RemoteUrl">
-            <summary>
-            sso服务的url
-            </summary>
-        </member>
-        <member name="P:SSO.Util.Client.SSOClientService.Token">
-            <summary>
-            jwt token
-            </summary>
-        </member>
-        <member name="F:SSO.Util.Client.SSOClientService.headers">
-            <summary>
-            请求header
-            </summary>
-        </member>
-        <member name="M:SSO.Util.Client.SSOClientService.#ctor(System.String,System.String)">
-            <summary>
-            sso服务的url
-            </summary>
-            <param name="remoteUrl"></param>
-            <param name="token"></param>
-        </member>
-        <member name="M:SSO.Util.Client.SSOClientService.GetAllCompany">
-            <summary>
-            获取所有company
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.SSOClientService.GetAllDepartment(System.String)">
-            <summary>
-            获取指定department列表
-            </summary>
-            <param name="companyCode"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.SSOClientService.GetUserList(System.String,System.String,System.Int32,System.Int32)">
-            <summary>
-            获取user列表
-            </summary>
-            <param name="filter"></param>
-            <param name="companyCode"></param>
-            <param name="pageIndex"></param>
-            <param name="pageSize"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.SSOClientService.GetRoleList(System.String,System.Int32,System.Int32)">
-            <summary>
-            获取角色列表
-            </summary>
-            <param name="filter"></param>
-            <param name="pageIndex"></param>
-            <param name="pageSize"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.SSOClientService.GetUserDetail(System.String)">
-            <summary>
-            获取user详情
-            </summary>
-            <param name="userId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.SSOClientService.ReplacePermissions(System.String,System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            替换权限项
-            </summary>
-            <param name="origin">项目标记</param>
-            <param name="names">权限列表</param>
-            <returns></returns>
-        </member>
-        <member name="T:SSO.Util.Client.CompanyItem">
-            <summary>
-            Company类
-            </summary>
-        </member>
-        <member name="T:SSO.Util.Client.DepartmentItem">
-            <summary>
-            department类
-            </summary>
-        </member>
-        <member name="T:SSO.Util.Client.UserItem">
-            <summary>
-            User列表类
-            </summary>
-        </member>
-        <member name="T:SSO.Util.Client.UserDetail">
-            <summary>
-            用户详情类
-            </summary>
-        </member>
-        <member name="T:SSO.Util.Client.RoleItem">
-            <summary>
-            角色列表项
-            </summary>
         </member>
         <member name="T:SSO.Util.Client.StreamExtention">
             <summary>

@@ -74,6 +74,10 @@ namespace SSO.Util.Client.ElasticLite
             var result = ExecuteRequest("HEAD", command, jsonData);
             return result == "404" ? false : true;
         }
+        /// <summary>
+        /// 判断服务器是否可用
+        /// </summary>
+        /// <returns></returns>
         public bool CheckServerAvailable()
         {
             var result = ExecuteRequest("Get", "", "");

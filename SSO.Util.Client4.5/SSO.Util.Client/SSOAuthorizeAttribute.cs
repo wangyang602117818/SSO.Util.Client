@@ -19,7 +19,7 @@ namespace SSO.Util.Client
     /// <summary>
     /// sso验证
     /// </summary>
-    public class SSOAuthorizeAttribute : Attribute, IAuthorizationFilter
+    public class SSOAuthorizeAttribute : FilterAttribute, IAuthorizationFilter
     {
         public static string BaseUrl = AppSettings.GetValue("ssoBaseUrl");
         public static string SecretKey = AppSettings.GetValue("ssoSecretKey");

@@ -99,7 +99,30 @@ services.AddControllers(options =>
   var result = requestHelper.Post(baseUrl, model, null); //接口返回值
   return JsonSerializerHelper.Deserialize<ServiceModel<List<LogModel>>>(result);  //解析返回值
   ```
-### 功能四: SqlBatisLite 操作 SQL Server 数据库(ORM)
+### 功能四: 轻量版操作 ElasticSearch 工具
+- 案例
+  ```
+  List<string> urls = new List<string>(){ "http://localhost:9200/"};
+  ElasticConnection elasticConnection = new ElasticConnection(urls);
+  //判断index是否存在
+  bool exists = elasticConnection.Head(indexName);
+  //创建index,并且设置mapping
+  var result = elasticConnection.Put(indexName, mapping);
+  if (result.Contains("\"acknowledged\":true")) return true;
+  //索引数据
+  var result = elasticConnection.Post("person/doc/1", json);
+  if (result.Contains("\"successful\":1")) return true;
+  //删除数据
+  var result = elasticConnection.Post("person/doc/1", json);
+  if (result.Contains("\"successful\":1")) return true;
+  //搜索数据
+  var result = elasticConnection.Post(indexName, json);
+  //或者只取需要的数据
+  var result = elasticConnection.Post(indexName+ "/_search?filter_path=hits.total,hits.hits._source,hits.hits._id,hits.hits.highlight", json);
+  更新数据最佳实践:
+  确保id一致使用索引数据接口
+  ```
+### 功能五: SqlBatisLite 操作 SQL Server 数据库(ORM)
 - 配置文件:  
 1. sbl.config.xml : 全局配置文件,SqlBatisLite启动时会自动从项目根目录读取该文件  
    文件 Build Action : None  

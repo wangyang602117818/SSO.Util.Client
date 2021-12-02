@@ -25,6 +25,7 @@ namespace SSO.Util.Client
         /// 获取日志对象列表
         /// </summary>
         /// <param name="from"></param>
+        /// <param name="to"></param>
         /// <param name="controller"></param>
         /// <param name="action"></param>
         /// <param name="startTime"></param>
@@ -53,7 +54,7 @@ namespace SSO.Util.Client
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
-            var result = requestHelper.Post(baseUrl + "/log/getlist?", logModel, null); ;
+            var result = requestHelper.Post(baseUrl + "/log/getlist", logModel, null); ;
             return JsonSerializerHelper.Deserialize<ServiceModel<List<LogModel>>>(result);
         }
         /// <summary>

@@ -19,7 +19,7 @@ namespace SSO.Util.Client
         /// <param name="baseUrl">消息中心项目的基本url</param>
         public MessageCenterService(string baseUrl)
         {
-            this.baseUrl = baseUrl;
+            this.baseUrl = baseUrl.TrimEnd('/');
         }
         /// <summary>
         /// 记录日志
@@ -60,7 +60,7 @@ namespace SSO.Util.Client
                 Exception = exception,
                 CreateTime = DateTime.Now
             };
-            var result = requestHelper.Post(baseUrl.TrimEnd('/') + "/log/insert", logModel, null);
+            var result = requestHelper.Post(baseUrl + "/log/insert", logModel, null);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
         /// <summary>
@@ -72,7 +72,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<string> InsertConvertTask(string machineName, string collectionName, string collectionId)
         {
-            var result = requestHelper.Post(baseUrl.TrimEnd('/') + "/filetask/insert", new { machineName, collectionName, collectionId }, null);
+            var result = requestHelper.Post(baseUrl + "/filetask/insert", new { machineName, collectionName, collectionId }, null);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
         /// <summary>
@@ -85,7 +85,21 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<string> InsertTaskScheduling(string machineName, int schedulingId, int triggerId, int schedulingState)
         {
-            var result = requestHelper.Post(baseUrl.TrimEnd('/') + "/TaskScheduling/insert", new { machineName, schedulingId, triggerId, schedulingState }, null);
+            var result = requestHelper.Post(baseUrl + "/TaskScheduling/insert", new { machineName, schedulingId, triggerId, schedulingState }, null);
+            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
+        }
+        /// <summary>
+        /// 添加搜索数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="title"></param>
+        /// <param name="description"></param>
+        /// <param name="doc_time"></param>
+        /// <returns></returns>
+        public ServiceModel<string> InsertSearchData(string id, string title, string description, DateTime doc_time)
+        {
+            object data = new { id, title, description, doc_time };
+            var result = requestHelper.Post(baseUrl + "/searchData/insert", data, null);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
     }
