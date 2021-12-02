@@ -25,10 +25,10 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="word"></param>
         /// <returns></returns>
-        public ServiceModel<List<SuggestModel>> Suggest(string word)
+        public ServiceModel<List<SuggestData>> Suggest(string word)
         {
             var result = requestHelper.Get(baseUrl + "/searchdata/suggest?word=" + word, null);
-            return JsonSerializerHelper.Deserialize<ServiceModel<List<SuggestModel>>>(result);
+            return JsonSerializerHelper.Deserialize<ServiceModel<List<SuggestData>>>(result);
         }
         /// <summary>
         /// 搜索
@@ -37,16 +37,16 @@ namespace SSO.Util.Client
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public ServiceModel<List<SearchDataModel>> Search(string word, int pageIndex = 1, int pageSize = 10)
+        public ServiceModel<List<SearchData>> Search(string word, int pageIndex = 1, int pageSize = 10)
         {
             string result = requestHelper.Get(baseUrl + "/searchdata/search?word=" + word + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, null);
-            return JsonSerializerHelper.Deserialize<ServiceModel<List<SearchDataModel>>>(result);
+            return JsonSerializerHelper.Deserialize<ServiceModel<List<SearchData>>>(result);
         }
     }
     /// <summary>
     /// search返回类
     /// </summary>
-    public class SearchDataModel
+    public class SearchData
     {
         public string id { get; set; }
         public string title { get; set; }
@@ -57,7 +57,7 @@ namespace SSO.Util.Client
     /// <summary>
     /// suggest返回类
     /// </summary>
-    public class SuggestModel
+    public class SuggestData
     {
         [JsonProperty("_id")]
         public string id { get; set; }

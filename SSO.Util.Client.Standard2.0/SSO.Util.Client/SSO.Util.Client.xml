@@ -1146,12 +1146,12 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
-        <member name="T:SSO.Util.Client.SearchDataModel">
+        <member name="T:SSO.Util.Client.SearchData">
             <summary>
             search返回类
             </summary>
         </member>
-        <member name="T:SSO.Util.Client.SuggestModel">
+        <member name="T:SSO.Util.Client.SuggestData">
             <summary>
             suggest返回类
             </summary>
