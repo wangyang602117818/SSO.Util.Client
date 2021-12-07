@@ -1119,6 +1119,24 @@
             <param name="schedulingState"></param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.MessageCenterService.InsertSearchData(System.String,System.String,System.String,System.DateTime)">
+            <summary>
+            添加搜索数据
+            </summary>
+            <param name="id"></param>
+            <param name="type"></param>
+            <param name="title"></param>
+            <param name="description"></param>
+            <param name="doc_time"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.MessageCenterService.DeleteSearchData(System.String)">
+            <summary>
+            删除搜索数据
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:SSO.Util.Client.SearchService">
             <summary>
             搜索服务类

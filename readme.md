@@ -110,10 +110,10 @@ services.AddControllers(options =>
   var result = elasticConnection.Put(indexName, mapping);
   if (result.Contains("\"acknowledged\":true")) return true;
   //索引数据
-  var result = elasticConnection.Post("person/doc/1", json);
+  var result = elasticConnection.Post("person/_doc/1", json);
   if (result.Contains("\"successful\":1")) return true;
   //删除数据
-  var result = elasticConnection.Post("person/doc/1", json);
+  var result = elasticConnection.Delete("person/_doc/1");
   if (result.Contains("\"successful\":1")) return true;
   //搜索数据
   var result = elasticConnection.Post(indexName, json);

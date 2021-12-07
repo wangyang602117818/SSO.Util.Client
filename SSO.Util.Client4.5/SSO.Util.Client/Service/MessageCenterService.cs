@@ -92,13 +92,25 @@ namespace SSO.Util.Client
         /// 添加搜索数据
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="type"></param>
         /// <param name="title"></param>
         /// <param name="description"></param>
         /// <param name="doc_time"></param>
         /// <returns></returns>
         public ServiceModel<string> InsertSearchData(string id, string title, string description, DateTime doc_time)
         {
-            object data = new { id, title, description, doc_time };
+            object data = new { type = "update", id, title, description, doc_time };
+            var result = requestHelper.Post(baseUrl + "/searchData/insert", data, null);
+            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
+        }
+        /// <summary>
+        /// 删除搜索数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ServiceModel<string> DeleteSearchData(string id)
+        {
+            object data = new { type = "delete", id };
             var result = requestHelper.Post(baseUrl + "/searchData/insert", data, null);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
