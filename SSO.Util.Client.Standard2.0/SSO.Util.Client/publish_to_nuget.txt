@@ -1,4 +1,4 @@
 //打包
 dotnet pack SSO.Util.Client.csproj
 //发布
-dotnet nuget push SSO.Util.Client.1.0.0.nupkg -k oy2lqlbzp6jcu44wtwba5scf6jca7dzu5jjcuquhqbbyou -s https://api.nuget.org/v3/index.json
+dotnet nuget push SSO.Util.Client.1.0.0.nupkg -k {key} -s https://api.nuget.org/v3/index.json

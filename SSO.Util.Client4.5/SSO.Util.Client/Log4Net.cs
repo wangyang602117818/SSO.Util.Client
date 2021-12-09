@@ -30,7 +30,7 @@ namespace SSO.Util.Client
                     "<rollingStyle value=\"Composite\"/>" +
                     "<datePattern value=\"yyyy-MM-dd/yyyy-MM-dd HH&quot;.txt&quot;\"/>" +
                     "<maxSizeRollBackups value=\"-1\"/>" +
-                    "<maximumFileSize value=\"100kb\"/>" +
+                    "<maximumFileSize value=\"1000kb\"/>" +
                     "<layout type=\"log4net.Layout.PatternLayout\">" +
                         "<conversionPattern value=\"%d [%p]：%m%n\" />" +
                     "</layout>" +

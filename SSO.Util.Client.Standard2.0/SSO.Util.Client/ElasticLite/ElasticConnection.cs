@@ -72,17 +72,7 @@ namespace SSO.Util.Client.ElasticLite
         public bool Head(string command, string jsonData = null)
         {
             var result = ExecuteRequest("HEAD", command, jsonData);
-            return result == "404" ? false : true;
-        }
-        /// <summary>
-        /// 判断服务器是否可用
-        /// </summary>
-        /// <returns></returns>
-        public bool CheckServerAvailable()
-        {
-            var result = ExecuteRequest("Get", "", "");
-            if (result == "-1000") return false;
-            return true;
+            return result != "404" ? true : false;
         }
         /// <summary>
         /// 索引数据
@@ -135,6 +125,17 @@ namespace SSO.Util.Client.ElasticLite
                 }
                 catch (WebException webException)
                 {
+                    //服务可用并且返回404
+                    if (webException.Response != null && ((HttpWebResponse)webException.Response).StatusCode == HttpStatusCode.NotFound)
+                    {
+                        using (StreamReader reader = new StreamReader(webException.Response.GetResponseStream()))
+                        {
+                            ex = null;
+                            string resp = reader.ReadToEnd();
+                            if (resp.IsNullOrEmpty()) return "404";
+                            return resp;
+                        }
+                    }
                     ex = webException;
                     //从队列获取的连接不可用
                     string unuseConnect = connections.Dequeue();
@@ -146,10 +147,6 @@ namespace SSO.Util.Client.ElasticLite
             }
             if (ex != null)
             {
-                //服务不可用
-                if (ex.Response == null) return "-1000";
-                //index不存在
-                if (((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.NotFound) return "404";
                 throw ex;
             }
             return ex.Message;
@@ -157,11 +154,11 @@ namespace SSO.Util.Client.ElasticLite
         private HttpWebRequest CreateRequest(string method, string uri)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.Method = method;
             request.ServerCertificateValidationCallback = ((message, cert, chain, error) => { return true; });
             request.Accept = "application/json";
             request.ContentType = "application/json";
             request.Timeout = Timeout;
-            request.Method = method;
             if (Proxy != null) request.Proxy = Proxy;
             if (Credentials != null) request.Credentials = Credentials;
             return request;

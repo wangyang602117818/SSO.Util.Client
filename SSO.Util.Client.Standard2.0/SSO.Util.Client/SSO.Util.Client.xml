@@ -208,12 +208,6 @@
             <param name="jsonData"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.ElasticLite.ElasticConnection.CheckServerAvailable">
-            <summary>
-            判断服务器是否可用
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:SSO.Util.Client.ElasticLite.ElasticConnection.Post(System.String,System.String)">
             <summary>
             索引数据
