@@ -64,13 +64,13 @@
     <Compile Include="JsonSerializerHelper.cs" />
     <Compile Include="JwtManager.cs" />
     <Compile Include="Log4Net.cs" />
-    <Compile Include="LogRecordAttribute.cs" />
+    <Compile Include="Attribute\LogRecordAttribute.cs" />
     <Compile Include="Service\LogService.cs" />
     <Compile Include="Service\MessageCenterService.cs" />
     <Compile Include="LogModel.cs" />
     <Compile Include="MsQueue.cs" />
-    <Compile Include="MyHandleErrorAttribute.cs" />
-    <Compile Include="NoneLogRecordAttribute.cs" />
+    <Compile Include="Attribute\MyHandleErrorAttribute.cs" />
+    <Compile Include="Attribute\NoneLogRecordAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomExtention.cs" />
     <Compile Include="ResponseModel.cs" />
@@ -82,15 +82,15 @@
     <Compile Include="SqlBatisLite\SessionFactory.cs" />
     <Compile Include="SqlBatisLite\XmlStatement.cs" />
     <Compile Include="SqlBatisLite\XmlStatementAttribute.cs" />
-    <Compile Include="SSOAuthorizeAttribute.cs" />
+    <Compile Include="Attribute\SSOAuthorizeAttribute.cs" />
     <Compile Include="Service\SSOClientService.cs" />
     <Compile Include="StreamExtention.cs" />
     <Compile Include="StringExtention.cs" />
     <Compile Include="SymmetricEncryptHelper.cs" />
     <Compile Include="TcpListenerHelper.cs" />
-    <Compile Include="ThrottlingAttribute.cs" />
+    <Compile Include="Attribute\ThrottlingAttribute.cs" />
     <Compile Include="UserData.cs" />
-    <Compile Include="ValidateModelStateAttribute.cs" />
+    <Compile Include="Attribute\ValidateModelStateAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SSO.Util.Client.nuspec" />

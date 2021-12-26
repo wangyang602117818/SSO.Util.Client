@@ -109,7 +109,7 @@ namespace SSO.Util.Client
                 }
                 return;
             }
-            string authorization = JwtManager.GetAuthorization(request, CookieKey);
+            string authorization = JwtManager.GetAuthorization(CookieKey);
             string ticket = request.QueryString["ticket"];
             if (string.IsNullOrEmpty(authorization))
             {

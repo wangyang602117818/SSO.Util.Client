@@ -65,11 +65,13 @@ services.AddControllers(options =>
    ```
 - 获取authorization
    ```
-   var authorization = SSOAuthorizeAttribute.GetAuthorization(request)
+   var authorization = JwtManager.GetAuthorization()  //netframework
+   var authorization = JwtManager.GetAuthorization(httpContext)  //netcore
    ```
 - 访问用户其他信息
    ```
-   var userData = SSOAuthorizeAttribute.ParseUserData(authorization)
+   var userData = JwtManager.GetUserData()  //netframework
+   var userData = JwtManager.GetUserData(httpContext)  //netcore
    ```
 ### 功能二: 日志记录和异常记录
 - 注册全局错误处理器 `MyHandleErrorAttribute`

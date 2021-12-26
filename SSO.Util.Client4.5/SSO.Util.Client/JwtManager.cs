@@ -132,15 +132,14 @@ namespace SSO.Util.Client
         /// <summary>
         /// 获取cookie或者请求header中的jwt token
         /// </summary>
-        /// <param name="request"></param>
         /// <param name="cookieKey"></param>
         /// <returns></returns>
-        public static string GetAuthorization(HttpRequestBase request, string cookieKey = null)
+        public static string GetAuthorization(string cookieKey = null)
         {
-            if (cookieKey == null) cookieKey = SSOAuthorizeAttribute.CookieKey;
-            string authorization = request.Cookies[cookieKey] == null ? "" : request.Cookies[cookieKey].Value;
-            if (string.IsNullOrEmpty(authorization)) authorization = request.Headers["Authorization"] ?? "";
-            if (string.IsNullOrEmpty(authorization)) authorization = request["Authorization"];
+            if (cookieKey.IsNullOrEmpty()) cookieKey = SSOAuthorizeAttribute.CookieKey;
+            string authorization = HttpContext.Current.Request.Cookies[cookieKey] == null ? "" : HttpContext.Current.Request.Cookies[cookieKey].Value;
+            if (string.IsNullOrEmpty(authorization)) authorization = HttpContext.Current.Request.Headers["Authorization"] ?? "";
+            if (string.IsNullOrEmpty(authorization)) authorization = HttpContext.Current.Request["Authorization"];
             return authorization;
         }
         /// <summary>
@@ -169,6 +168,16 @@ namespace SSO.Util.Client
         {
             var principal = ParseAuthorization(authorization, secretKey, validateAudience);
             return ParseUserData(principal);
+        }
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="cookieKey"></param>
+        /// <returns></returns>
+        public static UserData GetUserData(string cookieKey = null)
+        {
+            string authorization = GetAuthorization(cookieKey);
+            return ParseUserData(authorization);
         }
         /// <summary>
         /// 根据cookie和key解析用户信息

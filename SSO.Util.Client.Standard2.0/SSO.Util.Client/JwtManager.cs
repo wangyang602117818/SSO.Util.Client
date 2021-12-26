@@ -134,15 +134,15 @@ namespace SSO.Util.Client
         /// <summary>
         /// 获取cookie或者请求header中的jwt token
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="httpContext"></param>
         /// <param name="cookieKey"></param>
         /// <returns></returns>
-        public static string GetAuthorization(HttpRequest request, string cookieKey = null)
+        public static string GetAuthorization(HttpContext httpContext, string cookieKey = null)
         {
-            if (cookieKey == null) cookieKey = SSOAuthorizeAttribute.CookieKey;
-            string authorization = request.Cookies[cookieKey] == null ? "" : request.Cookies[cookieKey];
-            if (string.IsNullOrEmpty(authorization)) authorization = request.Headers["Authorization"].ToString() ?? "";
-            if (string.IsNullOrEmpty(authorization)) authorization = request.Query["Authorization"];
+            if (cookieKey.IsNullOrEmpty()) cookieKey = SSOAuthorizeAttribute.CookieKey;
+            string authorization = httpContext.Request.Cookies[cookieKey] == null ? "" : httpContext.Request.Cookies[cookieKey];
+            if (string.IsNullOrEmpty(authorization)) authorization = httpContext.Request.Headers["Authorization"].ToString() ?? "";
+            if (string.IsNullOrEmpty(authorization)) authorization = httpContext.Request.Query["Authorization"];
             return authorization;
         }
         /// <summary>
@@ -172,6 +172,17 @@ namespace SSO.Util.Client
         {
             var principal = ParseAuthorization(authorization, httpContext, secretKey, validateAudience);
             return ParseUserData(principal);
+        }
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <param name="cookieKey"></param>
+        /// <returns></returns>
+        public static UserData GetUserData(HttpContext httpContext, string cookieKey = null)
+        {
+            string authorization = GetAuthorization(httpContext, cookieKey);
+            return ParseUserData(authorization, httpContext);
         }
         /// <summary>
         /// 根据cookie和key解析用户信息

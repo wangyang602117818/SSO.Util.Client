@@ -139,7 +139,7 @@ namespace SSO.Util.Client
                 if (result is RedirectToRouteResult) responseContent = "route:" + ((RedirectToRouteResult)result).RouteName;
             }
             string userId = "", userName = "", from = ""; ;
-            string authorization = JwtManager.GetAuthorization(request, CookieKey);
+            string authorization = JwtManager.GetAuthorization(request.HttpContext, CookieKey);
             if (!authorization.IsNullOrEmpty())
             {
                 ClaimsPrincipal claimsPrincipal = JwtManager.ParseAuthorization(authorization, request.HttpContext, SecretKey);
