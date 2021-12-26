@@ -55,7 +55,7 @@ services.AddControllers(options =>
       var assembly = Assembly.GetExecutingAssembly();
       var controllers = assembly.GetTypes().Where(w => w.FullName.Contains("FileService.Api.Controllers"));
       var res = SSOAuthorizeAttribute.GetPermissionDescription(controllers);
-      SSOClientService sSOClientService = new SSOClientService(ssoBaseUrl, JwtManager.GetAuthorization(Request));
+      SSOClientService sSOClientService = new SSOClientService(ssoBaseUrl, JwtManager.GetAuthorization(HttpContext));
       var category = AppSettings.GetApplicationUrlTrimHttpPrefix(Request);
       var result = sSOClientService.ReplacePermissions(category, res);
    ```

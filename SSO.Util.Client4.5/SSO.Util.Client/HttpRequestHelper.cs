@@ -19,6 +19,19 @@ namespace SSO.Util.Client
         /// 发送文件
         /// </summary>
         /// <param name="url"></param>
+        /// <param name="file"></param>
+        /// <param name="paras"></param>
+        /// <param name="headers"></param>
+        /// <returns></returns>
+        public string PostFile(string url, UploadFileItem file, Dictionary<string, string> paras = null, Dictionary<string, string> headers = null)
+        {
+            List<UploadFileItem> files=new List<UploadFileItem> { file };
+            return PostFile(url, files, paras, headers);
+        }
+        /// <summary>
+        /// 发送文件
+        /// </summary>
+        /// <param name="url"></param>
         /// <param name="files"></param>
         /// <param name="paras"></param>
         /// <param name="headers"></param>
@@ -45,8 +58,18 @@ namespace SSO.Util.Client
                 byte[] bytes = Encoding.UTF8.GetBytes(fileBegin);
                 stream.Write(bytes, 0, bytes.Length);
                 ////传文件数据
-                item.FileStream.Position = 0;
-                item.FileStream.CopyTo(stream);
+                if (item.FileStream.CanSeek)
+                {
+                    item.FileStream.Position = 0;
+                    item.FileStream.CopyTo(stream);
+                }
+                else
+                {
+                    var buffer = new byte[4096];
+                    int readed;
+                    while ((readed = item.FileStream.Read(buffer, 0, 4096)) != 0)
+                        stream.Write(buffer, 0, readed);
+                }
                 //传换行数据
                 byte[] LFBytes = Encoding.UTF8.GetBytes("\r\n");
                 stream.Write(LFBytes, 0, LFBytes.Length);
