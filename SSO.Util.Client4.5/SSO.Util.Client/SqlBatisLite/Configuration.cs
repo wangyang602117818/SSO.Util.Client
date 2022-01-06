@@ -17,10 +17,10 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <summary>
         /// 默认配置文件名称
         /// </summary>
-        public string ConfigName = "sbl.config.xml";
+        public string ConfigName = "sbl.config";
         private string basePath = AppDomain.CurrentDomain.BaseDirectory;
         /// <summary>
-        /// 使用默认配置文件名称 sbl.config.xml
+        /// 使用默认配置文件名称 sbl.config
         /// </summary>
         /// <returns></returns>
         public SessionFactory Configure()

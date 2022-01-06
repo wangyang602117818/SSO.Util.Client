@@ -126,7 +126,7 @@ services.AddControllers(options =>
   ```
 ### 功能五: SqlBatisLite 操作 SQL Server 数据库(ORM)
 - 配置文件:  
-1. sbl.config.xml : 全局配置文件,SqlBatisLite启动时会自动从项目根目录读取该文件  
+1. sbl.config : 全局配置文件,SqlBatisLite启动时会自动从项目根目录读取该文件  
    文件 Build Action : None  
    文件 Copy To Output Directory : Copy always 或者 Copy if newer  
    案例:
