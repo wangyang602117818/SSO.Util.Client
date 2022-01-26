@@ -34,12 +34,13 @@ namespace SSO.Util.Client
         /// 搜索
         /// </summary>
         /// <param name="word"></param>
+        /// <param name="highlight"></param>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public ServiceModel<List<SearchData>> Search(string word, int pageIndex = 1, int pageSize = 10)
+        public ServiceModel<List<SearchData>> Search(string word, bool highlight = false, int pageIndex = 1, int pageSize = 10)
         {
-            string result = requestHelper.Get(baseUrl + "/searchdata/search?word=" + word + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, null);
+            string result = requestHelper.Get(baseUrl + "/searchdata/search?word=" + word + "&highlight=" + highlight + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, null);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<SearchData>>>(result);
         }
     }

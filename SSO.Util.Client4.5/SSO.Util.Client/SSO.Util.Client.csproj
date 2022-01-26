@@ -56,6 +56,7 @@
     <Compile Include="ElasticLite\ElasticConnection.cs" />
     <Compile Include="ErrorCode.cs" />
     <Compile Include="ExtensionMap.cs" />
+    <Compile Include="OperationType.cs" />
     <Compile Include="Service\FileClientService.cs" />
     <Compile Include="FileItem.cs" />
     <Compile Include="HashEncryptHelper.cs" />

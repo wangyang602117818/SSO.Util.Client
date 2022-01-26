@@ -825,6 +825,66 @@
             创建时间
             </summary>
         </member>
+        <member name="T:SSO.Util.Client.DataBaseType">
+            <summary>
+            数据库类型
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.DataBaseType.sqlserver">
+            <summary>
+            sqlserver数据库
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.DataBaseType.mongodb">
+            <summary>
+            mongodb数据库
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.OperationType">
+            <summary>
+            操作类型
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.OperationType.insert">
+            <summary>
+            插入
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.OperationType.delete">
+            <summary>
+            删除
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.OperationType.replace">
+            <summary>
+            替换
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.OperationType.update">
+            <summary>
+            更新
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.OperationType.drop">
+            <summary>
+            删除
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.OperationType.rename">
+            <summary>
+            重命名
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.OperationType.dropDatabase">
+            <summary>
+            删除数据库
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.OperationType.invalidate">
+            <summary>
+            错误
+            </summary>
+        </member>
         <member name="T:SSO.Util.Client.RandomExtention">
             <summary>
             随机数扩展
@@ -1201,22 +1261,26 @@
             <param name="schedulingState"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.MessageCenterService.InsertSearchData(System.String,System.String,System.String,System.DateTime)">
+        <member name="M:SSO.Util.Client.MessageCenterService.InsertSearchData(SSO.Util.Client.DataBaseType,System.String,System.String,System.String,System.String,System.DateTime,System.String)">
             <summary>
             添加搜索数据
             </summary>
-            <param name="id"></param>
-            <param name="type"></param>
+            <param name="database"></param>
+            <param name="table"></param>
+            <param name="key"></param>
             <param name="title"></param>
             <param name="description"></param>
-            <param name="doc_time"></param>
+            <param name="doc_time">文档添加时间,不是进入ex时间)</param>
+            <param name="extra"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.MessageCenterService.DeleteSearchData(System.String)">
+        <member name="M:SSO.Util.Client.MessageCenterService.DeleteSearchData(SSO.Util.Client.DataBaseType,System.String,System.String)">
             <summary>
             删除搜索数据
             </summary>
-            <param name="id"></param>
+            <param name="database"></param>
+            <param name="table"></param>
+            <param name="key"></param>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.SearchService">
@@ -1237,11 +1301,12 @@
             <param name="word"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.SearchService.Search(System.String,System.Int32,System.Int32)">
+        <member name="M:SSO.Util.Client.SearchService.Search(System.String,System.Boolean,System.Int32,System.Int32)">
             <summary>
             搜索
             </summary>
             <param name="word"></param>
+            <param name="highlight"></param>
             <param name="pageIndex"></param>
             <param name="pageSize"></param>
             <returns></returns>

@@ -91,26 +91,30 @@ namespace SSO.Util.Client
         /// <summary>
         /// 添加搜索数据
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="type"></param>
+        /// <param name="database"></param>
+        /// <param name="table"></param>
+        /// <param name="key"></param>
         /// <param name="title"></param>
         /// <param name="description"></param>
-        /// <param name="doc_time"></param>
+        /// <param name="doc_time">文档添加时间,不是进入ex时间)</param>
+        /// <param name="extra"></param>
         /// <returns></returns>
-        public ServiceModel<string> InsertSearchData(string id, string title, string description, DateTime doc_time)
+        public ServiceModel<string> InsertSearchData(DataBaseType database, string table, string key, string title, string description, DateTime doc_time, string extra = "")
         {
-            object data = new { type = "update", id, title, description, doc_time };
+            object data = new { operationType = OperationType.insert, database, table, key, title, description, doc_time, extra };
             var result = requestHelper.Post(baseUrl + "/searchData/insert", data, null);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
         /// <summary>
         /// 删除搜索数据
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="database"></param>
+        /// <param name="table"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public ServiceModel<string> DeleteSearchData(string id)
+        public ServiceModel<string> DeleteSearchData(DataBaseType database, string table, string key)
         {
-            object data = new { type = "delete", id };
+            object data = new { operationType = OperationType.delete, database, table, key };
             var result = requestHelper.Post(baseUrl + "/searchData/insert", data, null);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
