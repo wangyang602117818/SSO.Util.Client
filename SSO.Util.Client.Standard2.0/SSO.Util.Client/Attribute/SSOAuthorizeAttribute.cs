@@ -105,7 +105,7 @@ namespace SSO.Util.Client
                 }
                 else //最后一个
                 {
-                    filterContext.Result = new RedirectResult(BaseUrl + "?returnUrl=" + returnUrl);
+                    filterContext.Result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl);
                 }
                 return;
             }
@@ -163,7 +163,7 @@ namespace SSO.Util.Client
         private ActionResult GetActionResult(string returnUrl)
         {
             ActionResult result = new ResponseModel<string>(ErrorCode.authorize_fault, "");
-            if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login" + "?returnUrl=" + returnUrl);
+            if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl);
             return result;
         }
         private bool CheckPermission(string permission, string authorization)
