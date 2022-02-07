@@ -1146,6 +1146,26 @@
             </summary>
             <param name="baseUrl">日志项目的url</param>
         </member>
+        <member name="M:SSO.Util.Client.LogService.InsertLog(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64,System.Boolean)">
+            <summary>
+            记录日志
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="controller"></param>
+            <param name="action"></param>
+            <param name="route"></param>
+            <param name="querystring"></param>
+            <param name="requestContent"></param>
+            <param name="responseContent"></param>
+            <param name="userId"></param>
+            <param name="userName"></param>
+            <param name="userHost"></param>
+            <param name="userAgent"></param>
+            <param name="time"></param>
+            <param name="exception"></param>
+            <returns></returns>
+        </member>
         <member name="M:SSO.Util.Client.LogService.GetList(System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Nullable{System.Boolean},System.Int32,System.Int32)">
             <summary>
             获取日志对象列表
@@ -1222,26 +1242,6 @@
             </summary>
             <param name="baseUrl">消息中心项目的基本url</param>
         </member>
-        <member name="M:SSO.Util.Client.MessageCenterService.InsertLog(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64,System.Boolean)">
-            <summary>
-            记录日志
-            </summary>
-            <param name="from"></param>
-            <param name="to"></param>
-            <param name="controller"></param>
-            <param name="action"></param>
-            <param name="route"></param>
-            <param name="querystring"></param>
-            <param name="requestContent"></param>
-            <param name="responseContent"></param>
-            <param name="userId"></param>
-            <param name="userName"></param>
-            <param name="userHost"></param>
-            <param name="userAgent"></param>
-            <param name="time"></param>
-            <param name="exception"></param>
-            <returns></returns>
-        </member>
         <member name="M:SSO.Util.Client.MessageCenterService.InsertConvertTask(System.String,System.String,System.String)">
             <summary>
             添加转换任务
@@ -1261,7 +1261,18 @@
             <param name="schedulingState"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.MessageCenterService.InsertSearchData(SSO.Util.Client.DataBaseType,System.String,System.String,System.String,System.String,System.DateTime,System.String)">
+        <member name="T:SSO.Util.Client.SearchService">
+            <summary>
+            搜索服务类
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.SearchService.#ctor(System.String)">
+            <summary>
+            构造
+            </summary>
+            <param name="baseUrl">日志项目的url</param>
+        </member>
+        <member name="M:SSO.Util.Client.SearchService.InsertSearchData(SSO.Util.Client.DataBaseType,System.String,System.String,System.String,System.String,System.DateTime,System.String)">
             <summary>
             添加搜索数据
             </summary>
@@ -1274,7 +1285,7 @@
             <param name="extra"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.MessageCenterService.DeleteSearchData(SSO.Util.Client.DataBaseType,System.String,System.String)">
+        <member name="M:SSO.Util.Client.SearchService.DeleteSearchData(SSO.Util.Client.DataBaseType,System.String,System.String)">
             <summary>
             删除搜索数据
             </summary>
@@ -1282,17 +1293,6 @@
             <param name="table"></param>
             <param name="key"></param>
             <returns></returns>
-        </member>
-        <member name="T:SSO.Util.Client.SearchService">
-            <summary>
-            搜索服务类
-            </summary>
-        </member>
-        <member name="M:SSO.Util.Client.SearchService.#ctor(System.String)">
-            <summary>
-            构造
-            </summary>
-            <param name="baseUrl">日志项目的url</param>
         </member>
         <member name="M:SSO.Util.Client.SearchService.Suggest(System.String)">
             <summary>

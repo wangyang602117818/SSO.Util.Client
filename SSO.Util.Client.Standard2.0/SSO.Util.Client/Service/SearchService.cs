@@ -21,6 +21,36 @@ namespace SSO.Util.Client
             this.baseUrl = baseUrl.TrimEnd('/');
         }
         /// <summary>
+        /// 添加搜索数据
+        /// </summary>
+        /// <param name="database"></param>
+        /// <param name="table"></param>
+        /// <param name="key"></param>
+        /// <param name="title"></param>
+        /// <param name="description"></param>
+        /// <param name="doc_time">文档添加时间,不是进入ex时间)</param>
+        /// <param name="extra"></param>
+        /// <returns></returns>
+        public ServiceModel<string> InsertSearchData(DataBaseType database, string table, string key, string title, string description, DateTime doc_time, string extra = "")
+        {
+            object data = new { operationType = OperationType.insert, database, table, key, title, description, doc_time, extra };
+            var result = requestHelper.Post(baseUrl + "/searchData/insert", data, null);
+            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
+        }
+        /// <summary>
+        /// 删除搜索数据
+        /// </summary>
+        /// <param name="database"></param>
+        /// <param name="table"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public ServiceModel<string> DeleteSearchData(DataBaseType database, string table, string key)
+        {
+            object data = new { operationType = OperationType.delete, database, table, key };
+            var result = requestHelper.Post(baseUrl + "/searchData/insert", data, null);
+            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
+        }
+        /// <summary>
         /// 根据前缀建议
         /// </summary>
         /// <param name="word"></param>

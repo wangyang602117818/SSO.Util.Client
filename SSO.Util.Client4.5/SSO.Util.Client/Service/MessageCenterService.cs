@@ -22,48 +22,6 @@ namespace SSO.Util.Client
             this.baseUrl = baseUrl.TrimEnd('/');
         }
         /// <summary>
-        /// 记录日志
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="controller"></param>
-        /// <param name="action"></param>
-        /// <param name="route"></param>
-        /// <param name="querystring"></param>
-        /// <param name="requestContent"></param>
-        /// <param name="responseContent"></param>
-        /// <param name="userId"></param>
-        /// <param name="userName"></param>
-        /// <param name="userHost"></param>
-        /// <param name="userAgent"></param>
-        /// <param name="time"></param>
-        /// <param name="exception"></param>
-        /// <returns></returns>
-        public ServiceModel<string> InsertLog(string from, string to, string controller, string action, string route, string querystring, string requestContent, string responseContent, string userId, string userName, string userHost, string userAgent, long time = 0, bool exception = false)
-        {
-            LogModel logModel = new LogModel()
-            {
-                From = from,
-                To = to,
-                Controller = controller,
-                Action = action,
-                Route = route,
-                QueryString = querystring,
-                Content = requestContent,
-                Response = responseContent,
-                UserId = userId,
-                UserName = userName,
-                UserHost = userHost,
-                UserAgent = userAgent,
-                Time = time,
-                CountPerMinute = 1,
-                Exception = exception,
-                CreateTime = DateTime.Now
-            };
-            var result = requestHelper.Post(baseUrl + "/log/insert", logModel, null);
-            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
-        }
-        /// <summary>
         /// 添加转换任务
         /// </summary>
         /// <param name="machineName">发往那个机器</param>
@@ -86,36 +44,6 @@ namespace SSO.Util.Client
         public ServiceModel<string> InsertTaskScheduling(string machineName, int schedulingId, int triggerId, int schedulingState)
         {
             var result = requestHelper.Post(baseUrl + "/TaskScheduling/insert", new { machineName, schedulingId, triggerId, schedulingState }, null);
-            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
-        }
-        /// <summary>
-        /// 添加搜索数据
-        /// </summary>
-        /// <param name="database"></param>
-        /// <param name="table"></param>
-        /// <param name="key"></param>
-        /// <param name="title"></param>
-        /// <param name="description"></param>
-        /// <param name="doc_time">文档添加时间,不是进入ex时间)</param>
-        /// <param name="extra"></param>
-        /// <returns></returns>
-        public ServiceModel<string> InsertSearchData(DataBaseType database, string table, string key, string title, string description, DateTime doc_time, string extra = "")
-        {
-            object data = new { operationType = OperationType.insert, database, table, key, title, description, doc_time, extra };
-            var result = requestHelper.Post(baseUrl + "/searchData/insert", data, null);
-            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
-        }
-        /// <summary>
-        /// 删除搜索数据
-        /// </summary>
-        /// <param name="database"></param>
-        /// <param name="table"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public ServiceModel<string> DeleteSearchData(DataBaseType database, string table, string key)
-        {
-            object data = new { operationType = OperationType.delete, database, table, key };
-            var result = requestHelper.Post(baseUrl + "/searchData/insert", data, null);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
     }

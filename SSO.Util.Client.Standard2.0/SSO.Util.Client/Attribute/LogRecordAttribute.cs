@@ -87,7 +87,7 @@ namespace SSO.Util.Client
             IEnumerable<CustomAttributeData> methodAttributes = actionDescriptor.MethodInfo.CustomAttributes;
             IEnumerable<CustomAttributeData> controllerAttributes = actionDescriptor.ControllerTypeInfo.CustomAttributes;
             if (!CheckLogRecord(methodAttributes, controllerAttributes)) return;
-            MessageCenterService messageService = new MessageCenterService(BaseUrl);
+            LogService logService = new LogService(BaseUrl);
             HttpRequest request = context.HttpContext.Request;
             //日志调用api
             var to = AppSettings.GetApplicationUrl(request).ReplaceHttpPrefix().TrimEnd('/').ToLower();
@@ -152,7 +152,7 @@ namespace SSO.Util.Client
             string userAgent = request.Headers["User-Agent"];
             var time = DateTime.UtcNow.MillisecondTimeStamp() - (long)context.HttpContext.Items["log_time_start"];
             bool exception = context.Exception != null;
-            messageService.InsertLog(from, to, controller, action, route, querystring, requestContent, responseContent, userId, userName, userHost, userAgent, time, exception);
+            logService.InsertLog(from, to, controller, action, route, querystring, requestContent, responseContent, userId, userName, userHost, userAgent, time, exception);
         }
         /// <summary>
         /// 验证配置文件

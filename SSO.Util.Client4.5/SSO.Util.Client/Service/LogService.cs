@@ -22,6 +22,48 @@ namespace SSO.Util.Client
             this.baseUrl = baseUrl.TrimEnd('/');
         }
         /// <summary>
+        /// 记录日志
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="controller"></param>
+        /// <param name="action"></param>
+        /// <param name="route"></param>
+        /// <param name="querystring"></param>
+        /// <param name="requestContent"></param>
+        /// <param name="responseContent"></param>
+        /// <param name="userId"></param>
+        /// <param name="userName"></param>
+        /// <param name="userHost"></param>
+        /// <param name="userAgent"></param>
+        /// <param name="time"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public ServiceModel<string> InsertLog(string from, string to, string controller, string action, string route, string querystring, string requestContent, string responseContent, string userId, string userName, string userHost, string userAgent, long time = 0, bool exception = false)
+        {
+            LogModel logModel = new LogModel()
+            {
+                From = from,
+                To = to,
+                Controller = controller,
+                Action = action,
+                Route = route,
+                QueryString = querystring,
+                Content = requestContent,
+                Response = responseContent,
+                UserId = userId,
+                UserName = userName,
+                UserHost = userHost,
+                UserAgent = userAgent,
+                Time = time,
+                CountPerMinute = 1,
+                Exception = exception,
+                CreateTime = DateTime.Now
+            };
+            var result = requestHelper.Post(baseUrl + "/log/insert", logModel, null);
+            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
+        }
+        /// <summary>
         /// 获取日志对象列表
         /// </summary>
         /// <param name="from"></param>
