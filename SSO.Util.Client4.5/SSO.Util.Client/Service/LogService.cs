@@ -39,7 +39,7 @@ namespace SSO.Util.Client
         /// <param name="time"></param>
         /// <param name="exception"></param>
         /// <returns></returns>
-        public ServiceModel<string> InsertLog(string from, string to, string controller, string action, string route, string querystring, string requestContent, string responseContent, string userId, string userName, string userHost, string userAgent, long time = 0, bool exception = false)
+        internal ServiceModel<string> InsertLog(string from, string to, string controller, string action, string route, string querystring, string requestContent, string responseContent, string userId, string userName, string userHost, string userAgent, long time = 0, bool exception = false)
         {
             LogModel logModel = new LogModel()
             {

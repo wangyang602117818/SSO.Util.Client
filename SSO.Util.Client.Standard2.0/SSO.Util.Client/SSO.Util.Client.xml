@@ -1024,22 +1024,24 @@
             <param name="remoteUrl"></param>
             <param name="token"></param>
         </member>
-        <member name="M:SSO.Util.Client.FileClientService.Upload(System.String,System.String,System.IO.Stream,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:SSO.Util.Client.FileClientService.Upload(System.String,System.String,System.IO.Stream,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             上传文件
             </summary>
             <param name="fileName">文件名称</param>
             <param name="contentType">文件contentType</param>
             <param name="stream">文件流</param>
-            <param name="param">其他参数</param>
+            <param name="roles">角色设置</param>
+            <param name="users">用户设置</param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.FileClientService.Uploads(System.Collections.Generic.IEnumerable{SSO.Util.Client.UploadFileItem},System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:SSO.Util.Client.FileClientService.Uploads(System.Collections.Generic.IEnumerable{SSO.Util.Client.UploadFileItem},System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             上传多个文件
             </summary>
             <param name="files"></param>
-            <param name="param"></param>
+            <param name="roles">角色设置</param>
+            <param name="users">用户设置</param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.FileClientService.DownloadFile(System.String,System.String,System.String)">

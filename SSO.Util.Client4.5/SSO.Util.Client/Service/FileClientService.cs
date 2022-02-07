@@ -37,13 +37,14 @@ namespace SSO.Util.Client
         /// <param name="fileName">文件名称</param>
         /// <param name="contentType">文件contentType</param>
         /// <param name="stream">文件流</param>
-        /// <param name="param">其他参数</param>
+        /// <param name="roles">角色设置</param>
+        /// <param name="users">用户设置</param>
         /// <returns></returns>
-        public ServiceModel<FileResponse> Upload(string fileName, string contentType, Stream stream, Dictionary<string, string> param = null)
+        public ServiceModel<FileResponse> Upload(string fileName, string contentType, Stream stream, IEnumerable<string> roles = null, IEnumerable<string> users = null)
         {
             List<UploadFileItem> files = new List<UploadFileItem>();
             files.Add(new UploadFileItem() { FileName = fileName, ContentType = contentType, FileStream = stream });
-            var result = Uploads(files, param);
+            var result = Uploads(files, roles, users);
             return new ServiceModel<FileResponse>()
             {
                 code = result.code,
@@ -55,13 +56,17 @@ namespace SSO.Util.Client
         /// <summary>
         /// 上传多个文件
         /// </summary>
-        /// <param name="files"></param>
-        /// <param name="param"></param>
+        /// <param name="files">文件列表</param>
+        /// <param name="roles">角色设置</param>
+        /// <param name="users">用户设置</param>
         /// <returns></returns>
-        public ServiceModel<List<FileResponse>> Uploads(IEnumerable<UploadFileItem> files, Dictionary<string, string> param = null)
+        public ServiceModel<List<FileResponse>> Uploads(IEnumerable<UploadFileItem> files, IEnumerable<string> roles = null, IEnumerable<string> users = null)
         {
             Dictionary<string, string> headers = new Dictionary<string, string>();
             headers.Add("Authorization", Token);
+            Dictionary<string, string> param = new Dictionary<string, string>() { };
+            if (roles != null && roles.Count() > 0) param.Add("roles", JsonSerializerHelper.Serialize(roles));
+            if (users != null && users.Count() > 0) param.Add("users", JsonSerializerHelper.Serialize(users));
             string result = requestHelper.PostFile(RemoteUrl + "/upload/file", files, param, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<FileResponse>>>(result);
         }
