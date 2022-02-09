@@ -26,12 +26,9 @@ namespace SSO.Util.Client
         /// 构造
         /// </summary>
         /// <param name="baseUrl">消息中心项目的基本url</param>
-        /// <param name="token"></param>
-        public SearchService(string baseUrl, string token)
+        public SearchService(string baseUrl)
         {
             this.baseUrl = baseUrl.TrimEnd('/');
-            Token = token;
-            headers.Add("Authorization", Token);
         }
         /// <summary>
         /// 添加搜索数据
