@@ -21,6 +21,7 @@ namespace SSO.Util.Client
         /// jwt token
         /// </summary>
         public string Token { get; set; }
+        Dictionary<string, string> headers = new Dictionary<string, string>();
         /// <summary>
         /// 文件服务器的url
         /// </summary>
@@ -30,6 +31,7 @@ namespace SSO.Util.Client
         {
             RemoteUrl = remoteUrl.TrimEnd('/');
             Token = token;
+            headers.Add("Authorization", Token);
         }
         /// <summary>
         /// 上传文件
@@ -62,8 +64,6 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<FileResponse>> Uploads(IEnumerable<UploadFileItem> files, IEnumerable<string> roles = null, IEnumerable<string> users = null)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             Dictionary<string, string> param = new Dictionary<string, string>() { };
             if (roles != null && roles.Count() > 0) param.Add("roles", JsonSerializerHelper.Serialize(roles));
             if (users != null && users.Count() > 0) param.Add("users", JsonSerializerHelper.Serialize(users));
@@ -79,8 +79,6 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public DownloadFileItem DownloadFile(string id, string filename, string flag = "")
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + filename + "?mode=download&flag=" + flag, headers);
         }
         /// <summary>
@@ -91,8 +89,6 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public DownloadFileItem DownloadFileIcon(string id, string filename)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             return requestHelper.GetFile(RemoteUrl + "/file/GetFileIconWrapId/" + id + filename.GetFileExt(), headers);
         }
         /// <summary>
@@ -102,8 +98,6 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<int> FileState(string id)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             string state = requestHelper.Get(RemoteUrl + "/data/FileState/" + id, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<int>>(state);
         }
@@ -122,8 +116,6 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<FileItem>> GetFileList(int pageIndex = 1, int pageSize = 10, string from = "", string filter = "", string fileType = "", DateTime? startTime = null, DateTime? endTime = null, Dictionary<string, string> sorts = null, bool delete = false)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             var url = RemoteUrl + "/data/GetFiles?pageIndex=" + pageIndex + "&pageSize=" + pageSize;
             if (!from.IsNullOrEmpty()) url += "&from=" + from;
             if (!filter.IsNullOrEmpty()) url += "&filter=" + filter;
@@ -153,8 +145,6 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<FileItem> GetFileInfo(string id)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             var url = RemoteUrl + "/data/GetFileInfo/" + id;
             string item = requestHelper.Get(url, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<FileItem>>(item);
@@ -166,8 +156,6 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<FileItem>> GetFileInfos(IEnumerable<string> ids)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             var url = RemoteUrl + "/data/GetFileInfos";
             string result = requestHelper.Post(url, new { Ids = ids }, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<FileItem>>>(result);
@@ -176,13 +164,11 @@ namespace SSO.Util.Client
         /// 获取from列表
         /// </summary>
         /// <returns></returns>
-        public ServiceModel<List<string>> GetFromList()
+        public ServiceModel<List<FromData>> GetFromList()
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             var url = RemoteUrl + "/data/GetFromList";
             string list = requestHelper.Get(url, headers);
-            return JsonSerializerHelper.Deserialize<ServiceModel<List<string>>>(list);
+            return JsonSerializerHelper.Deserialize<ServiceModel<List<FromData>>>(list);
         }
         /// <summary>
         /// 获取ExtensionMap
@@ -190,8 +176,6 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<ExtensionMap>> GetExtensionMap()
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             var url = RemoteUrl + "/data/GetExtensionsMap";
             string list = requestHelper.Get(url, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<ExtensionMap>>>(list);
@@ -203,8 +187,6 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<string> RemoveFile(string fileId)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             var url = RemoteUrl + "/data/Remove/" + fileId;
             string result = requestHelper.Get(url, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
@@ -216,8 +198,6 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<string> RemoveFiles(IEnumerable<string> fileIds)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             var url = RemoteUrl + "/data/Removes";
             string result = requestHelper.Post(url, new { Ids = fileIds }, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
@@ -229,8 +209,6 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<string> RestoreFile(string fileId)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             var url = RemoteUrl + "/data/Restore/" + fileId;
             string result = requestHelper.Get(url, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
@@ -242,8 +220,6 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<string> RestoreFiles(IEnumerable<string> fileIds)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Authorization", Token);
             var url = RemoteUrl + "/data/Restores";
             string result = requestHelper.Post(url, new { Ids = fileIds }, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);

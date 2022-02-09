@@ -10,15 +10,26 @@ namespace SSO.Util.Client
     /// </summary>
     public class SearchService
     {
-        private string baseUrl = "";
+        /// <summary>
+        /// 消息中心地址
+        /// </summary>
+        public string baseUrl = "";
+        /// <summary>
+        /// jwt token
+        /// </summary>
+        public string Token { get; set; }
         HttpRequestHelper requestHelper = new HttpRequestHelper();
+        Dictionary<string, string> headers = new Dictionary<string, string>();
         /// <summary>
         /// 构造
         /// </summary>
-        /// <param name="baseUrl">日志项目的url</param>
-        public SearchService(string baseUrl)
+        /// <param name="baseUrl">消息中心项目的基本url</param>
+        /// <param name="token"></param>
+        public SearchService(string baseUrl, string token)
         {
             this.baseUrl = baseUrl.TrimEnd('/');
+            Token = token;
+            headers.Add("Authorization", Token);
         }
         /// <summary>
         /// 添加搜索数据
@@ -34,7 +45,7 @@ namespace SSO.Util.Client
         public ServiceModel<string> InsertSearchData(DataBaseType database, string table, string key, string title, string description, DateTime doc_time, string extra = "")
         {
             object data = new { operationType = OperationType.insert, database, table, key, title, description, doc_time, extra };
-            var result = requestHelper.Post(baseUrl + "/searchData/insert", data, null);
+            var result = requestHelper.Post(baseUrl + "/searchData/insert", data, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
         /// <summary>
@@ -47,7 +58,7 @@ namespace SSO.Util.Client
         public ServiceModel<string> DeleteSearchData(DataBaseType database, string table, string key)
         {
             object data = new { operationType = OperationType.delete, database, table, key };
-            var result = requestHelper.Post(baseUrl + "/searchData/insert", data, null);
+            var result = requestHelper.Post(baseUrl + "/searchData/insert", data, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
         /// <summary>
@@ -57,7 +68,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<SuggestData>> Suggest(string word)
         {
-            var result = requestHelper.Get(baseUrl + "/searchdata/suggest?word=" + word, null);
+            var result = requestHelper.Get(baseUrl + "/searchdata/suggest?word=" + word, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<SuggestData>>>(result);
         }
         /// <summary>
@@ -70,7 +81,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public ServiceModel<List<SearchData>> Search(string word, bool highlight = false, int pageIndex = 1, int pageSize = 10)
         {
-            string result = requestHelper.Get(baseUrl + "/searchdata/search?word=" + word + "&highlight=" + highlight + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, null);
+            string result = requestHelper.Get(baseUrl + "/searchdata/search?word=" + word + "&highlight=" + highlight + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<SearchData>>>(result);
         }
     }

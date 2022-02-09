@@ -21,7 +21,7 @@ namespace SSO.Util.Client
         /// <summary>
         /// 请求header
         /// </summary>
-        Dictionary<string, string> headers = null;
+        Dictionary<string, string> headers = new Dictionary<string, string>();
         /// <summary>
         /// sso服务的url
         /// </summary>
@@ -31,7 +31,7 @@ namespace SSO.Util.Client
         {
             RemoteUrl = remoteUrl.TrimEnd('/');
             Token = token;
-            headers = new Dictionary<string, string>() { { "Authorization", token } };
+            headers.Add("Authorization", token);
         }
         /// <summary>
         /// 获取所有company

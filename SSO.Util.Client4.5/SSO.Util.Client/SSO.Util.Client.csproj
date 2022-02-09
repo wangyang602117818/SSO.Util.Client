@@ -52,13 +52,14 @@
     <Compile Include="AsymmetricEncryptHelper.cs" />
     <Compile Include="Base64SecureURL.cs" />
     <Compile Include="DateTimeExtention.cs" />
-    <Compile Include="DownloadFileItem.cs" />
+    <Compile Include="Models\DownloadFileItem.cs" />
     <Compile Include="ElasticLite\ElasticConnection.cs" />
-    <Compile Include="ErrorCode.cs" />
-    <Compile Include="ExtensionMap.cs" />
-    <Compile Include="OperationType.cs" />
+    <Compile Include="Models\ErrorCode.cs" />
+    <Compile Include="Models\ExtensionMap.cs" />
+    <Compile Include="Models\FromData.cs" />
+    <Compile Include="Models\OperationType.cs" />
     <Compile Include="Service\FileClientService.cs" />
-    <Compile Include="FileItem.cs" />
+    <Compile Include="Models\FileItem.cs" />
     <Compile Include="HashEncryptHelper.cs" />
     <Compile Include="HttpRequestHelper.cs" />
     <Compile Include="ImageExtention.cs" />
@@ -68,13 +69,13 @@
     <Compile Include="Attribute\LogRecordAttribute.cs" />
     <Compile Include="Service\LogService.cs" />
     <Compile Include="Service\MessageCenterService.cs" />
-    <Compile Include="LogModel.cs" />
+    <Compile Include="Models\LogModel.cs" />
     <Compile Include="MsQueue.cs" />
     <Compile Include="Attribute\MyHandleErrorAttribute.cs" />
     <Compile Include="Attribute\NoneLogRecordAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomExtention.cs" />
-    <Compile Include="ResponseModel.cs" />
+    <Compile Include="Models\ResponseModel.cs" />
     <Compile Include="Service\SearchService.cs" />
     <Compile Include="SqlBatisLite\AdoNetUtil.cs" />
     <Compile Include="SqlBatisLite\Configuration.cs" />
@@ -90,7 +91,7 @@
     <Compile Include="SymmetricEncryptHelper.cs" />
     <Compile Include="TcpListenerHelper.cs" />
     <Compile Include="Attribute\ThrottlingAttribute.cs" />
-    <Compile Include="UserData.cs" />
+    <Compile Include="Models\UserData.cs" />
     <Compile Include="Attribute\ValidateModelStateAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -98,7 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="log4net">
-      <Version>2.0.13</Version>
+      <Version>2.0.14</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNet.Mvc">
       <Version>5.2.7</Version>
@@ -107,7 +108,7 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt">
-      <Version>6.15.0</Version>
+      <Version>6.15.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

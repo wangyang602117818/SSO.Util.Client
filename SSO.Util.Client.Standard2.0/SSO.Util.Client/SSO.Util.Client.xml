@@ -299,31 +299,6 @@
             <param name="time"></param>
             <returns></returns>
         </member>
-        <member name="T:SSO.Util.Client.DownloadFileItem">
-            <summary>
-            下载文件的描述
-            </summary>
-        </member>
-        <member name="P:SSO.Util.Client.DownloadFileItem.FileName">
-            <summary>
-            文件描述
-            </summary>
-        </member>
-        <member name="P:SSO.Util.Client.DownloadFileItem.ContentType">
-            <summary>
-            ContentType类型
-            </summary>
-        </member>
-        <member name="P:SSO.Util.Client.DownloadFileItem.ContentLength">
-            <summary>
-            Content长度
-            </summary>
-        </member>
-        <member name="P:SSO.Util.Client.DownloadFileItem.FileStream">
-            <summary>
-            文件流
-            </summary>
-        </member>
         <member name="T:SSO.Util.Client.ElasticLite.ElasticConnection">
             <summary>
             操作 ElasticSearch 工具封装
@@ -382,81 +357,6 @@
             <param name="command">indexName</param>
             <param name="jsonData">mapping</param>
             <returns></returns>
-        </member>
-        <member name="F:SSO.Util.Client.ErrorCode.success">
-            <summary>
-            成功
-            </summary>
-        </member>
-        <member name="F:SSO.Util.Client.ErrorCode.redirect">
-            <summary>
-            重定向
-            </summary>
-        </member>
-        <member name="F:SSO.Util.Client.ErrorCode.record_not_exist">
-            <summary>
-            不存在
-            </summary>
-        </member>
-        <member name="F:SSO.Util.Client.ErrorCode.requests_has_been_exceeded">
-            <summary>
-            请求已经超过次数
-            </summary>
-        </member>
-        <member name="F:SSO.Util.Client.ErrorCode.record_exist">
-            <summary>
-            已存在
-            </summary>
-        </member>
-        <member name="F:SSO.Util.Client.ErrorCode.authorize_fault">
-            <summary>
-            权限不足
-            </summary>
-        </member>
-        <member name="F:SSO.Util.Client.ErrorCode.task_not_complete">
-            <summary>
-            任务未完成
-            </summary>
-        </member>
-        <member name="F:SSO.Util.Client.ErrorCode.baseUrl_not_config">
-            <summary>
-            配置文件缺失
-            </summary>
-        </member>
-        <member name="F:SSO.Util.Client.ErrorCode.record_has_been_used">
-            <summary>
-            记录已被使用
-            </summary>
-        </member>
-        <member name="F:SSO.Util.Client.ErrorCode.server_exception">
-            <summary>
-            未知错误
-            </summary>
-        </member>
-        <member name="T:SSO.Util.Client.FileItem">
-            <summary>
-            文件类
-            </summary>
-        </member>
-        <member name="T:SSO.Util.Client.UploadFileItem">
-            <summary>
-            上传文件类
-            </summary>
-        </member>
-        <member name="P:SSO.Util.Client.UploadFileItem.FileName">
-            <summary>
-            文件名
-            </summary>
-        </member>
-        <member name="P:SSO.Util.Client.UploadFileItem.ContentType">
-            <summary>
-            ContentType
-            </summary>
-        </member>
-        <member name="P:SSO.Util.Client.UploadFileItem.FileStream">
-            <summary>
-            文件流
-            </summary>
         </member>
         <member name="T:SSO.Util.Client.HashEncryptHelper">
             <summary>
@@ -735,6 +635,121 @@
             </summary>
             <param name="str"></param>
         </member>
+        <member name="T:SSO.Util.Client.DownloadFileItem">
+            <summary>
+            下载文件的描述
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.DownloadFileItem.FileName">
+            <summary>
+            文件描述
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.DownloadFileItem.ContentType">
+            <summary>
+            ContentType类型
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.DownloadFileItem.ContentLength">
+            <summary>
+            Content长度
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.DownloadFileItem.FileStream">
+            <summary>
+            文件流
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.success">
+            <summary>
+            成功
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.redirect">
+            <summary>
+            重定向
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.record_not_exist">
+            <summary>
+            不存在
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.requests_has_been_exceeded">
+            <summary>
+            请求已经超过次数
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.record_exist">
+            <summary>
+            已存在
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.authorize_fault">
+            <summary>
+            权限不足
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.task_not_complete">
+            <summary>
+            任务未完成
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.baseUrl_not_config">
+            <summary>
+            配置文件缺失
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.record_has_been_used">
+            <summary>
+            记录已被使用
+            </summary>
+        </member>
+        <member name="F:SSO.Util.Client.ErrorCode.server_exception">
+            <summary>
+            未知错误
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.FileItem">
+            <summary>
+            文件类
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.UploadFileItem">
+            <summary>
+            上传文件类
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.UploadFileItem.FileName">
+            <summary>
+            文件名
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.UploadFileItem.ContentType">
+            <summary>
+            ContentType
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.UploadFileItem.FileStream">
+            <summary>
+            文件流
+            </summary>
+        </member>
+        <member name="T:SSO.Util.Client.FromData">
+            <summary>
+            文件来源对象
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.FromData.From">
+            <summary>
+            来源
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.FromData.Count">
+            <summary>
+            个数(包含没有权限查看的)
+            </summary>
+        </member>
         <member name="T:SSO.Util.Client.LogModel">
             <summary>
             日志类
@@ -885,53 +900,6 @@
             错误
             </summary>
         </member>
-        <member name="T:SSO.Util.Client.RandomExtention">
-            <summary>
-            随机数扩展
-            </summary>
-        </member>
-        <member name="M:SSO.Util.Client.RandomExtention.RandomCode(System.Random,System.Int32)">
-            <summary>
-            获取随机字符串，
-            </summary>
-            <param name="random"></param>
-            <param name="numb">随机字符串个数</param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.RandomExtention.GetRandomCodes(System.Random,System.Int32,System.Int32)">
-            <summary>
-            获取[0,max]之间的len个不重复随机整数列表
-            </summary>
-            <param name="random"></param>
-            <param name="max"></param>
-            <param name="len"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.RandomExtention.Probability(System.Random,System.Double)">
-            <summary>
-            概率获取
-            </summary>
-            <param name="random"></param>
-            <param name="percent">0-1</param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.RandomExtention.GetRewardIdsDecrease(System.Random,System.Int32,System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="random"></param>
-            <param name="all"></param>
-            <param name="len"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.RandomExtention.RandomCodeHex(System.Random,System.Int32)">
-            <summary>
-            随机16精制字符串
-            </summary>
-            <param name="random"></param>
-            <param name="numb">16精制字符串长度</param>
-            <returns></returns>
-        </member>
         <member name="T:SSO.Util.Client.ResponseModel`1">
             <summary>
             Action返回类
@@ -1002,6 +970,53 @@
             错误信息
             </summary>
         </member>
+        <member name="T:SSO.Util.Client.RandomExtention">
+            <summary>
+            随机数扩展
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.RandomExtention.RandomCode(System.Random,System.Int32)">
+            <summary>
+            获取随机字符串，
+            </summary>
+            <param name="random"></param>
+            <param name="numb">随机字符串个数</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.RandomExtention.GetRandomCodes(System.Random,System.Int32,System.Int32)">
+            <summary>
+            获取[0,max]之间的len个不重复随机整数列表
+            </summary>
+            <param name="random"></param>
+            <param name="max"></param>
+            <param name="len"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.RandomExtention.Probability(System.Random,System.Double)">
+            <summary>
+            概率获取
+            </summary>
+            <param name="random"></param>
+            <param name="percent">0-1</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.RandomExtention.GetRewardIdsDecrease(System.Random,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="random"></param>
+            <param name="all"></param>
+            <param name="len"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.RandomExtention.RandomCodeHex(System.Random,System.Int32)">
+            <summary>
+            随机16精制字符串
+            </summary>
+            <param name="random"></param>
+            <param name="numb">16精制字符串长度</param>
+            <returns></returns>
+        </member>
         <member name="T:SSO.Util.Client.FileClientService">
             <summary>
             文件服务类
@@ -1039,7 +1054,7 @@
             <summary>
             上传多个文件
             </summary>
-            <param name="files"></param>
+            <param name="files">文件列表</param>
             <param name="roles">角色设置</param>
             <param name="users">用户设置</param>
             <returns></returns>
@@ -1268,11 +1283,22 @@
             搜索服务类
             </summary>
         </member>
-        <member name="M:SSO.Util.Client.SearchService.#ctor(System.String)">
+        <member name="F:SSO.Util.Client.SearchService.baseUrl">
+            <summary>
+            消息中心地址
+            </summary>
+        </member>
+        <member name="P:SSO.Util.Client.SearchService.Token">
+            <summary>
+            jwt token
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.SearchService.#ctor(System.String,System.String)">
             <summary>
             构造
             </summary>
-            <param name="baseUrl">日志项目的url</param>
+            <param name="baseUrl">消息中心项目的基本url</param>
+            <param name="token"></param>
         </member>
         <member name="M:SSO.Util.Client.SearchService.InsertSearchData(SSO.Util.Client.DataBaseType,System.String,System.String,System.String,System.String,System.DateTime,System.String)">
             <summary>
