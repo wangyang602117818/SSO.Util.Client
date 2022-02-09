@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -10,7 +11,8 @@ namespace SSO.Util.Client
     /// </summary>
     public class FileItem
     {
-        public string _id { get; set; }
+        [JsonProperty("_id")]
+        public string Id { get; set; }
         public string From { get; set; }
         public string FileId { get; set; }
         public string FileName { get; set; }
