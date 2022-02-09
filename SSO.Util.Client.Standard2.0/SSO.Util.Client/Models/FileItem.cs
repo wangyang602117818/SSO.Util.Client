@@ -11,7 +11,6 @@ namespace SSO.Util.Client
     /// </summary>
     public class FileItem
     {
-        [JsonProperty("_id")]
         public string Id { get; set; }
         public string From { get; set; }
         public string FileId { get; set; }
