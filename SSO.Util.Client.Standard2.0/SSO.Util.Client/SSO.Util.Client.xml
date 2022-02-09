@@ -735,6 +735,11 @@
             文件流
             </summary>
         </member>
+        <member name="T:SSO.Util.Client.FileType">
+            <summary>
+            文件类型
+            </summary>
+        </member>
         <member name="T:SSO.Util.Client.FromData">
             <summary>
             文件来源对象
@@ -1083,7 +1088,7 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.FileClientService.GetFileList(System.Int32,System.Int32,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Collections.Generic.Dictionary{System.String,System.String},System.Boolean)">
+        <member name="M:SSO.Util.Client.FileClientService.GetFileList(System.Int32,System.Int32,System.String,System.String,SSO.Util.Client.FileType,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Collections.Generic.Dictionary{System.String,System.String},System.Boolean)">
             <summary>
             获取文件列表
             </summary>

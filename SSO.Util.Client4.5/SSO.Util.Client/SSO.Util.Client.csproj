@@ -52,6 +52,7 @@
     <Compile Include="AsymmetricEncryptHelper.cs" />
     <Compile Include="Base64SecureURL.cs" />
     <Compile Include="DateTimeExtention.cs" />
+    <Compile Include="Models\FileType.cs" />
     <Compile Include="Models\DownloadFileItem.cs" />
     <Compile Include="ElasticLite\ElasticConnection.cs" />
     <Compile Include="Models\ErrorCode.cs" />

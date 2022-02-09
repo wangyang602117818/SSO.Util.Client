@@ -115,12 +115,12 @@ namespace SSO.Util.Client
         /// <param name="sorts"></param>
         /// <param name="delete"></param>
         /// <returns></returns>
-        public ServiceModel<List<FileItem>> GetFileList(int pageIndex = 1, int pageSize = 10, string from = "", string filter = "", string fileType = "", DateTime? startTime = null, DateTime? endTime = null, Dictionary<string, string> sorts = null, bool delete = false)
+        public ServiceModel<List<FileItem>> GetFileList(int pageIndex = 1, int pageSize = 10, string from = "", string filter = "", FileType fileType = FileType.all, DateTime? startTime = null, DateTime? endTime = null, Dictionary<string, string> sorts = null, bool delete = false)
         {
             var url = RemoteUrl + "/data/GetFiles?pageIndex=" + pageIndex + "&pageSize=" + pageSize;
             if (!from.IsNullOrEmpty()) url += "&from=" + from;
             if (!filter.IsNullOrEmpty()) url += "&filter=" + filter;
-            if (!fileType.IsNullOrEmpty()) url += "&fileType=" + fileType;
+            if (fileType != FileType.all) url += "&fileType=" + fileType.ToString();
             if (startTime != null) url += "&startTime=" + startTime.Value.ToString(AppSettings.DateTimeFormat);
             if (endTime != null) url += "&endTime=" + endTime.Value.ToString(AppSettings.DateTimeFormat);
             var index = 0;
