@@ -30,8 +30,16 @@ namespace SSO.Util.Client
         public int ProcessCount { get; set; }
         public bool Delete { get; set; }
         public bool Exception { get; set; }
+        public List<ConvertFile> Thumbnails { get; set; }
+        public List<ConvertFile> Videos { get; set; }
         public DateTime? DeleteTime { get; set; }
         public DateTime? CreateTime { get; set; }
+    }
+    public class ConvertFile
+    {
+        public string Id { get; set; }
+        public string Flag { get; set; }
+        public DateTime? CompletedTime { get; set; }
     }
     /// <summary>
     /// 上传文件类
