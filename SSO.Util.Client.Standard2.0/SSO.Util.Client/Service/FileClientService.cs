@@ -225,5 +225,38 @@ namespace SSO.Util.Client
             string result = requestHelper.Post(url, new { Ids = fileIds }, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
         }
+        /// <summary>
+        /// 获取多种流m3u8清单文件
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public DownloadFileItem M3u8MultiStream(string id, string filename)
+        {
+            var newfilename = filename.GetFileName() + ".m3u";
+            return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + newfilename, headers);
+        }
+        /// <summary>
+        /// 获取单流m3u8清单文件
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public DownloadFileItem M3u8(string id, string filename)
+        {
+            var newfilename = filename.GetFileName() + ".m3u8";
+            return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + newfilename, headers);
+        }
+        /// <summary>
+        /// 获取切片文件
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public DownloadFileItem Ts(string id, string filename)
+        {
+            var newfilename = filename.GetFileName() + ".ts";
+            return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + newfilename, headers);
+        }
     }
 }

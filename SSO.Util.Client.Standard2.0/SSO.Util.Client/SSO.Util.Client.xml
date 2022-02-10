@@ -1157,6 +1157,30 @@
             <param name="fileIds"></param>
             <returns></returns>
         </member>
+        <member name="M:SSO.Util.Client.FileClientService.M3u8MultiStream(System.String,System.String)">
+            <summary>
+            获取多种流m3u8清单文件
+            </summary>
+            <param name="id"></param>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.M3u8(System.String,System.String)">
+            <summary>
+            获取单流m3u8清单文件
+            </summary>
+            <param name="id"></param>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.FileClientService.Ts(System.String,System.String)">
+            <summary>
+            获取切片文件
+            </summary>
+            <param name="id"></param>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
         <member name="T:SSO.Util.Client.LogService">
             <summary>
             日志服务类
