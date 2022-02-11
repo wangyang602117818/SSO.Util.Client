@@ -230,9 +230,11 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="id">原文件id</param>
         /// <param name="filename">文件名+".m3u"</param>
+        /// <param name="time">记录视频播放时间(s)</param>
         /// <returns></returns>
-        public DownloadFileItem M3u8MultiStream(string id, string filename)
+        public DownloadFileItem M3u8MultiStream(string id, string filename, int time = 0)
         {
+            if (time > 0) headers.Add("tsTime", time.ToString());
             return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + filename, headers);
         }
         /// <summary>
@@ -240,9 +242,11 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="id">原文件id</param>
         /// <param name="filename">子文件id+".m3u8"</param>
+        /// <param name="time">记录视频播放时间(s)</param>
         /// <returns></returns>
-        public DownloadFileItem M3u8(string id, string filename)
+        public DownloadFileItem M3u8(string id, string filename, int time = 0)
         {
+            if (time > 0) headers.Add("tsTime", time.ToString());
             return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + filename, headers);
         }
         /// <summary>

@@ -1157,20 +1157,22 @@
             <param name="fileIds"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.FileClientService.M3u8MultiStream(System.String,System.String)">
+        <member name="M:SSO.Util.Client.FileClientService.M3u8MultiStream(System.String,System.String,System.Int32)">
             <summary>
             获取多种流m3u8清单文件
             </summary>
             <param name="id">原文件id</param>
             <param name="filename">文件名+".m3u"</param>
+            <param name="time">记录视频播放时间(s)</param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.FileClientService.M3u8(System.String,System.String)">
+        <member name="M:SSO.Util.Client.FileClientService.M3u8(System.String,System.String,System.Int32)">
             <summary>
             获取单流m3u8清单文件
             </summary>
             <param name="id">原文件id</param>
             <param name="filename">子文件id+".m3u8"</param>
+            <param name="time">记录视频播放时间(s)</param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.FileClientService.Ts(System.String,System.String)">
