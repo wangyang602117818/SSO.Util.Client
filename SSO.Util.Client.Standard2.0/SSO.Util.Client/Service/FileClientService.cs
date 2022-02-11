@@ -228,11 +228,12 @@ namespace SSO.Util.Client
         /// <summary>
         /// 获取多种流m3u8清单文件
         /// </summary>
-        /// <param name="filename">原文件id+".m3u"</param>
+        /// <param name="id">原文件id</param>
+        /// <param name="filename">文件名+".m3u"</param>
         /// <returns></returns>
-        public DownloadFileItem M3u8MultiStream(string filename)
+        public DownloadFileItem M3u8MultiStream(string id, string filename)
         {
-            return requestHelper.GetFile(RemoteUrl + "/file/" + filename, headers);
+            return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + filename, headers);
         }
         /// <summary>
         /// 获取单流m3u8清单文件
@@ -242,8 +243,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public DownloadFileItem M3u8(string id, string filename)
         {
-            var newfilename = filename.GetFileName() + ".m3u8";
-            return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + newfilename, headers);
+            return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + filename, headers);
         }
         /// <summary>
         /// 获取切片文件
@@ -253,8 +253,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public DownloadFileItem Ts(string id, string filename)
         {
-            var newfilename = filename.GetFileName() + ".ts";
-            return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + newfilename, headers);
+            return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + filename, headers);
         }
     }
 }

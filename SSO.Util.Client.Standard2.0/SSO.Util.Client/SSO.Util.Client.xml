@@ -1157,11 +1157,12 @@
             <param name="fileIds"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.FileClientService.M3u8MultiStream(System.String)">
+        <member name="M:SSO.Util.Client.FileClientService.M3u8MultiStream(System.String,System.String)">
             <summary>
             获取多种流m3u8清单文件
             </summary>
-            <param name="filename">原文件id+".m3u"</param>
+            <param name="id">原文件id</param>
+            <param name="filename">文件名+".m3u"</param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.FileClientService.M3u8(System.String,System.String)">
