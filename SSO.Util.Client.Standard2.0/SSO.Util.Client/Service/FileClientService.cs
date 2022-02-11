@@ -234,7 +234,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public DownloadFileItem M3u8MultiStream(string id, string filename, int time = 0)
         {
-            if (time > 0) headers.Add("tsTime", time.ToString());
+            if (time > 0) headers.Add("time", time.ToString());
             return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + filename, headers);
         }
         /// <summary>
@@ -246,7 +246,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public DownloadFileItem M3u8(string id, string filename, int time = 0)
         {
-            if (time > 0) headers.Add("tsTime", time.ToString());
+            if (time > 0) headers.Add("time", time.ToString());
             return requestHelper.GetFile(RemoteUrl + "/file/" + id + "/" + filename, headers);
         }
         /// <summary>
