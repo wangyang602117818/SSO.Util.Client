@@ -28,7 +28,7 @@ namespace SSO.Util.Client
             {
                 jsonFile = "appsettings.Development.json";
             }
-            Configuration = builder.AddJsonFile(jsonFile, optional: false).Build();
+            Configuration = builder.AddJsonFile(jsonFile, optional: true).Build();
         }
         /// <summary>
         /// 获取配置文件
