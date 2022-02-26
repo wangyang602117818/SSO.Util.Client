@@ -19,6 +19,7 @@ namespace SSO.Util.Client.SqlBatisLite
     {
         string b = "#", e = "#", d = "_";
         public string mappingName = "";
+        Regex iterateRegex = new Regex(@"#(\w+)?\[\](\.\w+)?#");
         public Dictionary<string, XElement> mappings = null;
         public XmlStatement(string mappingName, Dictionary<string, XElement> mappings)
         {
@@ -35,7 +36,7 @@ namespace SSO.Util.Client.SqlBatisLite
         public string GetXElementSql(XElement xElement, object obj, object replacement = null)
         {
             Dictionary<string, object> paras = GetParameterDict(obj);
-            string sql = GetXElementSql(xElement, obj, paras, -1);
+            string sql = GetXElementSql(xElement, obj, paras);
             return ReplaceStatements(sql, replacement);
         }
         /// <summary>
@@ -54,7 +55,7 @@ namespace SSO.Util.Client.SqlBatisLite
             }
             return sqlParameters.ToArray();
         }
-        private string GetXElementSql(XElement xElement, object obj, Dictionary<string, object> paras, int index = 0)
+        private string GetXElementSql(XElement xElement, object obj, Dictionary<string, object> paras)
         {
             string sql = "";
             var propertyName = xElement.Attribute("property")?.Value;
@@ -78,7 +79,7 @@ namespace SSO.Util.Client.SqlBatisLite
             {
                 if ((node.NodeType == XmlNodeType.Text || node.NodeType == XmlNodeType.CDATA) && condition)
                 {
-                    sql += prepend + ((XText)node).Value.Replace("@index", index.ToString());
+                    sql += prepend + ((XText)node).Value;
                 }
                 if (node.NodeType == XmlNodeType.Element)
                 {
@@ -116,8 +117,11 @@ namespace SSO.Util.Client.SqlBatisLite
             if (!open.IsNullOrEmpty()) open = " " + open + " ";
             var close = xElement.Attribute("close")?.Value;
             if (!open.IsNullOrEmpty()) close = " " + close + " ";
-            //获取propertyName在paras中的属性值
             var count = 0;
+            //未设置propertyName属性
+            Match propMatch = iterateRegex.Match(xElement.Value);
+            if (propertyName.IsNullOrEmpty() && propMatch.Success) propertyName = propMatch.Groups[1].Value;
+            //获取propertyName在paras中的属性值
             if (obj is JToken)
             {
                 count = FindJArrayByName(propertyName, obj).Count;
@@ -136,23 +140,19 @@ namespace SSO.Util.Client.SqlBatisLite
                     string iterateSql = "";
                     if (node.NodeType == XmlNodeType.Text || node.NodeType == XmlNodeType.CDATA)
                     {
-                        var regex = new Regex("(" + propertyName + ")" + @"\[index\](\.)?");
-                        iterateSql = ((XText)node).Value.Replace("@index", i.ToString());
-                        iterateSql = regex.Replace(iterateSql, (match) =>
+                        iterateSql = iterateRegex.Replace(((XText)node).Value, (match) =>
                         {
-                            return match.Groups[1] + b + i + e + (match.Groups[2].Value == "." ? "_" : "");
+                            string propName = match.Groups[1].Value;
+                            if (propName.IsNullOrEmpty()) propName = propertyName;
+                            string attrName = match.Groups[2].Value;
+                            if (attrName.IsNullOrEmpty()) return "@" + propName + b + i + e;
+                            return "@" + propName + b + i + e + d + attrName.TrimStart('.');
                         });
                     }
-                    else
-                    {
-                        XElement xNode = (XElement)node;
-                        iterateSql = GetXElementSql(xNode, paras, null, i);
-                    }
-                    iterateSqls.Add(iterateSql);
+                    if (!iterateSql.IsNullOrEmpty()) iterateSqls.Add(open + iterateSql + close);
                 }
             }
-            if (iterateSqls.Count == 0) return "";
-            return prepend + open + string.Join(conjunction, iterateSqls) + close;
+            return prepend + string.Join(conjunction, iterateSqls);
         }
         private string ReplaceStatements(string sql, object replacement)
         {

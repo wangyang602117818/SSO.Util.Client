@@ -163,7 +163,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <returns></returns>
         public int ExecuteSql(string sql, object paras)
         {
-            return session.ExecuteNonQuery(sql, paras);
+            return session.ExecuteSql(sql, paras);
         }
         /// <summary>
         /// 获取sql
