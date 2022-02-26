@@ -39,7 +39,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public int Insert(string xName, object paras, object replacement = null)
+        internal int Insert(string xName, object paras, object replacement = null)
         {
             return ExecuteNonQuery(xName, paras, replacement);
         }
@@ -50,7 +50,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public int InsertIdentity(string xName, object paras, object replacement = null)
+        internal int InsertIdentity(string xName, object paras, object replacement = null)
         {
             string sql = GetSql(xName, paras, replacement);
             sql += " select SCOPE_IDENTITY()";
@@ -63,7 +63,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public int Update(string xName, object paras, object replacement = null)
+        internal int Update(string xName, object paras, object replacement = null)
         {
             return ExecuteNonQuery(xName, paras, replacement);
         }
@@ -74,7 +74,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public int Delete(string xName, object paras, object replacement = null)
+        internal int Delete(string xName, object paras, object replacement = null)
         {
             return ExecuteNonQuery(xName, paras, replacement);
         }
@@ -86,7 +86,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public T QueryObject<T>(string xName, object paras, object replacement = null)
+        internal T QueryObject<T>(string xName, object paras, object replacement = null)
         {
             var result = Execute(xName, paras, replacement);
             if (result == null) return default(T);
@@ -100,7 +100,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public IEnumerable<T> QueryList<T>(string xName, object paras, object replacement = null)
+        internal IEnumerable<T> QueryList<T>(string xName, object paras, object replacement = null)
         {
             var result = Execute(xName, paras, replacement);
             if (result == null) return new List<T>();
@@ -112,7 +112,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="sql"></param>
         /// <param name="paras"></param>
         /// <returns></returns>
-        public int ExecuteSql(string sql, object paras)
+        internal int ExecuteSql(string sql, object paras)
         {
             return base.ExecuteNonQuery(sql, xmlStatement.GetSqlParameters(paras));
         }
@@ -123,7 +123,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras">要插入的对象</param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public int ExecuteNonQuery(string xName, object paras, object replacement = null)
+        internal int ExecuteNonQuery(string xName, object paras, object replacement = null)
         {
             XElement xElement = mappings[mappingName + "." + xName];
             string sql = xmlStatement.GetXElementSql(xElement, paras, replacement);
@@ -136,7 +136,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public object ExecuteScalar(string xName, object paras, object replacement = null)
+        internal object ExecuteScalar(string xName, object paras, object replacement = null)
         {
             XElement xElement = mappings[mappingName + "." + xName];
             string sql = xmlStatement.GetXElementSql(xElement, paras, replacement);
@@ -148,7 +148,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="sql"></param>
         /// <param name="paras"></param>
         /// <returns></returns>
-        public object ExecuteScalar(string sql, object paras)
+        internal object ExecuteScalar(string sql, object paras)
         {
             SqlParameter[] parameters = GetParameters(paras);
             return base.ExecuteScalar(sql, parameters);
@@ -160,7 +160,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras">要查询的参数</param>
         /// <param name="replacement">要替换的参数</param>
         /// <returns></returns>
-        public string Execute(string xName, object paras, object replacement = null)
+        internal string Execute(string xName, object paras, object replacement = null)
         {
             XElement xElement = mappings[mappingName + "." + xName];
             string sql = xmlStatement.GetXElementSql(xElement, paras, replacement);
@@ -175,7 +175,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras"></param>
         /// <param name="replacements"></param>
         /// <returns></returns>
-        public int ExecuteTransaction(IEnumerable<string> xNames, IEnumerable<object> paras, IEnumerable<object> replacements = null)
+        internal int ExecuteTransaction(IEnumerable<string> xNames, IEnumerable<object> paras, IEnumerable<object> replacements = null)
         {
             List<string> sqls = new List<string>();
             List<SqlParameter[]> sqlParameters = new List<SqlParameter[]>();
@@ -195,7 +195,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <param name="paras"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public string GetSql(string xName, object paras, object replacement = null)
+        internal string GetSql(string xName, object paras, object replacement = null)
         {
             XElement xElement = mappings[mappingName + "." + xName];
             string sql = xmlStatement.GetXElementSql(xElement, paras, replacement);
@@ -206,7 +206,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// </summary>
         /// <param name="paras"></param>
         /// <returns></returns>
-        public SqlParameter[] GetParameters(object paras)
+        internal SqlParameter[] GetParameters(object paras)
         {
             return xmlStatement.GetSqlParameters(paras);
         }

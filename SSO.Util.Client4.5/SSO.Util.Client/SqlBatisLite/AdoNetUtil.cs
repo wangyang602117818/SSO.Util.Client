@@ -17,6 +17,8 @@ namespace SSO.Util.Client.SqlBatisLite
         /// 连接字符串
         /// </summary>
         public string connstring = null;
+        private SqlConnection conn = null;
+        private SqlTransaction trans = null;
         /// <summary>
         /// 
         /// </summary>
@@ -26,6 +28,35 @@ namespace SSO.Util.Client.SqlBatisLite
             this.connstring = connstring;
         }
         /// <summary>
+        /// 事务开始
+        /// </summary>
+        public void BeginTransaction()
+        {
+            conn = new SqlConnection(connstring);
+            conn.Open();
+            trans = conn.BeginTransaction();
+        }
+        /// <summary>
+        /// 开启事务
+        /// </summary>
+        public void CommitTransaction()
+        {
+            trans.Commit();
+            conn.Dispose();
+            conn = null;
+            trans = null;
+        }
+        /// <summary>
+        /// 回滚事务
+        /// </summary>
+        public void RollBackTransaction()
+        {
+            trans.Rollback();
+            conn.Dispose();
+            conn = null;
+            trans = null;
+        }
+        /// <summary>
         /// 执行非query操作
         /// </summary>
         /// <param name="sql"></param>
@@ -33,15 +64,16 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <returns></returns>
         protected int ExecuteNonQuery(string sql, params SqlParameter[] parameters)
         {
+            if (trans != null && conn != null) return ExecuteNonQueryTrans(sql, parameters);
             using (SqlConnection conn = new SqlConnection(connstring))
             {
-                using (SqlCommand comm = conn.CreateCommand())
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
                     conn.Open();
-                    comm.CommandText = sql;
+                    cmd.CommandText = sql;
                     if (parameters.Length > 0)
-                        comm.Parameters.AddRange(parameters);
-                    return comm.ExecuteNonQuery();
+                        cmd.Parameters.AddRange(parameters);
+                    return cmd.ExecuteNonQuery();
                 }
             }
         }
@@ -53,6 +85,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <returns></returns>
         protected object ExecuteScalar(string sql, params SqlParameter[] parameters)
         {
+            if (trans != null && conn != null) return ExecuteScalarTrans(sql, parameters);
             using (SqlConnection conn = new SqlConnection(connstring))
             {
                 using (SqlCommand comm = conn.CreateCommand())
@@ -73,6 +106,7 @@ namespace SSO.Util.Client.SqlBatisLite
         /// <returns></returns>
         protected DataTable ExecuteDataTable(string sql, params SqlParameter[] parameters)
         {
+            if (trans != null && conn != null) return ExecuteDataTableTrans(sql, parameters);
             using (SqlDataAdapter adapter = new SqlDataAdapter(sql, connstring))
             {
                 DataTable dt = new DataTable();
@@ -99,7 +133,54 @@ namespace SSO.Util.Client.SqlBatisLite
             return cmd.ExecuteReader(CommandBehavior.CloseConnection);
         }
         /// <summary>
-        /// 执行事务操作,返回最后一个语句受影响的行数,每个语句之间没有互相使用的数据
+        /// 执行非query操作(事务)
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        private int ExecuteNonQueryTrans(string sql, params SqlParameter[] parameters)
+        {
+            SqlCommand cmd = new SqlCommand(sql, conn, trans);
+            cmd.CommandText = sql;
+            if (parameters.Length > 0)
+                cmd.Parameters.AddRange(parameters);
+            return cmd.ExecuteNonQuery();
+        }
+        /// <summary>
+        /// 执行返回单行单列的操作(事务)
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        protected object ExecuteScalarTrans(string sql, params SqlParameter[] parameters)
+        {
+            SqlCommand cmd = new SqlCommand(sql, conn, trans);
+            cmd.CommandText = sql;
+            if (parameters.Length > 0)
+                cmd.Parameters.AddRange(parameters);
+            return cmd.ExecuteScalar();
+        }
+        /// <summary>
+        /// 执行返回table的操作(事务)
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        protected DataTable ExecuteDataTableTrans(string sql, params SqlParameter[] parameters)
+        {
+            SqlCommand cmd = new SqlCommand(sql, conn, trans);
+            using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+            {
+                DataTable dt = new DataTable();
+                if (parameters.Length > 0)
+                    adapter.SelectCommand.Parameters.AddRange(parameters);
+                adapter.Fill(dt);
+                return dt;
+            }
+        }
+
+        /// <summary>
+        /// 执行事务操作
         /// </summary>
         /// <param name="sqls"></param>
         /// <param name="parameters"></param>
