@@ -20,6 +20,7 @@ namespace SSO.Util.Client.SqlBatisLite
         string b = "#", e = "#", d = "_";
         public string mappingName = "";
         Regex iterateRegex = new Regex(@"#(\w+)?\[\](\.\w+)?#");
+        Regex properRegex = new Regex(@"@(\w+)\.(\w+)");
         public Dictionary<string, XElement> mappings = null;
         public XmlStatement(string mappingName, Dictionary<string, XElement> mappings)
         {
@@ -37,6 +38,10 @@ namespace SSO.Util.Client.SqlBatisLite
         {
             Dictionary<string, object> paras = GetParameterDict(obj);
             string sql = GetXElementSql(xElement, obj, paras);
+            sql = properRegex.Replace(sql, (match) =>
+            {
+                return "@" + match.Groups[1].Value + d + match.Groups[2].Value;
+            });
             return ReplaceStatements(sql, replacement);
         }
         /// <summary>
@@ -179,7 +184,7 @@ namespace SSO.Util.Client.SqlBatisLite
         {
             foreach (var item in paras)
             {
-                if (item.Key == propertyName)
+                if (item.Key == propertyName.Replace(".", d))
                 {
                     var value = item.Value;
                     if (value == null) return false;
@@ -199,7 +204,7 @@ namespace SSO.Util.Client.SqlBatisLite
         {
             foreach (var item in paras)
             {
-                if (item.Key == propertyName)
+                if (item.Key == propertyName.Replace(".", d))
                 {
                     var value = item.Value;
                     if (value == null) return true;
@@ -219,7 +224,7 @@ namespace SSO.Util.Client.SqlBatisLite
         {
             foreach (var item in paras)
             {
-                if (item.Key == propertyName)
+                if (item.Key == propertyName.Replace(".", d))
                 {
                     if (item.Value == null) return false;
                     return true;
@@ -237,7 +242,7 @@ namespace SSO.Util.Client.SqlBatisLite
         {
             foreach (var item in paras)
             {
-                if (item.Key == propertyName)
+                if (item.Key == propertyName.Replace(".", d))
                 {
                     if (item.Value == null) return true;
                     return false;
@@ -256,7 +261,7 @@ namespace SSO.Util.Client.SqlBatisLite
         {
             foreach (var item in paras)
             {
-                if (item.Key == propertyName)
+                if (item.Key == propertyName.Replace(".", d))
                 {
                     var value = item.Value;
                     if (value == null) return false;
@@ -277,7 +282,7 @@ namespace SSO.Util.Client.SqlBatisLite
         {
             foreach (var item in paras)
             {
-                if (item.Key == propertyName)
+                if (item.Key == propertyName.Replace(".", d))
                 {
                     var value = item.Value;
                     if (value == null) return false;
@@ -299,7 +304,7 @@ namespace SSO.Util.Client.SqlBatisLite
             if (!eleValue.IsNumeric()) return false;  //比较值不为数字
             foreach (var item in paras)
             {
-                if (item.Key == propertyName)
+                if (item.Key == propertyName.Replace(".", d))
                 {
                     var value = item.Value;
                     if (value == null) return false;
@@ -322,7 +327,7 @@ namespace SSO.Util.Client.SqlBatisLite
             if (!eleValue.IsNumeric()) return false;  //比较值不为数字
             foreach (var item in paras)
             {
-                if (item.Key == propertyName)
+                if (item.Key == propertyName.Replace(".", d))
                 {
                     var value = item.Value;
                     if (value == null) return false;
@@ -345,7 +350,7 @@ namespace SSO.Util.Client.SqlBatisLite
             if (!eleValue.IsNumeric()) return false;  //比较值不为数字
             foreach (var item in paras)
             {
-                if (item.Key == propertyName)
+                if (item.Key == propertyName.Replace(".", d))
                 {
                     var value = item.Value;
                     if (value == null) return false;
@@ -368,7 +373,7 @@ namespace SSO.Util.Client.SqlBatisLite
             if (!eleValue.IsNumeric()) return false;  //比较值不为数字
             foreach (var item in paras)
             {
-                if (item.Key == propertyName)
+                if (item.Key == propertyName.Replace(".", d))
                 {
                     var value = item.Value;
                     if (value == null) return false;
@@ -497,7 +502,7 @@ namespace SSO.Util.Client.SqlBatisLite
         private JArray FindJArrayByName(string propertyName, object obj)
         {
             var jObject = obj as JObject;
-            return (JArray)jObject["propertyName"];
+            return (JArray)jObject[propertyName];
         }
     }
 }
