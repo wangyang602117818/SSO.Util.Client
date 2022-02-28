@@ -122,20 +122,11 @@ namespace SSO.Util.Client.SqlBatisLite
             if (!open.IsNullOrEmpty()) open = " " + open + " ";
             var close = xElement.Attribute("close")?.Value;
             if (!open.IsNullOrEmpty()) close = " " + close + " ";
-            var count = 0;
             //未设置propertyName属性
             Match propMatch = iterateRegex.Match(xElement.Value);
             if (propertyName.IsNullOrEmpty() && propMatch.Success) propertyName = propMatch.Groups[1].Value;
             //获取propertyName在paras中的属性值
-            if (obj is JToken)
-            {
-                count = FindJArrayByName(propertyName, obj).Count;
-            }
-            else
-            {
-                var ienum = FindObjectsByName(propertyName, obj).GetEnumerator();
-                while (ienum.MoveNext()) count++;
-            }
+            var count = FindObjectsCountByName(propertyName, paras);
             List<string> iterateSqls = new List<string>();
             //通过循环每一个对象来解析iterate中的语句
             for (var i = 0; i < count; i++)
@@ -486,23 +477,22 @@ namespace SSO.Util.Client.SqlBatisLite
             }
             return parasDict;
         }
-        private System.Collections.IEnumerable FindObjectsByName(string propertyName, object obj)
+        private int FindObjectsCountByName(string propertyName, Dictionary<string, object> paras)
         {
-            PropertyInfo[] propertyInfos = obj?.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance) ?? new PropertyInfo[] { };
-            foreach (var pi in propertyInfos)
+            propertyName = propertyName.Replace(".", d);
+            int count = -1;
+            Regex maxIndex = new Regex(@"" + propertyName + @"#(\d+)#");
+            foreach (var item in paras)
             {
-                if (pi.Name == propertyName)
+                var match = maxIndex.Match(item.Key);
+                if (match.Success)
                 {
-                    var val = pi.GetValue(obj);
-                    if (val != null) return (System.Collections.IEnumerable)pi.GetValue(obj);
+                    string index = match.Groups[1].Value;
+                    if (int.Parse(index) > count) count = int.Parse(index);
                 }
+
             }
-            return new List<object>();
-        }
-        private JArray FindJArrayByName(string propertyName, object obj)
-        {
-            var jObject = obj as JObject;
-            return (JArray)jObject[propertyName];
+            return count + 1;
         }
     }
 }

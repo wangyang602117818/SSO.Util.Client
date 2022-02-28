@@ -287,16 +287,9 @@
         </member>
         <member name="M:SSO.Util.Client.DateTimeExtention.TimeStampToDateTime(System.String)">
             <summary>
-             时间戳转DateTime,如果是TUC时间则需要调用 .ToLocalTime() 转成当地时间
+             时间戳返回当地时间(.ToUniversalTime() 转成UTC时间)
             </summary>
             <param name="timestamp"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.DateTimeExtention.MilliTimeStampToDateTime(System.String)">
-            <summary>
-            毫秒时间戳转DateTime,如果是TUC时间则需要调用 .ToLocalTime() 转成当地时间
-            </summary>
-            <param name="time"></param>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.ElasticLite.ElasticConnection">
@@ -1494,6 +1487,21 @@
             </summary>
             <param name="connstring"></param>
         </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.AdoNetUtil.BeginTransaction">
+            <summary>
+            事务开始
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.AdoNetUtil.CommitTransaction">
+            <summary>
+            提交事务
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.AdoNetUtil.RollBackTransaction">
+            <summary>
+            回滚事务
+            </summary>
+        </member>
         <member name="M:SSO.Util.Client.SqlBatisLite.AdoNetUtil.ExecuteNonQuery(System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
             执行非query操作
@@ -1521,6 +1529,30 @@
         <member name="M:SSO.Util.Client.SqlBatisLite.AdoNetUtil.ExecuteReader(System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
             执行返回reader的操作
+            </summary>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.AdoNetUtil.ExecuteNonQueryTrans(System.String,System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            执行非query操作(事务)
+            </summary>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.AdoNetUtil.ExecuteScalarTrans(System.String,System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            执行返回单行单列的操作(事务)
+            </summary>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.SqlBatisLite.AdoNetUtil.ExecuteDataTableTrans(System.String,System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            执行返回table的操作(事务)
             </summary>
             <param name="sql"></param>
             <param name="parameters"></param>
