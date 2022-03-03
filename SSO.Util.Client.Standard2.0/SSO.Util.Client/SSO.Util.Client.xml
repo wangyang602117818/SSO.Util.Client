@@ -843,6 +843,11 @@
             数据库类型
             </summary>
         </member>
+        <member name="F:SSO.Util.Client.DataBaseType.none">
+            <summary>
+            不指定数据库
+            </summary>
+        </member>
         <member name="F:SSO.Util.Client.DataBaseType.sqlserver">
             <summary>
             sqlserver数据库
@@ -1327,37 +1332,41 @@
             <summary>
             添加搜索数据
             </summary>
-            <param name="database"></param>
-            <param name="table"></param>
-            <param name="key"></param>
-            <param name="title"></param>
-            <param name="description"></param>
-            <param name="doc_time">文档添加时间,不是进入ex时间)</param>
-            <param name="extra"></param>
+            <param name="database">数据库</param>
+            <param name="table">表</param>
+            <param name="key">唯一id</param>
+            <param name="title">搜索标题</param>
+            <param name="description">搜索内容</param>
+            <param name="doc_time">文档添加时间,不是进入es时间)</param>
+            <param name="extra">额外信息</param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.SearchService.DeleteSearchData(SSO.Util.Client.DataBaseType,System.String,System.String)">
             <summary>
             删除搜索数据
             </summary>
-            <param name="database"></param>
-            <param name="table"></param>
-            <param name="key"></param>
+            <param name="database">数据库</param>
+            <param name="table">表</param>
+            <param name="key">唯一id</param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.SearchService.Suggest(System.String)">
+        <member name="M:SSO.Util.Client.SearchService.Suggest(System.String,SSO.Util.Client.DataBaseType,System.String)">
             <summary>
             根据前缀建议
             </summary>
-            <param name="word"></param>
+            <param name="word">关键词</param>
+            <param name="database">数据库</param>
+            <param name="table">表</param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.SearchService.Search(System.String,System.Boolean,System.Int32,System.Int32)">
+        <member name="M:SSO.Util.Client.SearchService.Search(System.String,SSO.Util.Client.DataBaseType,System.String,System.Boolean,System.Int32,System.Int32)">
             <summary>
             搜索
             </summary>
-            <param name="word"></param>
-            <param name="highlight"></param>
+            <param name="word">关键词</param>
+            <param name="database">数据库</param>
+            <param name="table">表</param>
+            <param name="highlight">结果是否高亮</param>
             <param name="pageIndex"></param>
             <param name="pageSize"></param>
             <returns></returns>

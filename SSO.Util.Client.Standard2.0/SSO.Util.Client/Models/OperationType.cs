@@ -10,6 +10,10 @@ namespace SSO.Util.Client
     public enum DataBaseType
     {
         /// <summary>
+        /// 不指定数据库
+        /// </summary>
+        none,
+        /// <summary>
         /// sqlserver数据库
         /// </summary>
         sqlserver,
