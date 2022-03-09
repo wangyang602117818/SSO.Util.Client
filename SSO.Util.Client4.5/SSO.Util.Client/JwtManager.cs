@@ -19,7 +19,6 @@ namespace SSO.Util.Client
         private string secretKey = "";
         private string issuer = "";
         private int ticketTime = 0;
-        private DateTime expires = DateTime.Now.Date.AddDays(1).AddHours(3);
         /// <summary>
         /// 生成JwtToken的类
         /// </summary>
@@ -39,15 +38,17 @@ namespace SSO.Util.Client
         /// <param name="userName"></param>
         /// <param name="lang"></param>
         /// <param name="extra"></param>
+        ///  <param name="expires"></param>
         /// <param name="audience"></param>
         /// <returns></returns>
-        public string GenerateToken(string userId, string userName, string lang, string audience, Dictionary<string, string> extra = null)
+        public string GenerateToken(string userId, string userName, string lang, string audience, DateTime? expires = null, Dictionary<string, string> extra = null)
         {
             var symmetricKey = Convert.FromBase64String(secretKey);
             var tokenHandler = new JwtSecurityTokenHandler();
             var claims = new List<Claim>() { new Claim(ClaimTypes.Name, userId) };
             if (!string.IsNullOrEmpty(userName)) claims.Add(new Claim("name", userName));
             if (!string.IsNullOrEmpty(lang)) claims.Add(new Claim("lang", lang));
+            if (expires == null) expires = DateTime.Now.Date.AddDays(1).AddHours(3);
             if (extra != null)
             {
                 foreach (var item in extra)
@@ -80,6 +81,7 @@ namespace SSO.Util.Client
             var tokenHandler = new JwtSecurityTokenHandler();
             var stoken = tokenHandler.ReadJwtToken(token);
             var newClaims = new List<Claim>() { };
+            DateTime expTime = DateTime.Now;
             foreach (var claim in stoken.Claims)
             {
                 if (claim.Type == "lang")
@@ -90,12 +92,16 @@ namespace SSO.Util.Client
                 {
                     newClaims.Add(new Claim(claim.Type, claim.Value));
                 }
+                if (claim.Type == "exp")
+                {
+                    expTime = Convert.ToInt64(claim.Value).TimeStampToDateTime();
+                }
             }
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(newClaims),  //token数据
                 IssuedAt = DateTime.Now,               //颁发时间
-                Expires = expires, //过期时间
+                Expires = expTime, //过期时间
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)   //签名
             };
             var newStoken = tokenHandler.CreateToken(tokenDescriptor);
@@ -182,7 +188,7 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="authorization"></param>
         /// <param name="secretKey"></param>
-        /// <param name="validateAudience">是否需要验证ip地址</param>
+        /// <param name="validateAudience">是否需要验证来源</param>
         /// <returns></returns>
         public static ClaimsPrincipal ParseAuthorization(string authorization, string secretKey = null, bool validateAudience = true)
         {

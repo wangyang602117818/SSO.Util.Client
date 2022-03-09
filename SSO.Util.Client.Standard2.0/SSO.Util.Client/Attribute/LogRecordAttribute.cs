@@ -142,8 +142,7 @@ namespace SSO.Util.Client
             string authorization = JwtManager.GetAuthorization(request.HttpContext, CookieKey);
             if (!authorization.IsNullOrEmpty())
             {
-                ClaimsPrincipal claimsPrincipal = JwtManager.ParseAuthorization(authorization, request.HttpContext, SecretKey);
-                UserData userData = JwtManager.ParseUserData(claimsPrincipal);
+                UserData userData = JwtManager.GetUserData(request.HttpContext, CookieKey);
                 userId = userData.UserId;
                 userName = userData.UserName;
                 from = userData.From.ReplaceHttpPrefix().TrimEnd('/').ToLower();

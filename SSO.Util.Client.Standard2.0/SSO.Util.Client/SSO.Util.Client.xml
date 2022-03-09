@@ -542,7 +542,7 @@
             <param name="issuer">颁发者</param>
             <param name="ticketTime">url上面的ticket过期时间(秒)</param>
         </member>
-        <member name="M:SSO.Util.Client.JwtManager.GenerateToken(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:SSO.Util.Client.JwtManager.GenerateToken(System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             生成JwtToken类
             </summary>
@@ -550,6 +550,7 @@
             <param name="userName"></param>
             <param name="lang"></param>
             <param name="extra"></param>
+             <param name="expires"></param>
             <param name="audience"></param>
             <returns></returns>
         </member>
@@ -597,7 +598,7 @@
             <param name="authorization"></param>
             <param name="secretKey"></param>
             <param name="httpContext"></param>
-            <param name="validateAudience">是否需要验证ip地址</param>
+            <param name="validateAudience">是否需要验证来源</param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.JwtManager.GetUserData(Microsoft.AspNetCore.Http.HttpContext,System.String)">
@@ -2245,6 +2246,13 @@
             替换 http://www. 或者 https://www. 或者 www. 为""
             </summary>
             <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.StringExtention.ReplaceReturnUrlToBaseUrl(System.String)">
+            <summary>
+            把returnUrl中的额外信息剔除,保留基本信息
+            </summary>
+            <param name="returnUrl"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.StringExtention.PascalToUnderline(System.String)">
