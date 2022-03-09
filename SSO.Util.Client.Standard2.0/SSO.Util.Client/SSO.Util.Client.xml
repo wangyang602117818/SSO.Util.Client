@@ -217,11 +217,10 @@
             </summary>
             <param name="filterContext"></param>
         </member>
-        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.GetTokenByTicket(System.String,System.String,System.String)">
+        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.GetTokenByTicket(System.String,System.String)">
             <summary>
             根据url上面的ticket获取token
             </summary>
-            <param name="from"></param>
             <param name="ticket"></param>
             <param name="audience"></param>
             <returns></returns>
@@ -543,7 +542,7 @@
             <param name="issuer">颁发者</param>
             <param name="ticketTime">url上面的ticket过期时间(秒)</param>
         </member>
-        <member name="M:SSO.Util.Client.JwtManager.GenerateToken(System.String,System.String,System.String,System.String,System.Int32,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:SSO.Util.Client.JwtManager.GenerateToken(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             生成JwtToken类
             </summary>
@@ -551,17 +550,15 @@
             <param name="userName"></param>
             <param name="lang"></param>
             <param name="extra"></param>
-            <param name="ip"></param>
-            <param name="minutes"></param>
+            <param name="audience"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.JwtManager.ModifyTokenLang(System.String,System.String,System.Int32)">
+        <member name="M:SSO.Util.Client.JwtManager.ModifyTokenLang(System.String,System.String)">
             <summary>
             改变语言,并且返回新token
             </summary>
             <param name="token"></param>
             <param name="lang"></param>
-            <param name="minutes"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.JwtManager.GenerateTicket(System.String)">
@@ -618,7 +615,7 @@
             <param name="authorization"></param>
             <param name="secretKey"></param>
             <param name="httpContext"></param>
-            <param name="validateAudience">是否需要验证ip地址</param>
+            <param name="validateAudience">是否需要验证来源</param>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.Log4Net">

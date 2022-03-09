@@ -120,8 +120,8 @@ namespace SSO.Util.Client
                 }
                 else
                 {
-                    string from = AppSettings.GetApplicationUrl(request).ReplaceHttpPrefix().TrimEnd('/');
-                    authorization = GetTokenByTicket(from, ticket, request.HttpContext.Connection.RemoteIpAddress.ToString());
+                    string audience = AppSettings.GetApplicationUrl(request).ReplaceHttpPrefix().TrimEnd('/');
+                    authorization = GetTokenByTicket(ticket, audience);
                     if (!string.IsNullOrEmpty(authorization))
                     {
                         if (CookieTime != "session")
@@ -181,13 +181,12 @@ namespace SSO.Util.Client
         /// <summary>
         /// 根据url上面的ticket获取token
         /// </summary>
-        /// <param name="from"></param>
         /// <param name="ticket"></param>
         /// <param name="audience"></param>
         /// <returns></returns>
-        public string GetTokenByTicket(string from, string ticket, string audience)
+        public string GetTokenByTicket(string ticket, string audience)
         {
-            var url = BaseUrl.TrimEnd('/') + "/sso/gettoken?from=" + from + "&ticket=" + ticket + "&ip=" + audience;
+            var url = BaseUrl.TrimEnd('/') + "/sso/gettoken?ticket=" + ticket + "&audience=" + audience;
             HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
             string resp = httpRequestHelper.Get(url, null);
             var result = JsonSerializerHelper.Deserialize<ServiceModel<string>>(resp);

@@ -38,6 +38,17 @@ namespace SSO.Util.Client
             return request.Url.Scheme + "://" + request.Url.Host + portstr + request.ApplicationPath;
         }
         /// <summary>
+        /// 获取应用程序的根路径
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static string GetApplicationUrl(HttpRequest request)
+        {
+            var port = request.Url.Port;
+            var portstr = port == 80 ? "" : (":" + port);
+            return request.Url.Scheme + "://" + request.Url.Host + portstr + request.ApplicationPath;
+        }
+        /// <summary>
         /// 获取应用程序的根路径,并且替换前缀http和后缀/,然后转成小写
         /// </summary>
         /// <param name="request"></param>
@@ -47,11 +58,29 @@ namespace SSO.Util.Client
             return GetApplicationUrl(request).ReplaceHttpPrefix().TrimEnd('/').ToLower();
         }
         /// <summary>
+        /// 获取应用程序的根路径,并且替换前缀http和后缀/,然后转成小写
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static string GetApplicationUrlTrimHttpPrefix(HttpRequest request)
+        {
+            return GetApplicationUrl(request).ReplaceHttpPrefix().TrimEnd('/').ToLower();
+        }
+        /// <summary>
         /// 获取当前请求的完整路径
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         public static string GetAbsoluteUri(HttpRequestBase request)
+        {
+            return request.Url.AbsoluteUri;
+        }
+        /// <summary>
+        /// 获取当前请求的完整路径
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static string GetAbsoluteUri(HttpRequest request)
         {
             return request.Url.AbsoluteUri;
         }

@@ -19,6 +19,7 @@ namespace SSO.Util.Client
         private string secretKey = "";
         private string issuer = "";
         private int ticketTime = 0;
+        private DateTime expires = DateTime.Now.Date.AddDays(1).AddHours(3);
         /// <summary>
         /// 生成JwtToken的类
         /// </summary>
@@ -38,16 +39,15 @@ namespace SSO.Util.Client
         /// <param name="userName"></param>
         /// <param name="lang"></param>
         /// <param name="extra"></param>
-        /// <param name="ip"></param>
-        /// <param name="minutes"></param>
+        /// <param name="audience"></param>
         /// <returns></returns>
-        public string GenerateToken(string userId, string userName, string lang, string ip, int minutes, Dictionary<string, string> extra = null)
+        public string GenerateToken(string userId, string userName, string lang, string audience, Dictionary<string, string> extra = null)
         {
             var symmetricKey = Convert.FromBase64String(secretKey);
             var tokenHandler = new JwtSecurityTokenHandler();
             var claims = new List<Claim>() { new Claim(ClaimTypes.Name, userId) };
-            if (!string.IsNullOrEmpty(userName)) claims.Add(new Claim("StaffName", userName));
-            if (!string.IsNullOrEmpty(lang)) claims.Add(new Claim("Lang", lang));
+            if (!string.IsNullOrEmpty(userName)) claims.Add(new Claim("name", userName));
+            if (!string.IsNullOrEmpty(lang)) claims.Add(new Claim("lang", lang));
             if (extra != null)
             {
                 foreach (var item in extra)
@@ -55,14 +55,13 @@ namespace SSO.Util.Client
                     claims.Add(new Claim(item.Key, item.Value));
                 }
             }
-            if (ip == "::1") ip = "127.0.0.1";
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),  //token数据
                 Issuer = issuer,           //颁发者
                 IssuedAt = DateTime.Now,               //颁发时间
-                Audience = ip,                         //颁发给
-                Expires = DateTime.Now.AddMinutes(minutes), //过期时间
+                Audience = audience,                         //颁发给
+                Expires = expires, //过期时间
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)   //签名
             };
             var stoken = tokenHandler.CreateToken(tokenDescriptor);
@@ -74,9 +73,8 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="token"></param>
         /// <param name="lang"></param>
-        /// <param name="minutes"></param>
         /// <returns></returns>
-        public string ModifyTokenLang(string token, string lang, int minutes)
+        public string ModifyTokenLang(string token, string lang)
         {
             var symmetricKey = Convert.FromBase64String(secretKey);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -84,9 +82,9 @@ namespace SSO.Util.Client
             var newClaims = new List<Claim>() { };
             foreach (var claim in stoken.Claims)
             {
-                if (claim.Type == "Lang")
+                if (claim.Type == "lang")
                 {
-                    newClaims.Add(new Claim("Lang", lang));
+                    newClaims.Add(new Claim("lang", lang));
                 }
                 else
                 {
@@ -97,7 +95,7 @@ namespace SSO.Util.Client
             {
                 Subject = new ClaimsIdentity(newClaims),  //token数据
                 IssuedAt = DateTime.Now,               //颁发时间
-                Expires = DateTime.Now.AddMinutes(minutes), //过期时间
+                Expires = expires, //过期时间
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)   //签名
             };
             var newStoken = tokenHandler.CreateToken(tokenDescriptor);
@@ -151,10 +149,10 @@ namespace SSO.Util.Client
         {
             return new UserData()
             {
-                From = User.Claims.Where(w => w.Type == "from").Select(s => s.Value).FirstOrDefault(),
+                From = User.Claims.Where(w => w.Type == "aud").Select(s => s.Value).FirstOrDefault(),
                 UserId = User.Identity.Name,
-                UserName = User.Claims.Where(w => w.Type == "StaffName").Select(s => s.Value).FirstOrDefault(),
-                Lang = User.Claims.Where(w => w.Type == "Lang").Select(s => s.Value).FirstOrDefault(),
+                UserName = User.Claims.Where(w => w.Type == "name").Select(s => s.Value).FirstOrDefault(),
+                Lang = User.Claims.Where(w => w.Type == "lang").Select(s => s.Value).FirstOrDefault(),
             };
         }
         /// <summary>
@@ -162,9 +160,9 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="authorization"></param>
         /// <param name="secretKey"></param>
-        /// <param name="validateAudience">是否需要验证ip地址</param>
+        /// <param name="validateAudience">是否需要验证来源</param>
         /// <returns></returns>
-        public static UserData ParseUserData(string authorization, string secretKey = null, bool validateAudience = false)
+        public static UserData ParseUserData(string authorization, string secretKey = null, bool validateAudience = true)
         {
             var principal = ParseAuthorization(authorization, secretKey, validateAudience);
             return ParseUserData(principal);
@@ -186,19 +184,18 @@ namespace SSO.Util.Client
         /// <param name="secretKey"></param>
         /// <param name="validateAudience">是否需要验证ip地址</param>
         /// <returns></returns>
-        public static ClaimsPrincipal ParseAuthorization(string authorization, string secretKey = null, bool validateAudience = false)
+        public static ClaimsPrincipal ParseAuthorization(string authorization, string secretKey = null, bool validateAudience = true)
         {
             if (secretKey == null) secretKey = SSOAuthorizeAttribute.SecretKey;
             var tokenHandler = new JwtSecurityTokenHandler();
             var symmetricKey = Convert.FromBase64String(secretKey);
-            string ip = HttpContext.Current.Request.UserHostAddress;
-            if (ip == "::1") ip = "127.0.0.1";
+            string audience = AppSettings.GetApplicationUrl(HttpContext.Current.Request).ReplaceHttpPrefix().TrimEnd('/');
             var validationParameters = new TokenValidationParameters()
             {
                 RequireExpirationTime = true,
-                ValidateLifetime = false,
-                ValidateIssuer = false,
-                ValidAudience = ip,
+                ValidateLifetime = true,
+                ValidateIssuer = true,
+                ValidAudience = audience,
                 ValidateAudience = validateAudience,
                 IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
             };
