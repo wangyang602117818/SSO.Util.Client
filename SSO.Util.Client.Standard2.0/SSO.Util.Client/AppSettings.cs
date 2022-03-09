@@ -46,10 +46,12 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public static string GetApplicationUrl(HttpRequest request)
         {
-            return request.Scheme + "://" + request.Host + request.PathBase.Value;
+            var port = request.Host.Port;
+            var portstr = (port == null || port.Value == 80) ? "" : (":" + port);
+            return request.Scheme + "://" + request.Host.Host + portstr + request.PathBase.Value;
         }
         /// <summary>
-        /// 获取应用程序的根路径,并且替换前缀http和后缀/
+        /// 获取应用程序的根路径,并且替换前缀http和后缀/,然后转成小写
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

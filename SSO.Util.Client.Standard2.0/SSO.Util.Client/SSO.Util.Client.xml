@@ -4,6 +4,28 @@
         <name>SSO.Util.Client</name>
     </assembly>
     <members>
+        <member name="T:SSO.Util.Client.AesEncryptHelper">
+            <summary>
+            对称加密解密类
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.AesEncryptHelper.Encode(System.String,System.String)">
+            <summary>
+            加密
+            </summary>
+            <param name="source">要加密的字符串</param>
+            <param name="key">秘钥</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.AesEncryptHelper.Decode(System.String,System.String)">
+            <summary>
+            解密
+            </summary>
+            <param name="secret">加密后的字符串,base64形式</param>
+            <param name="key">秘钥</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
         <member name="T:SSO.Util.Client.AppSettings">
             <summary>
             系统设置类
@@ -35,7 +57,7 @@
         </member>
         <member name="M:SSO.Util.Client.AppSettings.GetApplicationUrlTrimHttpPrefix(Microsoft.AspNetCore.Http.HttpRequest)">
             <summary>
-            获取应用程序的根路径,并且替换前缀http和后缀/
+            获取应用程序的根路径,并且替换前缀http和后缀/,然后转成小写
             </summary>
             <param name="request"></param>
             <returns></returns>
@@ -285,7 +307,7 @@
             <param name="dateTime"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.DateTimeExtention.TimeStampToDateTime(System.String)">
+        <member name="M:SSO.Util.Client.DateTimeExtention.TimeStampToDateTime(System.Int64)">
             <summary>
              时间戳返回当地时间(.ToUniversalTime() 转成UTC时间)
             </summary>
@@ -1018,6 +1040,39 @@
             </summary>
             <param name="random"></param>
             <param name="numb">16精制字符串长度</param>
+            <returns></returns>
+        </member>
+        <member name="T:SSO.Util.Client.RsaEncryptHelper">
+            <summary>
+            rsa加密解密类
+            </summary>
+        </member>
+        <member name="M:SSO.Util.Client.RsaEncryptHelper.Encode(System.String,System.String)">
+            <summary>
+            加密,2048长度的秘钥能加密大概240个字符串,1024的110个字符串
+            </summary>
+            <param name="source">要加密的字符串</param>
+            <param name="pubKey">公钥</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.RsaEncryptHelper.Decode(System.String,System.String)">
+            <summary>
+            解密
+            </summary>
+            <param name="secret">要解密的字符串</param>
+            <param name="priKey">私钥</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.RsaEncryptHelper.GetPublicKey">
+            <summary>
+            公钥获取
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.RsaEncryptHelper.GetPrivateKey">
+            <summary>
+            私钥获取
+            </summary>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.FileClientService">
@@ -2215,96 +2270,6 @@
             </summary>
             <param name="value"></param>
             <returns></returns>
-        </member>
-        <member name="T:SSO.Util.Client.SymmetricEncryptHelper">
-            <summary>
-            对称加密算法
-            </summary>
-        </member>
-        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.AesEncode(System.String,System.String,System.Boolean)">
-            <summary>
-            Aes加密算法，替代des
-            </summary>
-            <param name="sourceString">待加密字符串</param>
-            <param name="key">base64形式的key,256位。如果为明文字符串则长度只能是：16/24/32</param>
-            <param name="isBase64Key">是否是base64形式的key</param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.AesEncode(System.IO.Stream,System.String,System.Boolean)">
-            <summary>
-            Aes加密算法，替代des
-            </summary>
-            <param name="sourceStream"></param>
-            <param name="key"></param>
-            <param name="isBase64Key"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.AesDecode(System.String,System.String,System.Boolean)">
-            <summary>
-            Aes解密算法
-            </summary>
-            <param name="secretString">密文</param>
-            <param name="key">base64形式的key，256位</param>
-            <param name="isBase64Key">是否是base64形式的key</param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.AesDecode(System.IO.Stream,System.String,System.Boolean)">
-            <summary>
-            Aes解密算法
-            </summary>
-            <param name="sourceStream">密文</param>
-            <param name="key">base64形式的key，256位</param>
-            <param name="isBase64Key">是否是base64形式的key</param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.DESEncode(System.String,System.String)">
-            <summary>
-            DES加密，8个长度的字符串秘钥（64位，其中第8、16、24、32、40、48、56、64位是校验位）,校验位不参与密码计算
-            所以可能会出现，不同的key加密出来的字符串是一样的，不同的key可以解密相同的字符串
-            </summary>
-            <param name="sourceString"></param>
-            <param name="key">字符串长度为8的key</param>
-            <returns>返回base64编码的密文</returns>
-        </member>
-        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.DESDecode(System.String,System.String)">
-            <summary>
-            DES解密
-            </summary>
-            <param name="secretString">base64加密字符串</param>
-            <param name="key"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.TripleDESEncode(System.String,System.String)">
-            <summary>
-            3DES加密，为DES向AES过度的版本
-            </summary>
-            <param name="sourceString">要加密的字符串</param>
-            <param name="key">base64形式的key</param>
-            <returns>返回base64编码的密文</returns>
-        </member>
-        <member name="M:SSO.Util.Client.SymmetricEncryptHelper.TripleDESDecode(System.String,System.String)">
-            <summary>
-            3DES解密
-            </summary>
-            <param name="secretString">密文</param>
-            <param name="key"></param>
-            <returns></returns>
-        </member>
-        <member name="P:SSO.Util.Client.SymmetricEncryptHelper.GenerateDESKey">
-            <summary>
-            生成DES加密密钥
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:SSO.Util.Client.SymmetricEncryptHelper.GenerateTripleDESKey">
-            <summary>
-            生成TripleDES加密密钥
-            </summary>
-        </member>
-        <member name="P:SSO.Util.Client.SymmetricEncryptHelper.GenerateAESKey">
-            <summary>
-            生成256位的AES加密密钥
-            </summary>
         </member>
         <member name="T:SSO.Util.Client.TcpListenerHelper">
             <summary>

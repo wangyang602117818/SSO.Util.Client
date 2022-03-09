@@ -204,7 +204,7 @@ namespace SSO.Util.Client
         }
         private static string StrictJsonReplacement(Match match)
         {
-            return "\"" + match.Groups[1].Value.TimeStampToDateTime().ToString(AppSettings.DateTimeFormat) + "\"";
+            return "\"" + long.Parse(match.Groups[1].Value).TimeStampToDateTime().ToString(AppSettings.DateTimeFormat) + "\"";
         }
         /// <summary>
         /// 替换 http://www. 或者 https://www. 或者 www. 为""

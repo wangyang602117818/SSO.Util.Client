@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AesEncryptHelper.cs" />
     <Compile Include="AppSettings.cs" />
     <Compile Include="AsymmetricEncryptHelper.cs" />
     <Compile Include="Base64SecureURL.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Models\ExtensionMap.cs" />
     <Compile Include="Models\FromData.cs" />
     <Compile Include="Models\OperationType.cs" />
+    <Compile Include="RsaEncryptHelper.cs" />
     <Compile Include="Service\FileClientService.cs" />
     <Compile Include="Models\FileItem.cs" />
     <Compile Include="HashEncryptHelper.cs" />
@@ -89,7 +91,6 @@
     <Compile Include="Service\SSOClientService.cs" />
     <Compile Include="StreamExtention.cs" />
     <Compile Include="StringExtention.cs" />
-    <Compile Include="SymmetricEncryptHelper.cs" />
     <Compile Include="TcpListenerHelper.cs" />
     <Compile Include="Attribute\ThrottlingAttribute.cs" />
     <Compile Include="Models\UserData.cs" />

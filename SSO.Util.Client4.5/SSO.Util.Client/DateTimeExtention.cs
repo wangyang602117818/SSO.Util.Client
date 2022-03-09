@@ -18,7 +18,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public static long TimeStamp(this DateTime dateTime)
         {
-            return ((dateTime.ToUniversalTime().Ticks - 621355968000000000) / 10000000);
+            return (dateTime.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
         }
         /// <summary>
         /// 获取DateTime时间的毫秒时间戳
@@ -34,17 +34,18 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="timestamp"></param>
         /// <returns></returns>
-        public static DateTime TimeStampToDateTime(this string timestamp)
+        public static DateTime TimeStampToDateTime(this long timestamp)
         {
             DateTime time = DateTime.MinValue;
             DateTime startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1, 0, 0, 0, 0), TimeZoneInfo.Local);
-            if (timestamp.Length == 10)        //精确到秒
+            var len = timestamp.ToString().Length;
+            if (len == 10)        //精确到秒
             {
-                time = startTime.AddSeconds(double.Parse(timestamp));
+                time = startTime.AddSeconds(timestamp);
             }
-            else if (timestamp.Length == 13)   //精确到毫秒
+            else if (len == 13)   //精确到毫秒
             {
-                time = startTime.AddMilliseconds(double.Parse(timestamp));
+                time = startTime.AddMilliseconds(timestamp);
             }
             return time;
         }

@@ -114,7 +114,7 @@ namespace SSO.Util.Client
         public string GenerateTicket(string userId)
         {
             string sourceString = DateTime.Now.ToString("yyyy-MM-dd") + userId + DateTime.Now.ToString("HH:mm:ss");
-            string ticket = SymmetricEncryptHelper.AesEncode(sourceString, secretKey);
+            string ticket = AesEncryptHelper.Encode(sourceString, secretKey);
             return Base64SecureURL.Encode(ticket);
         }
         /// <summary>
@@ -124,7 +124,7 @@ namespace SSO.Util.Client
         /// <returns>用户id,如果过期就返回""</returns>
         public string DecodeTicket(string ticket)
         {
-            string sourceString = SymmetricEncryptHelper.AesDecode(Base64SecureURL.Decode(ticket), secretKey);
+            string sourceString = AesEncryptHelper.Decode(Base64SecureURL.Decode(ticket), secretKey);
             string userId = sourceString.Substring(10, sourceString.Length - 18);
             DateTime ticketDateTime = DateTime.Parse(sourceString.Substring(0, 10) + " " + sourceString.Substring(10 + userId.Length));
             var diff = DateTime.Now - ticketDateTime;
