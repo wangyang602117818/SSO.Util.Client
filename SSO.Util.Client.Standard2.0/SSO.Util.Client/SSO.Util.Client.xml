@@ -542,7 +542,7 @@
             <param name="issuer">颁发者</param>
             <param name="ticketTime">url上面的ticket过期时间(秒)</param>
         </member>
-        <member name="M:SSO.Util.Client.JwtManager.GenerateToken(System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:SSO.Util.Client.JwtManager.GenerateToken(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             生成JwtToken类
             </summary>
@@ -550,7 +550,6 @@
             <param name="userName"></param>
             <param name="lang"></param>
             <param name="extra"></param>
-             <param name="expires"></param>
             <param name="audience"></param>
             <returns></returns>
         </member>
@@ -609,7 +608,7 @@
             <param name="cookieKey"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.JwtManager.ParseAuthorization(System.String,Microsoft.AspNetCore.Http.HttpContext,System.String,System.Boolean)">
+        <member name="M:SSO.Util.Client.JwtManager.ParseAuthorization(System.String,Microsoft.AspNetCore.Http.HttpContext,System.String,System.Boolean,System.Boolean)">
             <summary>
             根据cookie和key解析用户信息
             </summary>
@@ -617,6 +616,7 @@
             <param name="secretKey"></param>
             <param name="httpContext"></param>
             <param name="validateAudience">是否需要验证来源</param>
+            <param name="validateExpiration">是否需要验证过期时间</param>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.Log4Net">

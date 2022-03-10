@@ -22,6 +22,7 @@ namespace SSO.Util.Client
         private string secretKey = "";
         private string issuer = "";
         private int ticketTime = 0;
+        private DateTime expires = DateTime.Now.Date.AddDays(1).AddHours(2);
         /// <summary>
         /// 生成JwtToken的类
         /// </summary>
@@ -41,17 +42,15 @@ namespace SSO.Util.Client
         /// <param name="userName"></param>
         /// <param name="lang"></param>
         /// <param name="extra"></param>
-        ///  <param name="expires"></param>
         /// <param name="audience"></param>
         /// <returns></returns>
-        public string GenerateToken(string userId, string userName, string lang, string audience, DateTime? expires = null, Dictionary<string, string> extra = null)
+        public string GenerateToken(string userId, string userName, string lang, string audience, Dictionary<string, string> extra = null)
         {
             var symmetricKey = Convert.FromBase64String(secretKey);
             var tokenHandler = new JwtSecurityTokenHandler();
             var claims = new List<Claim>() { new Claim(ClaimTypes.Name, userId) };
             if (!string.IsNullOrEmpty(userName)) claims.Add(new Claim("name", userName));
             if (!string.IsNullOrEmpty(lang)) claims.Add(new Claim("lang", lang));
-            if (expires == null) expires = DateTime.Now.Date.AddDays(1).AddHours(3);
             if (extra != null)
             {
                 foreach (var item in extra)
@@ -195,8 +194,9 @@ namespace SSO.Util.Client
         /// <param name="secretKey"></param>
         /// <param name="httpContext"></param>
         /// <param name="validateAudience">是否需要验证来源</param>
+        /// <param name="validateExpiration">是否需要验证过期时间</param>
         /// <returns></returns>
-        public static ClaimsPrincipal ParseAuthorization(string authorization, HttpContext httpContext, string secretKey = null, bool validateAudience = true)
+        public static ClaimsPrincipal ParseAuthorization(string authorization, HttpContext httpContext, string secretKey = null, bool validateAudience = true, bool validateExpiration = false)
         {
             if (secretKey == null) secretKey = SSOAuthorizeAttribute.SecretKey;
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -205,7 +205,7 @@ namespace SSO.Util.Client
             var validationParameters = new TokenValidationParameters()
             {
                 RequireExpirationTime = true,
-                ValidateLifetime = true,
+                ValidateLifetime = validateExpiration,
                 ValidateIssuer = true,
                 ValidAudience = audience,
                 ValidateAudience = validateAudience,
