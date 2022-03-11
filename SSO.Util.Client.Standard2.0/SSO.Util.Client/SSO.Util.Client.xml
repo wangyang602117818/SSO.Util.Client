@@ -217,11 +217,12 @@
             </summary>
             <param name="filterContext"></param>
         </member>
-        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.GetTokenByTicket(System.String,System.String)">
+        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.GetTokenByTicket(System.String,System.String,System.String)">
             <summary>
             根据url上面的ticket获取token
             </summary>
             <param name="ticket"></param>
+            <param name="from"></param>
             <param name="audience"></param>
             <returns></returns>
         </member>
@@ -583,23 +584,6 @@
             <param name="cookieKey"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.JwtManager.ParseUserData(System.Security.Claims.ClaimsPrincipal)">
-            <summary>
-            解析出用户信息
-            </summary>
-            <param name="User"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.JwtManager.ParseUserData(System.String,Microsoft.AspNetCore.Http.HttpContext,System.String,System.Boolean)">
-            <summary>
-            根据cookie和key解析用户信息
-            </summary>
-            <param name="authorization"></param>
-            <param name="secretKey"></param>
-            <param name="httpContext"></param>
-            <param name="validateAudience">是否需要验证来源</param>
-            <returns></returns>
-        </member>
         <member name="M:SSO.Util.Client.JwtManager.GetUserData(Microsoft.AspNetCore.Http.HttpContext,System.String)">
             <summary>
             获取用户信息
@@ -617,6 +601,23 @@
             <param name="httpContext"></param>
             <param name="validateAudience">是否需要验证来源</param>
             <param name="validateExpiration">是否需要验证过期时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.JwtManager.ParseUserData(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            解析出用户信息
+            </summary>
+            <param name="User"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SSO.Util.Client.JwtManager.ParseUserData(System.String,Microsoft.AspNetCore.Http.HttpContext,System.String,System.Boolean)">
+            <summary>
+            根据cookie和key解析用户信息
+            </summary>
+            <param name="authorization"></param>
+            <param name="secretKey"></param>
+            <param name="httpContext"></param>
+            <param name="validateAudience">是否需要验证来源</param>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.Log4Net">
@@ -2246,13 +2247,6 @@
             替换 http://www. 或者 https://www. 或者 www. 为""
             </summary>
             <param name="str"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SSO.Util.Client.StringExtention.ReplaceReturnUrlToBaseUrl(System.String)">
-            <summary>
-            把returnUrl中的额外信息剔除,保留基本信息
-            </summary>
-            <param name="returnUrl"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.StringExtention.PascalToUnderline(System.String)">

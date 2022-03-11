@@ -216,18 +216,6 @@ namespace SSO.Util.Client
             return new Regex("https?://|www.", RegexOptions.IgnoreCase).Replace(str, "");
         }
         /// <summary>
-        /// 把returnUrl中的额外信息剔除,保留基本信息
-        /// </summary>
-        /// <param name="returnUrl"></param>
-        /// <returns></returns>
-        public static string ReplaceReturnUrlToBaseUrl(this string returnUrl)
-        {
-            Uri uri = new Uri(returnUrl);
-            if (uri.Query.Length > 0)
-                returnUrl = returnUrl.Replace(uri.Query, "").ReplaceHttpPrefix().TrimEnd('/');
-            return returnUrl;
-        }
-        /// <summary>
         /// 把驼峰形式的参数转换成_形式
         /// </summary>
         /// <param name="name"></param>

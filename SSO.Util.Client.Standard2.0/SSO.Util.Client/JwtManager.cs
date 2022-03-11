@@ -149,34 +149,6 @@ namespace SSO.Util.Client
             return authorization;
         }
         /// <summary>
-        /// 解析出用户信息
-        /// </summary>
-        /// <param name="User"></param>
-        /// <returns></returns>
-        public static UserData ParseUserData(ClaimsPrincipal User)
-        {
-            return new UserData()
-            {
-                From = User.Claims.Where(w => w.Type == "aud").Select(s => s.Value).FirstOrDefault(),
-                UserId = User.Identity.Name,
-                UserName = User.Claims.Where(w => w.Type == "name").Select(s => s.Value).FirstOrDefault(),
-                Lang = User.Claims.Where(w => w.Type == "lang").Select(s => s.Value).FirstOrDefault(),
-            };
-        }
-        /// <summary>
-        /// 根据cookie和key解析用户信息
-        /// </summary>
-        /// <param name="authorization"></param>
-        /// <param name="secretKey"></param>
-        /// <param name="httpContext"></param>
-        /// <param name="validateAudience">是否需要验证来源</param>
-        /// <returns></returns>
-        public static UserData ParseUserData(string authorization, HttpContext httpContext, string secretKey = null, bool validateAudience = false)
-        {
-            var principal = ParseAuthorization(authorization, httpContext, secretKey, validateAudience);
-            return ParseUserData(principal);
-        }
-        /// <summary>
         /// 获取用户信息
         /// </summary>
         /// <param name="httpContext"></param>
@@ -185,7 +157,8 @@ namespace SSO.Util.Client
         public static UserData GetUserData(HttpContext httpContext, string cookieKey = null)
         {
             string authorization = GetAuthorization(httpContext, cookieKey);
-            return ParseUserData(authorization, httpContext);
+            if (string.IsNullOrEmpty(authorization)) return null;
+            return ParseUserData(authorization, httpContext, cookieKey);
         }
         /// <summary>
         /// 根据cookie和key解析用户信息
@@ -201,12 +174,12 @@ namespace SSO.Util.Client
             if (secretKey == null) secretKey = SSOAuthorizeAttribute.SecretKey;
             var tokenHandler = new JwtSecurityTokenHandler();
             var symmetricKey = Convert.FromBase64String(secretKey);
-            string audience = AppSettings.GetApplicationUrl(httpContext.Request).ReplaceHttpPrefix().TrimEnd('/');
+            string audience = httpContext.Request.Host.Host.ReplaceHttpPrefix();
             var validationParameters = new TokenValidationParameters()
             {
                 RequireExpirationTime = true,
                 ValidateLifetime = validateExpiration,
-                ValidateIssuer = true,
+                ValidateIssuer = false,
                 ValidAudience = audience,
                 ValidateAudience = validateAudience,
                 IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
@@ -214,6 +187,34 @@ namespace SSO.Util.Client
             SecurityToken securityToken;
             var principal = tokenHandler.ValidateToken(authorization, validationParameters, out securityToken);
             return principal;
+        }
+        /// <summary>
+        /// 解析出用户信息
+        /// </summary>
+        /// <param name="User"></param>
+        /// <returns></returns>
+        private static UserData ParseUserData(ClaimsPrincipal User)
+        {
+            return new UserData()
+            {
+                From = User.Claims.Where(w => w.Type == "from").Select(s => s.Value).FirstOrDefault(),
+                UserId = User.Identity.Name,
+                UserName = User.Claims.Where(w => w.Type == "name").Select(s => s.Value).FirstOrDefault(),
+                Lang = User.Claims.Where(w => w.Type == "lang").Select(s => s.Value).FirstOrDefault(),
+            };
+        }
+        /// <summary>
+        /// 根据cookie和key解析用户信息
+        /// </summary>
+        /// <param name="authorization"></param>
+        /// <param name="secretKey"></param>
+        /// <param name="httpContext"></param>
+        /// <param name="validateAudience">是否需要验证来源</param>
+        /// <returns></returns>
+        private static UserData ParseUserData(string authorization, HttpContext httpContext, string secretKey = null, bool validateAudience = false)
+        {
+            var principal = ParseAuthorization(authorization, httpContext, secretKey, validateAudience);
+            return ParseUserData(principal);
         }
     }
 }
