@@ -78,6 +78,7 @@ namespace SSO.Util.Client
             HttpRequestBase request = filterContext.HttpContext.Request;
             var ssourl = request.QueryString["ssourls"];
             var absoluteUrl = AppSettings.GetAbsoluteUri(request);
+            var appPath = request.ApplicationPath.Trim('/');
             if (!string.IsNullOrEmpty(ssourl)) //sso 退出
             {
                 var returnUrl = request.QueryString["returnUrl"];
@@ -115,7 +116,7 @@ namespace SSO.Util.Client
             {
                 if (string.IsNullOrEmpty(ticket))
                 {
-                    filterContext.Result = GetActionResult(absoluteUrl);
+                    filterContext.Result = GetActionResult(absoluteUrl, appPath);
                     return;
                 }
                 else
@@ -125,17 +126,11 @@ namespace SSO.Util.Client
                     authorization = GetTokenByTicket(ticket, from, audience);
                     if (!string.IsNullOrEmpty(authorization))
                     {
-                        HttpCookie httpCookie = new HttpCookie(CookieKey, authorization);
-                        if (CookieTime != "session")
-                        {
-                            httpCookie.SameSite = SameSiteMode.Lax;
-                            httpCookie.Expires = DateTime.Now.AddMinutes(Convert.ToInt32(CookieTime));
-                        }
-                        filterContext.HttpContext.Response.Cookies.Add(httpCookie);
+                        SetCookies(filterContext.HttpContext.Response, authorization);
                     }
                     else
                     {
-                        filterContext.Result = GetActionResult(absoluteUrl);
+                        filterContext.Result = GetActionResult(absoluteUrl, appPath);
                         return;
                     }
                 }
@@ -144,6 +139,7 @@ namespace SSO.Util.Client
             {
                 var principal = JwtManager.ParseAuthorization(authorization, SecretKey);
                 filterContext.HttpContext.User = principal;
+                SetCookies(filterContext.HttpContext.Response, authorization);
                 if (!CheckPermission(permissionName, authorization)) filterContext.Result = new ResponseModel<string>(ErrorCode.error_permission, "");
             }
             catch (Exception ex) //token失效
@@ -155,13 +151,23 @@ namespace SSO.Util.Client
                     httpCookie.Expires = DateTime.Now.AddYears(-1);
                     filterContext.HttpContext.Response.Cookies.Add(httpCookie);
                 }
-                filterContext.Result = GetActionResult(absoluteUrl);
+                filterContext.Result = GetActionResult(absoluteUrl, appPath);
             }
         }
-        private ActionResult GetActionResult(string returnUrl)
+        private void SetCookies(HttpResponseBase httpResponse, string authorization)
+        {
+            HttpCookie httpCookie = new HttpCookie(CookieKey, authorization);
+            if (CookieTime != "session")
+            {
+                httpCookie.SameSite = SameSiteMode.Lax;
+                httpCookie.Expires = DateTime.Now.AddMinutes(Convert.ToInt32(CookieTime));
+            }
+            httpResponse.Cookies.Add(httpCookie);
+        }
+        private ActionResult GetActionResult(string returnUrl, string appPath = "")
         {
             ActionResult result = new ResponseModel<string>(ErrorCode.authorize_fault, "");
-            if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl);
+            if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl + "&appPath=" + appPath);
             return result;
         }
         private bool CheckPermission(string permission, string authorization)
@@ -183,7 +189,7 @@ namespace SSO.Util.Client
         /// <param name="from"></param>
         /// <param name="audience"></param>
         /// <returns></returns>
-        public static string GetTokenByTicket(string ticket,string from, string audience)
+        public static string GetTokenByTicket(string ticket, string from, string audience)
         {
             var url = BaseUrl.TrimEnd('/') + "/sso/gettoken?ticket=" + ticket + "&from=" + from + "&audience=" + audience;
             HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
