@@ -153,7 +153,7 @@ namespace SSO.Util.Client
         public static UserData GetUserData(string cookieKey = null)
         {
             string authorization = GetAuthorization(cookieKey);
-            return ParseUserData(authorization, cookieKey, false);
+            return ParseUserData(authorization);
         }
         /// <summary>
         /// 根据cookie和key解析用户信息
@@ -202,11 +202,10 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="authorization"></param>
         /// <param name="secretKey"></param>
-        /// <param name="validateAudience">是否需要验证来源</param>
         /// <returns></returns>
-        private static UserData ParseUserData(string authorization, string secretKey = null, bool validateAudience = false)
+        private static UserData ParseUserData(string authorization, string secretKey = null)
         {
-            var principal = ParseAuthorization(authorization, secretKey, validateAudience);
+            var principal = ParseAuthorization(authorization, secretKey, false);
             return ParseUserData(principal);
         }
     }

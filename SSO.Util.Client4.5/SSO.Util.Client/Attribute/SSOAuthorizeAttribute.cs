@@ -130,6 +130,12 @@ namespace SSO.Util.Client
                     }
                     else
                     {
+                        //ticket过期
+                        if (absoluteUrl.Contains("ticket"))
+                        {
+                            var index = absoluteUrl.IndexOf("ticket");
+                            absoluteUrl = absoluteUrl.Substring(0, index - 1);
+                        }
                         filterContext.Result = GetActionResult(absoluteUrl, appPath);
                         return;
                     }
@@ -167,7 +173,7 @@ namespace SSO.Util.Client
         private ActionResult GetActionResult(string returnUrl, string appPath = "")
         {
             ActionResult result = new ResponseModel<string>(ErrorCode.authorize_fault, "");
-            if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl + "&appPath=" + appPath);
+            if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl.StrToBase64() + "&appPath=" + appPath);
             return result;
         }
         private bool CheckPermission(string permission, string authorization)
