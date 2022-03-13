@@ -79,7 +79,6 @@ namespace SSO.Util.Client
             HttpRequest request = filterContext.HttpContext.Request;
             var ssourl = request.Query["ssourls"];
             var absoluteUrl = AppSettings.GetAbsoluteUri(request);
-            var appPath = request.PathBase.Value.Trim('/');
             if (!string.IsNullOrEmpty(ssourl)) //sso 退出
             {
                 var returnUrl = request.Query["returnUrl"];
@@ -106,7 +105,7 @@ namespace SSO.Util.Client
                 }
                 else //最后一个
                 {
-                    filterContext.Result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl + "&appPath=" + appPath);
+                    filterContext.Result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl);
                 }
                 return;
             }
@@ -116,7 +115,7 @@ namespace SSO.Util.Client
             {
                 if (string.IsNullOrEmpty(ticket))
                 {
-                    filterContext.Result = GetActionResult(absoluteUrl, appPath);
+                    filterContext.Result = GetActionResult(absoluteUrl);
                     return;
                 }
                 else
@@ -136,7 +135,7 @@ namespace SSO.Util.Client
                             var index = absoluteUrl.IndexOf("ticket");
                             absoluteUrl = absoluteUrl.Substring(0, index - 1);
                         }
-                        filterContext.Result = GetActionResult(absoluteUrl, appPath);
+                        filterContext.Result = GetActionResult(absoluteUrl);
                         return;
                     }
                 }
@@ -156,7 +155,7 @@ namespace SSO.Util.Client
                 {
                     filterContext.HttpContext.Response.Cookies.Delete(CookieKey);
                 }
-                filterContext.Result = GetActionResult(absoluteUrl, appPath);
+                filterContext.Result = GetActionResult(absoluteUrl);
             }
         }
         private void SetCookies(HttpResponse httpResponse, string authorization)
@@ -174,10 +173,10 @@ namespace SSO.Util.Client
                 httpResponse.Cookies.Append(CookieKey, authorization);
             }
         }
-        private ActionResult GetActionResult(string returnUrl, string appPath = "")
+        private ActionResult GetActionResult(string returnUrl)
         {
             ActionResult result = new ResponseModel<string>(ErrorCode.authorize_fault, "");
-            if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl.StrToBase64() + "&appPath=" + appPath);
+            if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl);
             return result;
         }
         private bool CheckPermission(string permission, string authorization)

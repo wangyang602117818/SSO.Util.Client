@@ -78,7 +78,6 @@ namespace SSO.Util.Client
             HttpRequestBase request = filterContext.HttpContext.Request;
             var ssourl = request.QueryString["ssourls"];
             var absoluteUrl = AppSettings.GetAbsoluteUri(request);
-            var appPath = request.ApplicationPath.Trim('/');
             if (!string.IsNullOrEmpty(ssourl)) //sso 退出
             {
                 var returnUrl = request.QueryString["returnUrl"];
@@ -116,7 +115,7 @@ namespace SSO.Util.Client
             {
                 if (string.IsNullOrEmpty(ticket))
                 {
-                    filterContext.Result = GetActionResult(absoluteUrl, appPath);
+                    filterContext.Result = GetActionResult(absoluteUrl);
                     return;
                 }
                 else
@@ -136,7 +135,7 @@ namespace SSO.Util.Client
                             var index = absoluteUrl.IndexOf("ticket");
                             absoluteUrl = absoluteUrl.Substring(0, index - 1);
                         }
-                        filterContext.Result = GetActionResult(absoluteUrl, appPath);
+                        filterContext.Result = GetActionResult(absoluteUrl);
                         return;
                     }
                 }
@@ -157,7 +156,7 @@ namespace SSO.Util.Client
                     httpCookie.Expires = DateTime.Now.AddYears(-1);
                     filterContext.HttpContext.Response.Cookies.Add(httpCookie);
                 }
-                filterContext.Result = GetActionResult(absoluteUrl, appPath);
+                filterContext.Result = GetActionResult(absoluteUrl);
             }
         }
         private void SetCookies(HttpResponseBase httpResponse, string authorization)
@@ -170,10 +169,10 @@ namespace SSO.Util.Client
             }
             httpResponse.Cookies.Add(httpCookie);
         }
-        private ActionResult GetActionResult(string returnUrl, string appPath = "")
+        private ActionResult GetActionResult(string returnUrl)
         {
             ActionResult result = new ResponseModel<string>(ErrorCode.authorize_fault, "");
-            if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl.StrToBase64() + "&appPath=" + appPath);
+            if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl);
             return result;
         }
         private bool CheckPermission(string permission, string authorization)
