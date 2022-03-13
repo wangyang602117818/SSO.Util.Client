@@ -169,7 +169,7 @@ namespace SSO.Util.Client
         /// <param name="validateAudience">是否需要验证来源</param>
         /// <param name="validateExpiration">是否需要验证过期时间</param>
         /// <returns></returns>
-        public static ClaimsPrincipal ParseAuthorization(string authorization, HttpContext httpContext, string secretKey = null, bool validateAudience = true, bool validateExpiration = false)
+        public static ClaimsPrincipal ParseAuthorization(string authorization, HttpContext httpContext, string secretKey = null, bool validateAudience = false, bool validateExpiration = true)
         {
             if (secretKey == null) secretKey = SSOAuthorizeAttribute.SecretKey;
             var tokenHandler = new JwtSecurityTokenHandler();
