@@ -168,7 +168,8 @@ namespace SSO.Util.Client
             if (secretKey == null) secretKey = SSOAuthorizeAttribute.SecretKey;
             var tokenHandler = new JwtSecurityTokenHandler();
             var symmetricKey = Convert.FromBase64String(secretKey);
-            string audience = HttpContext.Current.Request.Url.Host.ReplaceHttpPrefix();
+            string audience = "*";
+            if (HttpContext.Current != null) audience = HttpContext.Current.Request.Url.Host.ReplaceHttpPrefix();
             var validationParameters = new TokenValidationParameters()
             {
                 RequireExpirationTime = true,
@@ -187,7 +188,7 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="User"></param>
         /// <returns></returns>
-        private static UserData ParseUserData(ClaimsPrincipal User)
+        public static UserData ParseUserData(ClaimsPrincipal User)
         {
             return new UserData()
             {
@@ -203,9 +204,9 @@ namespace SSO.Util.Client
         /// <param name="authorization"></param>
         /// <param name="secretKey"></param>
         /// <returns></returns>
-        private static UserData ParseUserData(string authorization, string secretKey = null)
+        public static UserData ParseUserData(string authorization, string secretKey = null)
         {
-            var principal = ParseAuthorization(authorization, secretKey, false);
+            var principal = ParseAuthorization(authorization, secretKey, false, false);
             return ParseUserData(principal);
         }
     }

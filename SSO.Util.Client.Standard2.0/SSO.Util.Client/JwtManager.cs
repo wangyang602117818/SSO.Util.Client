@@ -169,12 +169,13 @@ namespace SSO.Util.Client
         /// <param name="validateAudience">是否需要验证来源</param>
         /// <param name="validateExpiration">是否需要验证过期时间</param>
         /// <returns></returns>
-        public static ClaimsPrincipal ParseAuthorization(string authorization, HttpContext httpContext, string secretKey = null, bool validateAudience = false, bool validateExpiration = true)
+        public static ClaimsPrincipal ParseAuthorization(string authorization, HttpContext httpContext = null, string secretKey = null, bool validateAudience = false, bool validateExpiration = true)
         {
             if (secretKey == null) secretKey = SSOAuthorizeAttribute.SecretKey;
             var tokenHandler = new JwtSecurityTokenHandler();
             var symmetricKey = Convert.FromBase64String(secretKey);
-            string audience = httpContext.Request.Host.Host.ReplaceHttpPrefix();
+            string audience = "*";
+            if (httpContext != null) audience = httpContext.Request.Host.Host.ReplaceHttpPrefix();
             var validationParameters = new TokenValidationParameters()
             {
                 RequireExpirationTime = true,
@@ -193,7 +194,7 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="User"></param>
         /// <returns></returns>
-        private static UserData ParseUserData(ClaimsPrincipal User)
+        public static UserData ParseUserData(ClaimsPrincipal User)
         {
             return new UserData()
             {
@@ -210,9 +211,9 @@ namespace SSO.Util.Client
         /// <param name="secretKey"></param>
         /// <param name="httpContext"></param>
         /// <returns></returns>
-        private static UserData ParseUserData(string authorization, HttpContext httpContext, string secretKey = null)
+        public static UserData ParseUserData(string authorization, HttpContext httpContext = null, string secretKey = null)
         {
-            var principal = ParseAuthorization(authorization, httpContext, secretKey, false);
+            var principal = ParseAuthorization(authorization, httpContext, secretKey, false, false);
             return ParseUserData(principal);
         }
     }

@@ -610,14 +610,13 @@
             <param name="User"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.JwtManager.ParseUserData(System.String,Microsoft.AspNetCore.Http.HttpContext,System.String,System.Boolean)">
+        <member name="M:SSO.Util.Client.JwtManager.ParseUserData(System.String,Microsoft.AspNetCore.Http.HttpContext,System.String)">
             <summary>
             根据cookie和key解析用户信息
             </summary>
             <param name="authorization"></param>
             <param name="secretKey"></param>
             <param name="httpContext"></param>
-            <param name="validateAudience">是否需要验证来源</param>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.Log4Net">
@@ -2232,7 +2231,7 @@
             <summary>
             替换由 ToJson() 转换的json字符串 中 ObjectId("") 和 ISODate("2020-05-30T08:50:10.048Z") 
             </summary>
-            <param name="toJsonStr"></param>
+            <param name="str"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.StringExtention.ReplaceStrictJsonString(System.String)">
