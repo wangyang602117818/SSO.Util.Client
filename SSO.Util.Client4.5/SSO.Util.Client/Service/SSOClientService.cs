@@ -59,10 +59,12 @@ namespace SSO.Util.Client
         /// <param name="companyCode"></param>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
+        /// <param name="orderField">排序名称</param>
+        /// <param name="orderType">排序规则:asc desc</param>
         /// <returns></returns>
-        public ServiceModel<List<UserItem>> GetUserList(string companyCode = "", string filter = "", int pageIndex = 1, int pageSize = 10)
+        public ServiceModel<List<UserItem>> GetUserList(string companyCode = "", string filter = "", int pageIndex = 1, int pageSize = 10, string orderField = "UserName", string orderType = "asc")
         {
-            string users = requestHelper.Get(RemoteUrl + "/user/getBasic?companyCode=" + companyCode + "&filter=" + filter + "&orderField=UserName&orderType=asc&pageIndex=" + pageIndex + "&pageSize=" + pageSize, headers);
+            string users = requestHelper.Get(RemoteUrl + "/user/getBasic?companyCode=" + companyCode + "&filter=" + filter + "&orderField=" + orderField + "&orderType=" + orderType + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize, headers);
             return JsonSerializerHelper.Deserialize<ServiceModel<List<UserItem>>>(users);
         }
         /// <summary>
