@@ -90,6 +90,15 @@ namespace SSO.Util.Client
             return JsonSerializerHelper.Deserialize<ServiceModel<UserDetail>>(user);
         }
         /// <summary>
+        /// 获取当前用户所有权限
+        /// </summary>
+        /// <returns></returns>
+        public ServiceModel<IEnumerable<string>> GetUserPermissions()
+        {
+            string permission = requestHelper.Get(RemoteUrl + "/user/getPermissions", headers);
+            return JsonSerializerHelper.Deserialize<ServiceModel<IEnumerable<string>>>(permission);
+        }
+        /// <summary>
         /// 替换权限项
         /// </summary>
         /// <param name="origin">项目标记</param>
