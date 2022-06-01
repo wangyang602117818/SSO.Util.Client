@@ -164,7 +164,7 @@ namespace SSO.Util.Client
             HttpCookie httpCookie = new HttpCookie(CookieKey, authorization);
             if (CookieTime != "session")
             {
-                httpCookie.SameSite = SameSiteMode.Lax;
+                //httpCookie.SameSite = SameSiteMode.Lax;
                 httpCookie.Expires = DateTime.Now.AddMinutes(Convert.ToInt32(CookieTime));
             }
             httpResponse.Cookies.Add(httpCookie);
@@ -254,6 +254,20 @@ namespace SSO.Util.Client
                 }
             }
             return actions;
+        }
+    }
+    /// <summary>
+    /// sso验证方法
+    /// </summary>
+    public class SSOAuthorize
+    {
+        public SSOAuthorize()
+        {
+
+        }
+        public void Authorize()
+        {
+
         }
     }
 }
