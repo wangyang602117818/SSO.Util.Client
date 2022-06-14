@@ -261,13 +261,199 @@ namespace SSO.Util.Client
     /// </summary>
     public class SSOAuthorize
     {
-        public SSOAuthorize()
+        public static string BaseUrl = AppSettings.GetValue("ssoBaseUrl");
+        public static string SecretKey = AppSettings.GetValue("ssoSecretKey");
+        public static string CookieKey = AppSettings.GetValue("ssoCookieKey");
+        public static string CookieTime = AppSettings.GetValue("ssoCookieTime");
+        public bool UnAuthorizedRedirect = true;
+        public string Name = "";
+        public SSOAuthorize(string name = "", bool unAuthorizedRedirect = true)
         {
-
+            Name = name;
+            UnAuthorizedRedirect = unAuthorizedRedirect;
         }
         public void Authorize()
         {
-
+            HttpResponse response = HttpContext.Current.Response;
+            HttpRequest request = HttpContext.Current.Request;
+            string authorization = JwtManager.GetAuthorization(CookieKey);
+            string ticket = request.QueryString["ticket"];
+            var absoluteUrl = AppSettings.GetAbsoluteUri(request);
+            if (!VerifyConfig(response))
+            {
+                response.End();
+                return;
+            }
+            if (string.IsNullOrEmpty(authorization))
+            {
+                if (string.IsNullOrEmpty(ticket))
+                {
+                    SendResult(response, absoluteUrl);
+                    return;
+                }
+                else
+                {
+                    string from = AppSettings.GetApplicationUrl(request).ReplaceHttpPrefix().TrimEnd('/');
+                    string audience = request.Url.Host.ReplaceHttpPrefix();
+                    authorization = GetTokenByTicket(ticket, from, audience);
+                    if (!string.IsNullOrEmpty(authorization))
+                    {
+                        SetCookies(response, authorization);
+                    }
+                    else
+                    {
+                        //ticket过期
+                        if (absoluteUrl.Contains("ticket"))
+                        {
+                            var index = absoluteUrl.IndexOf("ticket");
+                            absoluteUrl = absoluteUrl.Substring(0, index - 1);
+                        }
+                        SendResult(response, absoluteUrl);
+                        return;
+                    }
+                }
+            }
+            if (!CheckPermission(Name, authorization))
+            {
+                string json = new ResponseModel<string>(ErrorCode.error_permission, "").Content;
+                response.Write(json);
+                response.End();
+                return;
+            }
+            try
+            {
+                var principal = JwtManager.ParseAuthorization(authorization, SecretKey);
+                HttpContext.Current.User = principal;
+                SetCookies(response, authorization);
+            }
+            catch (Exception ex) //token失效
+            {
+                Log4Net.ErrorLog(ex);
+                HttpCookie httpCookie = request.Cookies[CookieKey];
+                if (httpCookie != null)
+                {
+                    httpCookie.Expires = DateTime.Now.AddYears(-1);
+                    response.Cookies.Add(httpCookie);
+                }
+                SendResult(response, absoluteUrl);
+            }
+        }
+        public void CheckIfLogOut()
+        {
+            HttpResponse response = HttpContext.Current.Response;
+            HttpRequest request = HttpContext.Current.Request;
+            var absoluteUrl = AppSettings.GetAbsoluteUri(request);
+            var ssourl = request.QueryString["ssourls"];
+            if (!string.IsNullOrEmpty(ssourl)) //sso 退出
+            {
+                var returnUrl = request.QueryString["returnUrl"];
+                ////////清除本站cookie
+                List<string> ssoUrls = JsonSerializerHelper.Deserialize<List<string>>(Encoding.UTF8.GetString(Convert.FromBase64String(Base64SecureURL.Decode(ssourl))));
+                var cookie = request.Cookies[CookieKey];
+                if (cookie != null)
+                {
+                    cookie.Expires = DateTime.Now.AddYears(-1);
+                    response.Cookies.Add(cookie);
+                }
+                /////////////////////
+                for (var i = 0; i < ssoUrls.Count; i++)
+                {
+                    if (absoluteUrl.Contains(ssoUrls[i]))
+                    {
+                        ssoUrls.RemoveAt(i);
+                        break;
+                    }
+                }
+                if (ssoUrls.Count > 0)
+                {
+                    string newSsoUrls = JsonSerializerHelper.Serialize(ssoUrls);
+                    response.Redirect(ssoUrls[0] + "?ssourls=" + newSsoUrls.StrToBase64() + "&returnUrl=" + returnUrl);
+                }
+                else //最后一个
+                {
+                    response.Redirect(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl);
+                }
+                return;
+            }
+        }
+        /// <summary>
+        /// 验证配置文件
+        /// </summary>
+        /// <param name="filterContext"></param>
+        /// <returns></returns>
+        public bool VerifyConfig(HttpResponse response)
+        {
+            if (BaseUrl.IsNullOrEmpty() && UnAuthorizedRedirect)
+            {
+                response.Write(new ResponseModel<string>(ErrorCode.baseUrl_not_config, "").Content);
+                return false;
+            }
+            if (SecretKey.IsNullOrEmpty())
+            {
+                response.Write(new ResponseModel<string>(ErrorCode.secretKey_not_config, "").Content);
+                return false;
+            }
+            if (CookieKey.IsNullOrEmpty())
+            {
+                response.Write(new ResponseModel<string>(ErrorCode.cookieKey_not_config, "").Content);
+                return false;
+            }
+            if (CookieTime.IsNullOrEmpty())
+            {
+                response.Write(new ResponseModel<string>(ErrorCode.cookieTime_not_config, "").Content);
+                return false;
+            }
+            return true;
+        }
+        private void SendResult(HttpResponse response, string returnUrl)
+        {
+            if (UnAuthorizedRedirect)
+            {
+                response.Redirect(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl);
+            }
+            else
+            {
+                string json = new ResponseModel<string>(ErrorCode.authorize_fault, "").Content;
+                response.Write(json);
+                response.End();
+            }
+        }
+        /// <summary>
+        /// 根据url上面的ticket获取token
+        /// </summary>
+        /// <param name="ticket"></param>
+        /// <param name="from"></param>
+        /// <param name="audience"></param>
+        /// <returns></returns>
+        public string GetTokenByTicket(string ticket, string from, string audience)
+        {
+            var url = BaseUrl.TrimEnd('/') + "/sso/gettoken?ticket=" + ticket + "&from=" + from + "&audience=" + audience;
+            HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+            string resp = httpRequestHelper.Get(url, null);
+            var result = JsonSerializerHelper.Deserialize<ServiceModel<string>>(resp);
+            if (result.code == 0) return result.result;
+            return "";
+        }
+        private void SetCookies(HttpResponse httpResponse, string authorization)
+        {
+            HttpCookie httpCookie = new HttpCookie(CookieKey, authorization);
+            if (CookieTime != "session")
+            {
+                httpCookie.Expires = DateTime.Now.AddMinutes(Convert.ToInt32(CookieTime));
+            }
+            httpResponse.Cookies.Add(httpCookie);
+        }
+        private bool CheckPermission(string permission, string authorization)
+        {
+            if (permission.IsNullOrEmpty()) return true;
+            var url = BaseUrl.TrimEnd('/') + "/permission/checkPermission?permissionName=" + permission;
+            HttpRequestHelper httpRequestHelper = new HttpRequestHelper();
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Authorization", authorization);
+            string resp = httpRequestHelper.Get(url, headers);
+            var result = JsonSerializerHelper.Deserialize<ServiceModel<string>>(resp);
+            if (result.code == 0) return true;
+            return false;
         }
     }
 }
