@@ -27,18 +27,18 @@ namespace SSO.Util.Client
         /// <summary>
         /// 是否记录请求体
         /// </summary>
-        public bool RecordRequestContent = true;
+        public bool RecordRequestContent = false;
         /// <summary>
         /// 是否记录响应体
         /// </summary>
-        public bool RecordResponseContent = true;
+        public bool RecordResponseContent = false;
         /// <summary>
         /// 日志记录
         /// </summary>
         /// <param name="recordQuerystring"></param>
         /// <param name="recordRequestContent"></param>
         /// <param name="recordResponseContent"></param>
-        public LogRecordAttribute(bool recordQuerystring = true, bool recordRequestContent = true, bool recordResponseContent = true)
+        public LogRecordAttribute(bool recordQuerystring = true, bool recordRequestContent = false, bool recordResponseContent = false)
         {
             RecordQuerystring = recordQuerystring;
             RecordRequestContent = recordRequestContent;
