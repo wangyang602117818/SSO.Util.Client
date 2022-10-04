@@ -167,6 +167,7 @@
             验证配置文件
             </summary>
             <param name="filterContext"></param>
+            <param name="logRecord">是否记录日志</param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.LogRecordAttribute.CheckLogRecord(System.Collections.Generic.IEnumerable{System.Reflection.CustomAttributeData},System.Collections.Generic.IEnumerable{System.Reflection.CustomAttributeData})">
@@ -550,8 +551,8 @@
             <param name="userId"></param>
             <param name="userName"></param>
             <param name="lang"></param>
-            <param name="extra"></param>
             <param name="audience"></param>
+             <param name="extra"></param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.JwtManager.ModifyTokenLang(System.String,System.String)">

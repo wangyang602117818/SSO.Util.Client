@@ -38,22 +38,20 @@ namespace SSO.Util.Client
         /// <param name="userId"></param>
         /// <param name="userName"></param>
         /// <param name="lang"></param>
-        /// <param name="from"></param>
+        /// <param name="audience"></param>
         /// <param name="extra"></param>
         /// <returns></returns>
-        public string GenerateToken(string userId, string userName, string lang, string from, Dictionary<string, string> extra = null)
+        public string GenerateToken(string userId, string userName, string lang, string audience, Dictionary<string, string> extra = null)
         {
             var symmetricKey = Convert.FromBase64String(secretKey);
             var tokenHandler = new JwtSecurityTokenHandler();
             var claims = new List<Claim>() { new Claim(ClaimTypes.Name, userId) };
             if (!string.IsNullOrEmpty(userName)) claims.Add(new Claim("name", userName));
             if (!string.IsNullOrEmpty(lang)) claims.Add(new Claim("lang", lang));
-            if (!string.IsNullOrEmpty(from)) claims.Add(new Claim("from", from));
             if (extra != null)
             {
                 foreach (var item in extra)
                 {
-                    if (item.Key == "from") continue;
                     claims.Add(new Claim(item.Key, item.Value));
                 }
             }
@@ -62,7 +60,7 @@ namespace SSO.Util.Client
                 Subject = new ClaimsIdentity(claims),  //token数据
                 Issuer = issuer,           //颁发者
                 IssuedAt = DateTime.Now,               //颁发时间
-                Audience = from,                         //颁发给
+                Audience = audience,                         //颁发给
                 Expires = expires, //过期时间
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)   //签名
             };
