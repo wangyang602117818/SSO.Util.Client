@@ -51,6 +51,7 @@ namespace SSO.Util.Client
             var claims = new List<Claim>() { new Claim(ClaimTypes.Name, userId) };
             if (!string.IsNullOrEmpty(userName)) claims.Add(new Claim("name", userName));
             if (!string.IsNullOrEmpty(lang)) claims.Add(new Claim("lang", lang));
+            if (!string.IsNullOrEmpty(audience)) claims.Add(new Claim("from", audience));
             if (extra != null)
             {
                 foreach (var item in extra)
