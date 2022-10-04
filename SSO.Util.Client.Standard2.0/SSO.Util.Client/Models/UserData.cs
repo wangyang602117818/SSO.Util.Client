@@ -12,5 +12,6 @@ namespace SSO.Util.Client
         public string UserId = null;
         public string UserName = null;
         public string Lang = null;
+        public Dictionary<string, string> Extra = null;
     }
 }

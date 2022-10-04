@@ -53,6 +53,7 @@ namespace SSO.Util.Client
             {
                 foreach (var item in extra)
                 {
+                    if (item.Key == "from") continue;
                     claims.Add(new Claim(item.Key, item.Value));
                 }
             }
@@ -191,13 +192,31 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public static UserData ParseUserData(ClaimsPrincipal User)
         {
-            return new UserData()
+            UserData userData = new UserData() { Extra = new Dictionary<string, string>() };
+            foreach (var item in User.Claims)
             {
-                From = User.Claims.Where(w => w.Type == "from").Select(s => s.Value).FirstOrDefault(),
-                UserId = User.Identity.Name,
-                UserName = User.Claims.Where(w => w.Type == "name").Select(s => s.Value).FirstOrDefault(),
-                Lang = User.Claims.Where(w => w.Type == "lang").Select(s => s.Value).FirstOrDefault(),
-            };
+                if (item.Type == ClaimTypes.Name)
+                {
+                    userData.UserId = item.Value;
+                }
+                else if (item.Type == "name")
+                {
+                    userData.UserName = item.Value;
+                }
+                else if (item.Type == "lang")
+                {
+                    userData.Lang = item.Value;
+                }
+                else if (item.Type == "from")
+                {
+                    userData.From = item.Value;
+                }
+                else
+                {
+                    userData.Extra.Add(item.Type, item.Value);
+                }
+            }
+            return userData;
         }
         /// <summary>
         /// 根据cookie和key解析用户信息
