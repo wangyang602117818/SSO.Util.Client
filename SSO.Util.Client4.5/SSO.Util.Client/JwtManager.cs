@@ -171,7 +171,7 @@ namespace SSO.Util.Client
             var tokenHandler = new JwtSecurityTokenHandler();
             var symmetricKey = Convert.FromBase64String(secretKey);
             string audience = "*";
-            if (HttpContext.Current != null) audience = HttpContext.Current.Request.Url.Host.ReplaceHttpPrefix();
+            if (HttpContext.Current != null) audience = SSOAuthorizeAttribute.GetRemoteIp(HttpContext.Current.Request);
             var validationParameters = new TokenValidationParameters()
             {
                 RequireExpirationTime = true,
