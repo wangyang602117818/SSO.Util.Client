@@ -179,10 +179,6 @@ namespace SSO.Util.Client
             if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl);
             return result;
         }
-        private string GetRemoteIp(HttpContext context)
-        {
-            return context.Connection.RemoteIpAddress.ToString();
-        }
         private bool CheckPermission(string permission, string authorization)
         {
             if (permission.IsNullOrEmpty()) return true;
@@ -194,6 +190,15 @@ namespace SSO.Util.Client
             var result = JsonSerializerHelper.Deserialize<ServiceModel<string>>(resp);
             if (result.code == 0) return true;
             return false;
+        }
+        /// <summary>
+        /// 获取远程ip
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static string GetRemoteIp(HttpContext context)
+        {
+            return context.Connection.RemoteIpAddress.ToString();
         }
         /// <summary>
         /// 根据url上面的ticket获取token
