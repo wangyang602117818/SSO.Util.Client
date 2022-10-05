@@ -41,16 +41,18 @@ namespace SSO.Util.Client
         /// <param name="userId"></param>
         /// <param name="userName"></param>
         /// <param name="lang"></param>
-        /// <param name="audience"></param>
-        ///  <param name="extra"></param>
+        /// <param name="audience">颁发给(客户端地址|ip)</param>
+        /// <param name="from">token来源(项目地址)</param>
+        ///  <param name="extra">其他信息</param>
         /// <returns></returns>
-        public string GenerateToken(string userId, string userName, string lang, string audience, Dictionary<string, string> extra = null)
+        public string GenerateToken(string userId, string userName, string lang, string audience, string from, Dictionary<string, string> extra = null)
         {
             var symmetricKey = Convert.FromBase64String(secretKey);
             var tokenHandler = new JwtSecurityTokenHandler();
             var claims = new List<Claim>() { new Claim(ClaimTypes.Name, userId) };
             if (!string.IsNullOrEmpty(userName)) claims.Add(new Claim("name", userName));
             if (!string.IsNullOrEmpty(lang)) claims.Add(new Claim("lang", lang));
+            if (!string.IsNullOrEmpty(from)) claims.Add(new Claim("from", from));
             if (extra != null)
             {
                 foreach (var item in extra)
@@ -199,6 +201,8 @@ namespace SSO.Util.Client
             UserData userData = new UserData() { Extra = new Dictionary<string, string>() };
             foreach (var item in User.Claims)
             {
+                var list = new List<string>() { "aud", "nbf", "iss", "exp", "iat" };
+                if (list.Contains(item.Type)) continue;
                 if (item.Type == ClaimTypes.Name)
                 {
                     userData.UserId = item.Value;

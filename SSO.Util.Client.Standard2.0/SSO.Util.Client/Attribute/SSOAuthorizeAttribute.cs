@@ -121,7 +121,7 @@ namespace SSO.Util.Client
                 else
                 {
                     string from = AppSettings.GetApplicationUrl(request).ReplaceHttpPrefix().TrimEnd('/');
-                    string audience = request.Host.Host.ReplaceHttpPrefix();
+                    string audience = GetRemoteIp(filterContext.HttpContext);
                     authorization = GetTokenByTicket(ticket, from, audience);
                     if (!string.IsNullOrEmpty(authorization))
                     {
@@ -178,6 +178,10 @@ namespace SSO.Util.Client
             ActionResult result = new ResponseModel<string>(ErrorCode.authorize_fault, "");
             if (UnAuthorizedRedirect) result = new RedirectResult(BaseUrl.TrimEnd('/') + "/sso/login?returnUrl=" + returnUrl);
             return result;
+        }
+        private string GetRemoteIp(HttpContext context)
+        {
+            return context.Connection.RemoteIpAddress.ToString();
         }
         private bool CheckPermission(string permission, string authorization)
         {
