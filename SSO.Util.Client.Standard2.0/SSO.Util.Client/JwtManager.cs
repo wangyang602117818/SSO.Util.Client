@@ -185,7 +185,7 @@ namespace SSO.Util.Client
                 ValidateAudience = validateAudience,
                 IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
             };
-            if (audience.IsNullOrEmpty()) validationParameters.ValidAudience = audience;
+            if (!audience.IsNullOrEmpty()) validationParameters.ValidAudience = audience;
             SecurityToken securityToken;
             var principal = tokenHandler.ValidateToken(authorization, validationParameters, out securityToken);
             return principal;

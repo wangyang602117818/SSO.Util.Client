@@ -163,24 +163,23 @@ namespace SSO.Util.Client
         /// <param name="authorization"></param>
         /// <param name="secretKey"></param>
         /// <param name="validateAudience">是否需要验证来源</param>
+        /// <param name="audience">来源</param>
         /// <param name="validateExpiration">是否需要验证过期时间</param>
         /// <returns></returns>
-        public static ClaimsPrincipal ParseAuthorization(string authorization, string secretKey = null, bool validateAudience = false, bool validateExpiration = true)
+        public static ClaimsPrincipal ParseAuthorization(string authorization, string secretKey = null, bool validateAudience = false, string audience = null, bool validateExpiration = true)
         {
             if (secretKey == null) secretKey = SSOAuthorizeAttribute.SecretKey;
             var tokenHandler = new JwtSecurityTokenHandler();
             var symmetricKey = Convert.FromBase64String(secretKey);
-            string audience = "*";
-            if (HttpContext.Current != null) audience = SSOAuthorizeAttribute.GetRemoteIp(HttpContext.Current.Request);
             var validationParameters = new TokenValidationParameters()
             {
                 RequireExpirationTime = true,
                 ValidateLifetime = validateExpiration,
                 ValidateIssuer = false,
-                ValidAudience = audience,
                 ValidateAudience = validateAudience,
                 IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
             };
+            if (!audience.IsNullOrEmpty()) validationParameters.ValidAudience = audience;
             SecurityToken securityToken;
             var principal = tokenHandler.ValidateToken(authorization, validationParameters, out securityToken);
             return principal;
