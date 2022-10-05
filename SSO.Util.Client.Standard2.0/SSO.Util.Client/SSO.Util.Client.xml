@@ -218,6 +218,13 @@
             </summary>
             <param name="filterContext"></param>
         </member>
+        <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.GetRemoteIp(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            获取远程ip
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
         <member name="M:SSO.Util.Client.SSOAuthorizeAttribute.GetTokenByTicket(System.String,System.String,System.String)">
             <summary>
             根据url上面的ticket获取token
@@ -544,15 +551,16 @@
             <param name="issuer">颁发者</param>
             <param name="ticketTime">url上面的ticket过期时间(秒)</param>
         </member>
-        <member name="M:SSO.Util.Client.JwtManager.GenerateToken(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:SSO.Util.Client.JwtManager.GenerateToken(System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             生成JwtToken类
             </summary>
             <param name="userId"></param>
             <param name="userName"></param>
             <param name="lang"></param>
-            <param name="audience"></param>
-             <param name="extra"></param>
+            <param name="audience">颁发给(客户端地址|ip)</param>
+            <param name="from">token来源(项目地址)</param>
+             <param name="extra">其他信息</param>
             <returns></returns>
         </member>
         <member name="M:SSO.Util.Client.JwtManager.ModifyTokenLang(System.String,System.String)">
