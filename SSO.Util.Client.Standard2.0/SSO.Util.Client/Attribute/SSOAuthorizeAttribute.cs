@@ -142,7 +142,7 @@ namespace SSO.Util.Client
             }
             try
             {
-                var principal = JwtManager.ParseAuthorization(authorization, filterContext.HttpContext, SecretKey);
+                var principal = JwtManager.ParseAuthorization(authorization, SecretKey);
                 filterContext.HttpContext.User = principal;
                 SetCookies(filterContext.HttpContext.Response, authorization);
                 if (!CheckPermission(permissionName, authorization)) filterContext.Result = new ResponseModel<string>(ErrorCode.error_permission, "");

@@ -160,19 +160,18 @@ namespace SSO.Util.Client
         {
             string authorization = GetAuthorization(httpContext, cookieKey);
             if (string.IsNullOrEmpty(authorization)) return null;
-            return ParseUserData(authorization, httpContext);
+            return ParseUserData(authorization);
         }
         /// <summary>
         /// 根据cookie和key解析用户信息
         /// </summary>
         /// <param name="authorization"></param>
         /// <param name="secretKey"></param>
-        /// <param name="httpContext"></param>
         /// <param name="validateAudience">是否需要验证来源</param>
         /// <param name="audience">来源</param>
         /// <param name="validateExpiration">是否需要验证过期时间</param>
         /// <returns></returns>
-        public static ClaimsPrincipal ParseAuthorization(string authorization, HttpContext httpContext = null, string secretKey = null, bool validateAudience = false, string audience = null, bool validateExpiration = true)
+        public static ClaimsPrincipal ParseAuthorization(string authorization, string secretKey = null, bool validateAudience = false, string audience = null, bool validateExpiration = true)
         {
             if (secretKey == null) secretKey = SSOAuthorizeAttribute.SecretKey;
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -230,11 +229,10 @@ namespace SSO.Util.Client
         /// </summary>
         /// <param name="authorization"></param>
         /// <param name="secretKey"></param>
-        /// <param name="httpContext"></param>
         /// <returns></returns>
-        public static UserData ParseUserData(string authorization, HttpContext httpContext = null, string secretKey = null)
+        public static UserData ParseUserData(string authorization, string secretKey = null)
         {
-            var principal = ParseAuthorization(authorization, httpContext, secretKey, false, false);
+            var principal = ParseAuthorization(authorization, secretKey, false, null, false);
             return ParseUserData(principal);
         }
     }

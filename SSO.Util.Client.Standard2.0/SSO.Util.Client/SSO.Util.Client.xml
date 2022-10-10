@@ -601,14 +601,14 @@
             <param name="cookieKey"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.JwtManager.ParseAuthorization(System.String,Microsoft.AspNetCore.Http.HttpContext,System.String,System.Boolean,System.Boolean)">
+        <member name="M:SSO.Util.Client.JwtManager.ParseAuthorization(System.String,System.String,System.Boolean,System.String,System.Boolean)">
             <summary>
             根据cookie和key解析用户信息
             </summary>
             <param name="authorization"></param>
             <param name="secretKey"></param>
-            <param name="httpContext"></param>
             <param name="validateAudience">是否需要验证来源</param>
+            <param name="audience">来源</param>
             <param name="validateExpiration">是否需要验证过期时间</param>
             <returns></returns>
         </member>
@@ -619,13 +619,12 @@
             <param name="User"></param>
             <returns></returns>
         </member>
-        <member name="M:SSO.Util.Client.JwtManager.ParseUserData(System.String,Microsoft.AspNetCore.Http.HttpContext,System.String)">
+        <member name="M:SSO.Util.Client.JwtManager.ParseUserData(System.String,System.String)">
             <summary>
             根据cookie和key解析用户信息
             </summary>
             <param name="authorization"></param>
             <param name="secretKey"></param>
-            <param name="httpContext"></param>
             <returns></returns>
         </member>
         <member name="T:SSO.Util.Client.Log4Net">

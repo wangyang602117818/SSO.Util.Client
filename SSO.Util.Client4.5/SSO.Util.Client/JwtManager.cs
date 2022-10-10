@@ -227,7 +227,7 @@ namespace SSO.Util.Client
         /// <returns></returns>
         public static UserData ParseUserData(string authorization, string secretKey = null)
         {
-            var principal = ParseAuthorization(authorization, secretKey, false, false);
+            var principal = ParseAuthorization(authorization, secretKey, false, null, false);
             return ParseUserData(principal);
         }
     }
