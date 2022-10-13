@@ -39,7 +39,7 @@ namespace SSO.Util.Client
         /// <param name="time"></param>
         /// <param name="exception"></param>
         /// <returns></returns>
-        internal ServiceModel<string> InsertLog(string from, string to, string controller, string action, string route, string querystring, string requestContent, string responseContent, string userId, string userName, string userHost, string userAgent, long time = 0, bool exception = false)
+        internal void InsertLog(string from, string to, string controller, string action, string route, string querystring, string requestContent, string responseContent, string userId, string userName, string userHost, string userAgent, long time = 0, bool exception = false)
         {
             LogModel logModel = new LogModel()
             {
@@ -60,8 +60,14 @@ namespace SSO.Util.Client
                 Exception = exception,
                 CreateTime = DateTime.Now
             };
-            var result = requestHelper.Post(baseUrl.TrimEnd('/') + "/log/insert", logModel, null);
-            return JsonSerializerHelper.Deserialize<ServiceModel<string>>(result);
+            try
+            {
+                requestHelper.Post(baseUrl.TrimEnd('/') + "/log/insert", logModel, null);
+            }
+            catch (Exception ex)
+            {
+                Log4Net.ErrorLog(ex);
+            }
         }
         /// <summary>
         /// 获取日志对象列表
