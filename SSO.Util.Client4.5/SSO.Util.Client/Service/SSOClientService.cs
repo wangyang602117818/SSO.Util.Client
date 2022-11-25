@@ -117,6 +117,7 @@ namespace SSO.Util.Client
     {
         public string Code { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public int Order { get; set; }
     }
     /// <summary>
@@ -128,6 +129,7 @@ namespace SSO.Util.Client
         public string Code { get; set; }
         [JsonProperty("title")]
         public string Name { get; set; }
+        public string Description { get; set; }
         public int Order { get; set; }
         public IEnumerable<DepartmentItem> Children { get; set; }
     }
