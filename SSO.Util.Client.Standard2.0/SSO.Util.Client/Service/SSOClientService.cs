@@ -115,6 +115,7 @@ namespace SSO.Util.Client
     /// </summary>
     public class CompanyItem
     {
+        public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -125,12 +126,13 @@ namespace SSO.Util.Client
     /// </summary>
     public class DepartmentItem
     {
-        [JsonProperty("value")]
+        public int Id { get; set; }
         public string Code { get; set; }
-        [JsonProperty("title")]
         public string Name { get; set; }
         public string Description { get; set; }
         public int Order { get; set; }
+        public int Layer { get; set; }
+        public string ParentCode { get; set; }
         public IEnumerable<DepartmentItem> Children { get; set; }
     }
     /// <summary>

@@ -108,7 +108,6 @@ namespace SSO.Util.Client
     /// </summary>
     public class SuggestData
     {
-        [JsonProperty("_id")]
         public string id { get; set; }
         public string text { get; set; }
     }
