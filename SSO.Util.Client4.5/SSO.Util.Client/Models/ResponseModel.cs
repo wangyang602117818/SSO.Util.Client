@@ -14,11 +14,11 @@ namespace SSO.Util.Client
     public class ResponseModel<T> : ContentResult
     {
         /// <summary>
-        /// 
+        /// 预定义的返回类
         /// </summary>
-        /// <param name="code"></param>
-        /// <param name="t"></param>
-        /// <param name="count"></param>
+        /// <param name="code">返回代码,返回描述由code转换</param>
+        /// <param name="t">可以是: 字符串,可序列化的类,json字符串</param>
+        /// <param name="count">总数,前端分页有用</param>
         public ResponseModel(ErrorCode code, T t, long count = 0)
         {
             if (t is string)
@@ -36,6 +36,34 @@ namespace SSO.Util.Client
             else
             {
                 Content = "{\"code\":" + (int)code + ",\"message\":\"" + code.ToString() + "\",\"result\":" + JsonSerializerHelper.Serialize(t) + ",\"count\":" + count + "}";
+            }
+            ContentEncoding = Encoding.UTF8;
+            ContentType = "application/json";
+        }
+        /// <summary>
+        /// 自定义返回类
+        /// </summary>
+        /// <param name="code">返回代码</param>
+        /// <param name="message">返回代码的描述</param>
+        /// <param name="t">返回体,可以是: 字符串,可序列化的类,json字符串</param>
+        /// <param name="count">总数,前端分页有用</param>
+        public ResponseModel(int code, string message, T t, long count = 0)
+        {
+            if (t is string)
+            {
+                string str = t.ToString();
+                if ((str.Contains("{") && str.Contains("}")) || (str.Contains("[") && str.Contains("]")))
+                {
+                }
+                else
+                {
+                    str = JsonSerializerHelper.Serialize(t);
+                }
+                Content = "{\"code\":" + (int)code + ",\"message\":\"" + message + "\",\"result\":" + str + ",\"count\":" + count + "}";
+            }
+            else
+            {
+                Content = "{\"code\":" + (int)code + ",\"message\":\"" + message + "\",\"result\":" + JsonSerializerHelper.Serialize(t) + ",\"count\":" + count + "}";
             }
             ContentEncoding = Encoding.UTF8;
             ContentType = "application/json";
