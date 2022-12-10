@@ -17,8 +17,6 @@ namespace SSO.Util.Client.ElasticLite
         public static Queue<string> connections = null;
         public int count = 0;
         public int Timeout { get; set; }
-        public ICredentials Credentials { get; set; }
-        public IWebProxy Proxy { get; set; }
         /// <summary>
         /// 单个 ElasticSearch 服务器实例化
         /// </summary>
@@ -159,8 +157,6 @@ namespace SSO.Util.Client.ElasticLite
             request.Accept = "application/json";
             request.ContentType = "application/json";
             request.Timeout = Timeout;
-            if (Proxy != null) request.Proxy = Proxy;
-            if (Credentials != null) request.Credentials = Credentials;
             return request;
         }
     }
