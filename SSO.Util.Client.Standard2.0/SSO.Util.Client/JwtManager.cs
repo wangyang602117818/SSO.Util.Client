@@ -148,7 +148,6 @@ namespace SSO.Util.Client
             string authorization = httpContext.Request.Cookies[cookieKey] == null ? "" : httpContext.Request.Cookies[cookieKey];
             if (string.IsNullOrEmpty(authorization)) authorization = httpContext.Request.Headers["Authorization"].ToString() ?? "";
             if (string.IsNullOrEmpty(authorization)) authorization = httpContext.Request.Query["Authorization"];
-            if (string.IsNullOrEmpty(authorization)) authorization = httpContext.Request.Form["Authorization"];
             return authorization;
         }
         /// <summary>
