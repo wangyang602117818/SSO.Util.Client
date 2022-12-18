@@ -348,3 +348,4 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/SSO.Util.Client.Standard2.0/SSO.Util.Client/bin/Release/publish_to_nuget.cmd
