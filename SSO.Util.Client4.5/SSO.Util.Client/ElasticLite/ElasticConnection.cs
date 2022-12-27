@@ -16,29 +16,39 @@ namespace SSO.Util.Client.ElasticLite
     {
         public static Queue<string> connections = null;
         public int count = 0;
+        public string username;
+        public string password;
         public int Timeout { get; set; }
         /// <summary>
         /// 单个 ElasticSearch 服务器实例化
         /// </summary>
         /// <param name="url">ElasticSearch服务器地址</param>
+        /// <param name="username">ElasticSearch用户名</param>
+        /// <param name="password">ElasticSearch密码</param>
         /// <param name="timeout">超时时间</param>
-        public ElasticConnection(string url, int timeout = 6000)
+        public ElasticConnection(string url, string username = "", string password = "", int timeout = 6000)
         {
             if (connections == null)
                 connections = new Queue<string>(new List<string>() { url });
             count = 1;
+            this.username = username;
+            this.password = password;
             Timeout = timeout;
         }
         /// <summary>
         /// 集群 ElasticSearch 服务器实例化
         /// </summary>
         /// <param name="urls">ElasticSearch服务器地址列表</param>
+        /// <param name="username">ElasticSearch用户名</param>
+        /// <param name="password">ElasticSearch密码</param>
         /// <param name="timeout">超时时间</param>
-        public ElasticConnection(IEnumerable<string> urls, int timeout = 6000)
+        public ElasticConnection(IEnumerable<string> urls, string username = "", string password = "", int timeout = 6000)
         {
             if (connections == null)
                 connections = new Queue<string>(urls);
             count = connections.Count;
+            this.username = username;
+            this.password = password;
             Timeout = timeout;
         }
         /// <summary>
@@ -157,6 +167,10 @@ namespace SSO.Util.Client.ElasticLite
             request.Accept = "application/json";
             request.ContentType = "application/json";
             request.Timeout = Timeout;
+            if (!username.IsNullOrEmpty() && !password.IsNullOrEmpty())
+            {
+                request.Credentials = new System.Net.NetworkCredential(username, password);
+            }
             return request;
         }
     }
