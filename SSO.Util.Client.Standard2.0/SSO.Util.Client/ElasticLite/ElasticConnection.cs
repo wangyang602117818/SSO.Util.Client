@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 
 
 
@@ -14,7 +17,7 @@ namespace SSO.Util.Client.ElasticLite
     /// </summary>
     public class ElasticConnection
     {
-        public static Queue<string> connections = null;
+        public static Queue<string> connections = new Queue<string>();
         public int count = 0;
         public string username;
         public string password;
@@ -25,8 +28,8 @@ namespace SSO.Util.Client.ElasticLite
         /// <param name="url">ElasticSearch服务器地址</param>
         /// <param name="username">ElasticSearch用户名</param>
         /// <param name="password">ElasticSearch密码</param>
-        /// <param name="timeout">超时时间</param>
-        public ElasticConnection(string url, string username = "", string password = "", int timeout = 6000)
+        /// <param name="timeout">超时时间s</param>
+        public ElasticConnection(string url, string username = "", string password = "", int timeout = 6)
         {
             if (connections == null)
                 connections = new Queue<string>(new List<string>() { url });
@@ -42,7 +45,7 @@ namespace SSO.Util.Client.ElasticLite
         /// <param name="username">ElasticSearch用户名</param>
         /// <param name="password">ElasticSearch密码</param>
         /// <param name="timeout">超时时间</param>
-        public ElasticConnection(IEnumerable<string> urls, string username = "", string password = "", int timeout = 6000)
+        public ElasticConnection(IEnumerable<string> urls, string username = "", string password = "", int timeout = 6)
         {
             if (connections == null)
                 connections = new Queue<string>(urls);
@@ -57,9 +60,9 @@ namespace SSO.Util.Client.ElasticLite
         /// <param name="command">person/doc/1</param>
         /// <param name="jsonData">删除条件</param>
         /// <returns></returns>
-        public string Delete(string command, string jsonData = null)
+        public async Task<string> Delete(string command, string jsonData = null)
         {
-            return ExecuteRequest("DELETE", command, jsonData);
+            return await ExecuteRequest(HttpMethod.Delete, command, jsonData);
         }
         /// <summary>
         /// 查询数据
@@ -67,9 +70,9 @@ namespace SSO.Util.Client.ElasticLite
         /// <param name="command">person/doc/1</param>
         /// <param name="jsonData"></param>
         /// <returns></returns>
-        public string Get(string command, string jsonData = null)
+        public async Task<string> Get(string command, string jsonData = null)
         {
-            return ExecuteRequest("GET", command, jsonData);
+            return await ExecuteRequest(HttpMethod.Get, command, jsonData);
         }
         /// <summary>
         /// 判断index是否存在
@@ -77,10 +80,10 @@ namespace SSO.Util.Client.ElasticLite
         /// <param name="command">indexName</param>
         /// <param name="jsonData"></param>
         /// <returns></returns>
-        public bool Head(string command, string jsonData = null)
+        public async Task<bool> Head(string command, string jsonData = null)
         {
-            var result = ExecuteRequest("HEAD", command, jsonData);
-            return result != "404" ? true : false;
+            var result = ExecuteRequest(HttpMethod.Head, command, jsonData);
+            return await result != "404" ? true : false;
         }
         /// <summary>
         /// 索引数据
@@ -88,9 +91,9 @@ namespace SSO.Util.Client.ElasticLite
         /// <param name="command">person/doc/1</param>
         /// <param name="jsonData">数据对象</param>
         /// <returns></returns>
-        public string Post(string command, string jsonData = null)
+        public async Task<string> Post(string command, string jsonData = null)
         {
-            return ExecuteRequest("Post", command, jsonData);
+            return await ExecuteRequest(HttpMethod.Post, command, jsonData);
         }
         /// <summary>
         /// 创建 index, 并且设置mapping:
@@ -98,13 +101,13 @@ namespace SSO.Util.Client.ElasticLite
         /// <param name="command">indexName</param>
         /// <param name="jsonData">mapping</param>
         /// <returns></returns>
-        public string Put(string command, string jsonData = null)
+        public async Task<string> Put(string command, string jsonData = null)
         {
-            return ExecuteRequest("Put", command, jsonData);
+            return await ExecuteRequest(HttpMethod.Put, command, jsonData);
         }
-        private string ExecuteRequest(string method, string command, string jsonData)
+        private async Task<string> ExecuteRequest(HttpMethod method, string command, string jsonData)
         {
-            WebException ex = null;
+            HttpRequestException ex = null;
             for (var i = 0; i < count; i++)
             {
                 //从队列获取一个连接
@@ -112,45 +115,39 @@ namespace SSO.Util.Client.ElasticLite
                 uri = uri.TrimEnd('/') + "/" + command.TrimStart('/');
                 try
                 {
-                    HttpWebRequest request = CreateRequest(method, uri);
-                    if (!string.IsNullOrEmpty(jsonData))
+                    var handler = new HttpClientHandler
                     {
-                        byte[] buffer = Encoding.UTF8.GetBytes(jsonData);
-                        request.ContentLength = buffer.Length;
-                        using (Stream requestStream = request.GetRequestStream())
-                        {
-                            requestStream.Write(buffer, 0, buffer.Length);
-                        }
-                    }
-                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) => true
+                    };
+                    var request = new HttpRequestMessage
                     {
-                        using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                        Method = method,
+                        RequestUri = new Uri(uri)
+                    };
+                    if (!string.IsNullOrEmpty(jsonData)) request.Content = new StringContent(jsonData ?? "{}", Encoding.UTF8, "application/json");
+                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    using (var httpClient = new HttpClient(handler))
+                    {
+                        httpClient.Timeout = TimeSpan.FromSeconds(Timeout);
+                        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
                         {
-                            ex = null;
-                            return reader.ReadToEnd();
+                            string authValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
+                            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authValue);
                         }
+                        var response = await httpClient.SendAsync(request);
+                        response.EnsureSuccessStatusCode();
+                        return await response.Content.ReadAsStringAsync();
                     }
                 }
-                catch (WebException webException)
+                catch (HttpRequestException exception)
                 {
                     //服务可用并且返回404
-                    if (webException.Response != null && ((HttpWebResponse)webException.Response).StatusCode == HttpStatusCode.NotFound)
-                    {
-                        using (StreamReader reader = new StreamReader(webException.Response.GetResponseStream()))
-                        {
-                            ex = null;
-                            string resp = reader.ReadToEnd();
-                            if (resp.IsNullOrEmpty()) return "404";
-                            return resp;
-                        }
-                    }
-                    ex = webException;
+                    if (exception.StatusCode == HttpStatusCode.NotFound) return "404";
+                    ex = exception;
                     //从队列获取的连接不可用
                     string unuseConnect = connections.Dequeue();
                     //把不可用的连接放入队尾
                     connections.Enqueue(unuseConnect);
-                    //通知维护人员
-                    Log4Net.ErrorLog(webException);
                 }
             }
             if (ex != null)
@@ -158,20 +155,6 @@ namespace SSO.Util.Client.ElasticLite
                 throw ex;
             }
             return ex.Message;
-        }
-        private HttpWebRequest CreateRequest(string method, string uri)
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-            request.Method = method;
-            request.ServerCertificateValidationCallback = ((message, cert, chain, error) => { return true; });
-            request.Accept = "application/json";
-            request.ContentType = "application/json";
-            request.Timeout = Timeout;
-            if (!username.IsNullOrEmpty() && !password.IsNullOrEmpty())
-            {
-                request.Credentials = new System.Net.NetworkCredential(username, password);
-            }
-            return request;
         }
     }
 }
